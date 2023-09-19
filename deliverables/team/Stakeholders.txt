@@ -1,1 +1,10 @@
-Add Partner and TA info
+[Update Partner info after first meeting]
+
+Partner:  
+- name: Evan  
+- title: 
+- email: ewheeler@unicef.org  
+
+TA:
+- name: Pritish  
+- email: pritish@cs.toronto.edu  
