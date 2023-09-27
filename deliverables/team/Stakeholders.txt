@@ -1,11 +1,11 @@
 [Update Partner info after first meeting]
 
 Partner:  
-- name: Evan  
-- title: 
+- name: Evan Wheeler
+- title: Software Engineer
 - email: ewheeler@unicef.org  
-- are they the primary contact:   
-- secondary contact:  
+- are they the primary contact: Yes  
+- secondary contact: To be determined in later weeks by Evan
 
 TA:
 - name: Pritish  
