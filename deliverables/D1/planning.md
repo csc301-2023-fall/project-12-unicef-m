@@ -95,6 +95,19 @@ Do a team-building activity in-person or online. This can be playing an online g
 
 #### Q7: What are the roles & responsibilities on the team?
 
+Rudy: Backend, dedicated partner liaison
+
+Rohan: Front end + some backend
+
+Jessica: Front end + some Backend
+
+Manya: Backend
+
+Nick: Front end + some Backend
+
+Andrew: Backend
+
+
 Describe the different roles on the team and the responsibilities associated with each role. 
  * Roles should reflect the structure of your team and be appropriate for your project. One person may have multiple roles.  
  * Add role(s) to your Team-[Team_Number]-[Team_Name].csv file on the main folder.
