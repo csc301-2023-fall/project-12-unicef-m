@@ -59,11 +59,14 @@
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
-> Short (1-2 min' read max)
- * What is the technology stack? Specify languages, frameworks, libraries, PaaS products or tools to be used or being considered. 
- * How will you deploy the application?
- * Describe the architecture - what are the high level components or patterns you will use? Diagrams are useful here. 
- * Will you be using third party applications or APIs? If so, what are they?
+For our frontend, we have decided to use React.js with JavaScript. We will style our React app with TailwindCSS, which will allow us to speed up our development process since it allows us to use pre-built CSS classes for styling, allowing us to focus more on the actual functionality than the design. 
+
+For our backend, we have decided to use Flask and Python. We originally wanted to use Node.js to gain experience with the MERN stack. However, the current proof of concept is built with Python scripts, so keeping our backend as Python will make it easier to integrate our code with the existing code. We will also be using FlaskAppBuilder since Apache Superset is also built using it. 
+
+We will be using the Apache Superset APIs in the backend, to do the bulk of the work, such as cloning the dashboards and replacing their data sources.
+
+Our liaison has communicated to us that it is acceptable for us to not deploy the product anywhere; rather, he is comfortable with this being hosted locally on a computer.
+
 
 ----
 ## Intellectual Property Confidentiality Agreement 
@@ -78,7 +81,7 @@
 
 **Your partner cannot ask you to sign any legal agreements or documents pertaining to non-disclosure, confidentiality, IP ownership, etc.**
 
-Briefly describe which option you have agreed to.
+UNICEF values contributing to the open source community. Our partner believes that this project will not only be useful for UNICEF, but will also be desired by other companies. Therefore, we have received permission to upload the code on github and share it freely. This corresponds to option 1. 
 
 ----
 
@@ -107,13 +110,7 @@ List each team member and:
 
 #### Q8: How will you work as a team?
 
-Describe meetings (and other events) you are planning to have. 
- * When and where? Recurring or ad hoc? In-person or online?
- * What's the purpose of each meeting?
- * Other events could be coding sessions, code reviews, quick weekly sync meeting online, etc.
- * You should have 2 meetings with your project partner (if you have one) before D1 is due. Describe them here:
-   * You must keep track of meeting minutes and add them to your repo under "documents/minutes" folder
-   * You must have a regular meeting schedule established for the rest of the term.  
+As a team, we are planning to have weekly meetings online on Thursdays to discuss that week’s objectives, what progress has been made since the last meeting, any challenges, and coding sessions/reviews. We also have a discord server set up and a Google Docs document set up for each deliverable/project component so the work can be more active throughout the week.
   
 #### Q9: How will you organize your team?
 
