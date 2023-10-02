@@ -36,7 +36,7 @@
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
-As a data analyst at UNICEF, I have many datasets. I would like to see the available dashboards that can be cloned with the other viable data sources I can use as the new datasource for the clone. 
+##### 1. As a data analyst at UNICEF, I have many datasets. I would like to see the available dashboards that can be cloned with the other viable data sources I can use as the new datasource for the clone. 
 
  Acceptance Criteria: Having multiple screens for available dashboards and viable data sources respectively. Being able to sort datasets in the view according to different features of the data and/or country and having clear indications of whether a dataset is viable with and reasons to why it is not viable.  
 
