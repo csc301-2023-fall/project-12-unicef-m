@@ -25,14 +25,12 @@
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
-> Short (1 - 2 min' read max)
- * We want you to "connect the dots" for us - Why does your product (as described in your answer to Q1) fits the needs of your users (as described in your answer to Q2)?
- * Explain the benefits of your product explicitly & clearly. For example:
-    * Save users time (how and how much?)
-    * Allow users to discover new information (which information? And, why couldn't they discover it before?)
-    * Provide users with more accurate and/or informative data (what kind of data? Why is it useful to them?)
-    * Does this application exist in another form? If so, how does your differ and provide value to the users?
-    * How does this align with your partner's organization's values/mission/mandate?
+Currently, the proof of concept only works on a single instance of Apache Superset. This is problematic because when dashboards are cloned in different environments, for example staging and production, the dashboard must be recreated in production anyways. This means that the dashboard must be tested again in production, defeating the purpose of the staging environment. 
+
+Secondly, the current proof of concept is a simple command line program. This is not very accessible for people who are not experienced in superset, so our web app will be more intuitive to use and allow for easier visualisation of data, regardless of a person’s given proficiency with superset. Additionally, it allows for smaller teams to do the cloning, we plan on expanding on this feature with a web application to allow use for larger teams. Evan has also mentioned that over a hundred different UNICEF offices utilise this tool. Due to the breadth at which it is used, there is a need to design it such that all offices can use the application to the same general level of proficiency.
+
+Third, as we have discussed with Evan, he has put forward the need for such a program to be open source so that it can be copied and modified for a user’s given purposes.
+
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
