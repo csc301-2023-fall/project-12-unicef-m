@@ -36,10 +36,26 @@
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
- * At least 5 user stories concerning the main features of the application - note that this can broken down further
- * You must follow proper user story format (as taught in lecture) ```As a <user of the app>, I want to <do something in the app> in order to <accomplish some goal>```
- * User stories must contain acceptance criteria. Examples of user stories with different formats can be found here: https://www.justinmind.com/blog/user-story-examples/. **It is important that you provide a link to an artifact containing your user stories**.
- * If you have a partner, these must be reviewed and accepted by them. You need to include the evidence of partner approval (e.g., screenshot from email) or at least communication to the partner (e.g., email you sent)
+As a data analyst at UNICEF, I have many datasets. I would like to see the available dashboards that can be cloned with the other viable data sources I can use as the new datasource for the clone. 
+
+ Acceptance Criteria: Having multiple screens for available dashboards and viable data sources respectively. Being able to sort datasets in the view according to different features of the data and/or country and having clear indications of whether a dataset is viable with and reasons to why it is not viable.  
+
+As a large team of data analysts, we would like to make use of the dashboard cloning capabilities to deploy ~130 copies for each country’s datasource.
+
+Acceptance Criteria: Have a lightweight web interface that can support multiple users, user’s information is saved, a potential for group accounts that can allow for multiple users making edits as long as conflicts are limited.
+
+As an open-source developer using Apache Superset, I would like to contribute to this project by increasing the scalability and improving the web application.
+
+Acceptance Criteria: Web application has a test suite that runs each time new features are added/deployed, test suites that can be expanded upon as more features are added, have well-written and easily to follow documentation and instructions within the code, Read.me file, and the repository itself. Additionally,  regarding documentation, providing more visual examples of what the user should be met with when interacting with the application. 
+
+As a developer responsible for deploying Apache Superset instances, I want to be able to clone dashboards across Superset instances so that I do not have to retest a dashboard in the production environment once it's passed all its tests in the staging environment. 
+
+Acceptance Criteria: Given the user provides the correct details for accessing two Superset instances A and B, when the user clones a dashboard from one Superset instance A to Superset instance B, an exact replica of the dashboard should successfully appear within Superset instance B.
+
+ As a developer, I would want to customise the dataset features such as its name and add notes. I would also like to see new changes, especially since I work within a team.
+
+ Acceptance Criteria: Having screens prior and post cloning to edit names, adding notes, and the ability to link the dataset to another user. Having an option to view recent cloning, changes, or history to track activity. 
+
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
