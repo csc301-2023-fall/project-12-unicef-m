@@ -81,9 +81,9 @@ Do a team-building activity in-person or online. This can be playing an online g
 
 #### Q7: What are the roles & responsibilities on the team?
 
-Rudy: Backend, dedicated partner liaison
+Rudy: Backend, dedicated partner liaison. I have done some back end node.js and would like to learn more about using Flask.
 
-Rohan: Front end + some backend
+Rohan: Front end + some backend. Aside from the prerequisite courses, I have not had exposure to devlopement so I would like to work on some aspects of each use case if possible, for an optimal leanring experience. 
 
 Jessica: Front end + some Backend
 
@@ -92,17 +92,6 @@ Manya: Backend
 Nick: Front end + some Backend
 
 Andrew: Backend
-
-
-Describe the different roles on the team and the responsibilities associated with each role. 
- * Roles should reflect the structure of your team and be appropriate for your project. One person may have multiple roles.  
- * Add role(s) to your Team-[Team_Number]-[Team_Name].csv file on the main folder.
- * At least one person must be identified as the dedicated partner liaison. They need to have great organization and communication skills.
- * Everyone must contribute to code. Students who don't contribute to code enough will receive a lower mark at the end of the term.
-
-List each team member and:
- * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
- * Why did you choose them to take that role? Specify if they are interested in learning that part, experienced in it, or any other reasons. Do no make things up. This part is not graded but may be reviewed later.
 
 
 #### Q8: How will you work as a team?
