@@ -45,6 +45,7 @@ User Story 5: As a developer, I would want to customise the dataset features suc
 
 Acceptance Criteria 5: Having screens prior and post cloning to edit names, adding notes, and the ability to link the dataset to another user. Having an option to view recent cloning, changes, or history to track activity. 
 
+![Login](UserStoryProof.png)
 
 #### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
@@ -55,7 +56,6 @@ For our backend, we have decided to use Flask and Python. We originally wanted t
 We will be using the Apache Superset APIs in the backend, to do the bulk of the work, such as cloning the dashboards and replacing their data sources.
 
 Our liaison has communicated to us that it is acceptable for us to not deploy the product anywhere; rather, he is comfortable with this being hosted locally on a computer.
-
 
 ----
 ## Intellectual Property Confidentiality Agreement 
@@ -90,13 +90,13 @@ Rudraksh: Backend, dedicated partner liaison. I have done some back end Node.js 
 
 Rohan: Front end + some backend. Aside from the prerequisite courses, I have not had exposure to developement so I would like to work on some aspects of each use case if possible, for an optimal learning experience. 
 
-Jessica: Front end + some Backend.
+Jessica: Front end, some backend. I have HCI research experience and frond-end experience at OnePolicy so I believe I am more experienced in frontend compared to backend. However due to the same reason I wanted to get more backend experience through this project.
 
-Manya: Backend.
+Manya: Backend. My experience in backend technologies such as Node.js, Express.js and PHP will allow me to contribute the most to the project. I tend to enjoy working on the backend more than front end so this will give me the opportunity to improve my skills in new technologies such as Flask.
 
-Nick: Front end + some Backend. 
+Nick: Front end, some backend. Aside from my prerequisite courses I am also taking a course that will allow me to grow my skill set as a fullstack dev. However through my own personal experiences on my own projects, I have come to learn I am more adept when it comes to front end, which is why I prefer to focus on that more.
 
-Andrew: Backend
+Andrew: Backend. With the courses I am taking this year, working on backend will complement my learning the best. I want to take this opportunity to gain a better working knowledge of Flask. Additionally, I enjoy working on the backend functionality of projects.
 
 
 #### Q8: How will you work as a team?
@@ -122,5 +122,48 @@ If a team member is not contributing, we will first attempt to understand why th
 
  
 **Collaboration: (Share your responses to Q8 & Q9 from A1)**
+
+Responses from Assignment 1:
+
+Rohan:
+
+Backend and Frontend Developer.
+
+I have done well in 207 (5 members are the same from that team) and have the prerequisites done well. I am currently taking CSC343 (databases) so I can contribute on that end. I am also currently learning HTML/CSS and JavaScript on my own time prior to the project meetings and will ramp up on what I need to learn based on what the project outline is. I want to do well in this course and will be dedicating a lot of time to it.  
+
+Rudraksh:
+
+Backend Developer, DevOps Developer, Team Manager
+
+I bring good transferrable backend programming skills in Node.js and Express.js that I can use to learn new backend frameworks as necessary. Over the summer, I also led the development of an MVP for a startup so I am aware of the responsiblities needed and things that need to be taken care of when working on a large scale project such as this. I am also proficient in frontend frameworks like React, so I can contribute to the frontend as necessary.
+
+Manya:
+
+Full stack, Backend, Product manager 
+
+With my previous experience working with web development technologies such as Node.js and React.js through internships and side projects, as well as experience in Android mobile development, I believe I can contribute best to the team as a full stack or backend developer. I would also be open to trying out product manager roles such as communicating 
+
+Jessica:
+   
+Product manager, Full-stack developer, Backend developer, Frontend developer, Database developer
+
+With my experience in front end and graphic design I believe I can bring high quality front end designs to my team, I am also willing to organize meetings, documentations, and other details if needed. 
+
+Andrew:
+
+Q8:
+Frontend, Backend, Database
+
+Q9:
+I consider myself to be a fast learner. Although I may not have all the skills required to masterfully contribute to every part of the project, I am confident in my ability to do my share of the work. Looking at the tech stack for our project, I am confident in my abilities to do any task in both JavaScript and Python. Additionally, I believe that I have the organizational and leadership skills to push my group forward, if it is ever needed.
+
+Nick: 
+
+Fullstack Developer, Frontend Developer, Backend Developer 
+
+I have experience with Responsive Web Design and utilization of Figma for my personal projects. Similarly, I am currently learning the necessary skills to work effectively in a fullstack environment.
+
  * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
- * How will you address the issue if one person doesn't contribute or is not responsive? 
+ * How will you address the issue if one person doesn't contribute or is not responsive?
+   
+We meet frequently in person and have a dedicated discord server for this project. Therefore issues can be resolved thorugh these means and if there is no response from a person then it makes sense to contact a TA (highly unlikely siutation). 
