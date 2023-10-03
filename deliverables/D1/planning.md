@@ -8,8 +8,8 @@ We will be building a web interface for the existing command line proof of conce
 
 ![Login](loginScreen.jpg)
 ![Login](dashboards.png)
-![Login](dashboard_customization.jpg)
 ![Login](sources.png)
+![Login](dashboard_customization.jpg)
 
 #### Q2: Who are your target users?
 
@@ -90,11 +90,11 @@ Rudy: Backend, dedicated partner liaison. I have done some back end node.js and 
 
 Rohan: Front end + some backend. Aside from the prerequisite courses, I have not had exposure to devlopement so I would like to work on some aspects of each use case if possible, for an optimal leanring experience. 
 
-Jessica: Front end + some Backend
+Jessica: Front end + some Backend.
 
-Manya: Backend
+Manya: Backend.
 
-Nick: Front end + some Backend
+Nick: Front end + some Backend. 
 
 Andrew: Backend
 
