@@ -7,6 +7,9 @@
 We will be building a web interface for the existing command line proof of concept that clones Apache Superset dashboards. Users will have the ability to modify and clone existing dashboards. The partner is UNICEF and this product will help the teams internally modify and clone their dashboards to make data-driven decisions. At a high level, the problem is not being able to easily clone as right now, we have to do redundent testing and there is no web interface for teams.  
 
 ![Login](loginScreen.jpg)
+![Login](dashboards.png)
+![Login](dashboard_customization.jpg)
+![Login](sources.png)
 
 #### Q2: Who are your target users?
 
