@@ -86,9 +86,9 @@ Do a team-building activity in-person or online. This can be playing an online g
 
 #### Q7: What are the roles & responsibilities on the team?
 
-Rudy: Backend, dedicated partner liaison. I have done some back end node.js and would like to learn more about using Flask.
+Rudy: Backend, dedicated partner liaison. I have done some back end Node.js and would like to learn more about using Flask.
 
-Rohan: Front end + some backend. Aside from the prerequisite courses, I have not had exposure to devlopement so I would like to work on some aspects of each use case if possible, for an optimal leanring experience. 
+Rohan: Front end + some backend. Aside from the prerequisite courses, I have not had exposure to developement so I would like to work on some aspects of each use case if possible, for an optimal learning experience. 
 
 Jessica: Front end + some Backend.
 
