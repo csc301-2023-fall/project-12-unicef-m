@@ -4,24 +4,11 @@
  
 #### Q1: What is the product?
 
- > Short (1 - 2 min' read)
- * Start with a single sentence, high-level description of the product.
- * Be clear - Describe the problem you are solving in simple terms.
- * Specify if you have a partner and who they are.
- * Be concrete. For example:
-    * What are you planning to build? Is it a website, mobile app, browser extension, command-line app, etc.?      
-    * When describing the problem/need, give concrete examples of common use cases.
-    * Assume your the reader knows nothing about the partner or the problem domain and provide the necessary context. 
- * Focus on *what* your product does, and avoid discussing *how* you're going to implement it.      
-   For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
- * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
-
+We will be building a web interface for the existing command line proof of concept that clones Apache Superset dashboards. Users will have the ability to modify and clone existing dashboards. The partner is UNICEF and this product will help the teams internally modify and clone their dashboards to make data-driven decisions. At a high level, the problem is not being able to easily clone as right now, we have to do redundent testing and there is no web interface for teams.  
 
 #### Q2: Who are your target users?
 
-  > Short (1 - 2 min' read max)
- * Be specific (e.g. a 'a third-year university student studying Computer Science' and not 'a student')
- * **Feel free to use personas. You can create your personas as part of this Markdown file, or add a link to an external site (for example, [Xtensio](https://xtensio.com/user-persona/)).**
+The tool we build will be used internally by UNICEF personnel who work in different countries. However, the tool will also be accessible to anyone who is working with Apache Superset dashboards. The project is aimed for people who have varying levels of expertise, and may not be well versed in Apache Superset. The goal is to create an intuitive interface for ease of use for our entire target users.
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
@@ -30,7 +17,6 @@ Currently, the proof of concept only works on a single instance of Apache Supers
 Secondly, the current proof of concept is a simple command line program. This is not very accessible for people who are not experienced in superset, so our web app will be more intuitive to use and allow for easier visualisation of data, regardless of a person’s given proficiency with superset. Additionally, it allows for smaller teams to do the cloning, we plan on expanding on this feature with a web application to allow use for larger teams. Evan has also mentioned that over a hundred different UNICEF offices utilise this tool. Due to the breadth at which it is used, there is a need to design it such that all offices can use the application to the same general level of proficiency.
 
 Third, as we have discussed with Evan, he has put forward the need for such a program to be open source so that it can be copied and modified for a user’s given purposes.
-
 
 #### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
