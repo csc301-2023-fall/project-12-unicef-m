@@ -1,5 +1,3 @@
-[Update Partner info after first meeting]
-
 Partner:  
 - name: Evan Wheeler
 - title: Software Engineer
