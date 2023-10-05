@@ -110,41 +110,39 @@ If a team member is not contributing, we will first attempt to understand why th
 
 Responses from Assignment 1:
 
-Rohan:
+**** Rohan
 
-Backend and Frontend Developer.
+Roles Preference: Backend Developer, Frontend Developer.
 
 I have done well in 207 (5 members are the same from that team) and have the prerequisites done well. I am currently taking CSC343 (databases) so I can contribute on that end. I am also currently learning HTML/CSS and JavaScript on my own time prior to the project meetings and will ramp up on what I need to learn based on what the project outline is. I want to do well in this course and will be dedicating a lot of time to it.  
 
-Rudraksh:
+**** Rudraksh
 
-Backend Developer, DevOps Developer, Team Manager
+Roles Preference: Backend Developer, DevOps Developer, Team Manager
 
 I bring good transferrable backend programming skills in Node.js and Express.js that I can use to learn new backend frameworks as necessary. Over the summer, I also led the development of an MVP for a startup so I am aware of the responsiblities needed and things that need to be taken care of when working on a large scale project such as this. I am also proficient in frontend frameworks like React, so I can contribute to the frontend as necessary.
 
-Manya:
+**** Manya
 
-Full stack, Backend, Product manager 
+Roles Preference: Full stack, Backend developer, Product manager 
 
 With my previous experience working with web development technologies such as Node.js and React.js through internships and side projects, as well as experience in Android mobile development, I believe I can contribute best to the team as a full stack or backend developer. I would also be open to trying out product manager roles such as communicating 
 
-Jessica:
+**** Jessica
    
-Product manager, Full-stack developer, Backend developer, Frontend developer, Database developer
+Roles Preference: Product manager, Full-stack developer, Backend developer, Frontend developer, Database developer
 
 With my experience in front end and graphic design I believe I can bring high quality front end designs to my team, I am also willing to organize meetings, documentations, and other details if needed. 
 
-Andrew:
+**** Andrew:
 
-Q8:
-Frontend, Backend, Database
+Roles Preference: Frontend developer, Backend developer, DevOps Developer
 
-Q9:
 I consider myself to be a fast learner. Although I may not have all the skills required to masterfully contribute to every part of the project, I am confident in my ability to do my share of the work. Looking at the tech stack for our project, I am confident in my abilities to do any task in both JavaScript and Python. Additionally, I believe that I have the organizational and leadership skills to push my group forward, if it is ever needed.
 
-Nick: 
+**** Nick:
 
-Fullstack Developer, Frontend Developer, Backend Developer 
+Roles Preference: Fullstack Developer, Frontend Developer, Backend Developer 
 
 I have experience with Responsive Web Design and utilization of Figma for my personal projects. Similarly, I am currently learning the necessary skills to work effectively in a fullstack environment.
 
