@@ -67,7 +67,7 @@ UNICEF values contributing to the open source community. Our partner believes th
 
 #### Q6: Have you met with your team?
 
-TBD
+3 Fun Facts about the Team --TBD--
 
 #### Q7: What are the roles & responsibilities on the team?
 
