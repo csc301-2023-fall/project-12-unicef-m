@@ -20,16 +20,17 @@ Feature Breakdown
 * Version control to update all cloned dashboards when a change is made to the original
 
 ## Instructions
-TBD
+TBD - CLEAR INSTRUCTIONS OF HOW TO USE
 
 ## Development Requirements
-TBD
+TBD - TECHNICAL REQUIREMENTS + SETTING UP AND RUNNING THE APP 
 
 ## Deployment and Github Workflow
 * We will use GitHub project to manage our tasks.
 * All new code will be done on a new seperate branch
 * Pull requests will be made after significant progress is made to an individual section
 * At least one individual will perform a code review before merging it onto the main branch
+* TBD - DEPLOYMENT TOOLS
 
 
 ## Coding Standards and Guidelines
