@@ -40,7 +40,7 @@ Information will be included later.
 ## Development Requirements
 We will be using a cloud-based database, Firebase, so no setup is required for the database itself. 
 
-TECHNICAL REQUIREMENTS + SETTING UP AND RUNNING THE APP - TBD 
+When we have environment variables for our flask backend we will tentatively update the development requirements
 
 ## Deployment and Github Workflow
 * We will use GitHub Projects with kanban boards to manage our upcoming tasks and assign them to team members
