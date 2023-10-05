@@ -45,7 +45,7 @@ User Story 5: As a developer, I would want to customise the dataset features suc
 
 Acceptance Criteria 5: Having screens prior and post cloning to edit names, adding notes, and the ability to link the dataset to another user. Having an option to view recent cloning, changes, or history to track activity. 
 
-![Login](mockups\UserStoryProof.png)
+![Login](UserStoryProof.png)
 
 ### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
