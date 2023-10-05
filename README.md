@@ -7,7 +7,7 @@ Our primary point of contact for this project is Evan Wheeler (ewheeler@unicef.o
 UNICEF is a multinational organization dedicated to protecting, assisting, and creating environments for children to grow up with the resources they need. 
 
 ## Project Description
-Our project is a web interface for a dashboard cloning tool built on top of apache superset that would allow for a form of version control within the application that would allow for the propogation of changes from the configuration to the parent dashboard to the cloned children. With additional features, UNICEF employees will have the tools they need to visualize any datasource they want.
+We will be building a web interface for the existing command line proof of concept that clones Apache Superset dashboards. Users will have the ability to modify and clone existing dashboards. Additionally, new features, such as a version control that would allow for the propogation of changes from the configuration to the parent dashboard to the cloned children and cloning dashboards across Superset instances. The current problem is difficulty surrounding the use of the cloning tool, and so with these additions, UNICEF employees will have the tools to quickly and easily visualize any datasource they want.
    
 ## Key Features
 Our primary feature is a web interface that would allow users to clone a dashboard template and populate it with any compatible datasource. Additional features include a version control system that would allow a user to make changes to a dashboard's configuration and update the cloned dashboards. In addition to being able to clone dashboards within the same instance we plan to implement cloning across superset instances.
@@ -31,7 +31,6 @@ TBD - TECHNICAL REQUIREMENTS + SETTING UP AND RUNNING THE APP
 * Pull requests will be made after significant progress is made to an individual section
 * At least one individual will perform a code review before merging it onto the main branch
 * TBD - DEPLOYMENT TOOLS
-
 
 ## Coding Standards and Guidelines
 We aim to keep all new features modular and independant of one another. As we are working with Python, we will stick with snake-case naming convention, and adhere to all other style conventions with respect to coding in Python. We will keep the code well documented and simple to understand for future developers to expand on our codebase.
