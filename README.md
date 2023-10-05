@@ -48,6 +48,7 @@ TECHNICAL REQUIREMENTS + SETTING UP AND RUNNING THE APP - TBD
 * Issues will be assigned to team members
 * Pull requests will be made after significant progress is made to an individual section
 * Prior to merging the branches to main, they will be reviewed by at least two other group members
+* We have done this workflow in CSC207 and it was successful in the completion of that project
   
 - DEPLOYMENT TOOLS TBD
 
