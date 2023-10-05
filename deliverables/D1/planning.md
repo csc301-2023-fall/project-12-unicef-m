@@ -42,6 +42,8 @@ User Story 5: As a developer, I would want to customise the dataset features suc
 
 Acceptance Criteria 5: Having screens prior and post cloning to edit names, adding notes, and the ability to link the dataset to another user. Having an option to view recent cloning, changes, or history to track activity. 
 
+Proof of Acceptance from the partner:
+
 ![Login](UserStoryProof.png)
 
 ### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
@@ -50,7 +52,7 @@ For our frontend, we have decided to use React.js with JavaScript. We will style
 
 For our backend, we have decided to use Flask and Python. We originally wanted to use Node.js to gain experience with the MERN stack. However, the current proof of concept is built with Python scripts, so keeping our backend as Python will make it easier to integrate our code with the existing code. We will also be using FlaskAppBuilder since Apache Superset is also built using it. 
 
-We will be using the Apache Superset APIs in the backend, to do the bulk of the work, such as cloning the dashboards and replacing their data sources.
+We will be using the Apache Superset APIs in the backend to do the initial cloning. 
 
 Our liaison has communicated to us that it is acceptable for us to not deploy the product anywhere; rather, he is comfortable with this being hosted locally on a computer.
 
