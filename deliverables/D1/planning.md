@@ -66,8 +66,11 @@ UNICEF values contributing to the open source community. Our partner believes th
 ## Teamwork Details
 
 #### Q6: Have you met with your team?
+We went and got lunch at Kensington but forgot to take a picture haha :D
 
-3 Fun Facts about the Team --TBD--
+1. This entire team is in the same section of CSC343
+2. Two of our members go to the gym together
+3. Two of our members lived in first-year residence together 
 
 #### Q7: What are the roles & responsibilities on the team?
 
@@ -95,7 +98,7 @@ As an overview of our first meeting we were introduced to the problem domain and
   
 #### Q9: How will you organize your team?
 
-For schedules we have a When2Meet set up and we will use the assignments as a rough timestamp to guide our development milestones. We will use the github project as a task board, and rank the TODO list to prioritise tasks. Overall we will discuss these details in the weekly meetings as well as update each other in the discord group chat.
+For schedules we have a When2Meet set up and we will use the assignments as a rough timestamp to guide our development milestones. We will use the Github Project as a task board, and rank the TODO list to prioritise tasks. We determine the status of work completed through our code reviews, pull requests must have made signifcant changes prior the review. Overall we will discuss these details in the weekly meetings as well as update each other in the discord group chat.
 
 #### Q10: What are the rules regarding how your team works?
 
