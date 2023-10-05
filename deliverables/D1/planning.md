@@ -2,7 +2,7 @@
 
 ## Product Details
  
-#### Q1: What is the product?
+### Q1: What is the product?
 
 We will be building a web interface for the existing command line proof of concept that clones Apache Superset dashboards. Users will have the ability to modify and clone existing dashboards. The partner is UNICEF and this product will help the teams internally modify and clone their dashboards to make data-driven decisions. At a high level, the problem is not being able to easily clone as right now, we have to do redundent testing and there is no web interface for teams.  
 
@@ -11,11 +11,11 @@ We will be building a web interface for the existing command line proof of conce
 ![Login](sources.png)
 ![Login](dashboard_customization.jpg)
 
-#### Q2: Who are your target users?
+### Q2: Who are your target users?
 
 The tool we build will be used internally by UNICEF personnel who work in different countries. However, the tool will also be accessible to anyone who is working with Apache Superset dashboards. The project is aimed for people who have varying levels of expertise, and may not be well versed in Apache Superset. The goal is to create an intuitive interface for ease of use for our entire target users.
 
-#### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
+### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
 Currently, the proof of concept only works on a single instance of Apache Superset. This is problematic because when dashboards are cloned in different environments, for example staging and production, the dashboard must be recreated in production anyways. This means that the dashboard must be tested again in production, defeating the purpose of the staging environment. 
 
@@ -23,7 +23,7 @@ Secondly, the current proof of concept is a simple command line program. This is
 
 Third, as we have discussed with Evan, he has put forward the need for such a program to be open source so that it can be copied and modified for a user’s given purposes.
 
-#### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
+### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
 User Story 1: As a data analyst at UNICEF, I have many datasets. I would like to see the available dashboards that can be cloned with the other viable data sources I can use as the new datasource for the clone. 
 
@@ -47,7 +47,7 @@ Acceptance Criteria 5: Having screens prior and post cloning to edit names, addi
 
 ![Login](UserStoryProof.png)
 
-#### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
+### Q5: Have you decided on how you will build it? Share what you know now or tell us the options you are considering.
 
 For our frontend, we have decided to use React.js with JavaScript. We will style our React app with TailwindCSS, which will allow us to speed up our development process since it allows us to use pre-built CSS classes for styling, allowing us to focus more on the actual functionality than the design. 
 
@@ -59,17 +59,6 @@ Our liaison has communicated to us that it is acceptable for us to not deploy th
 
 ----
 ## Intellectual Property Confidentiality Agreement 
-> Note this section is **not marked** but must be completed briefly if you have a partner. If you have any questions, please ask on Piazza.
->  
-**By default, you own any work that you do as part of your coursework.** However, some partners may want you to keep the project confidential after the course is complete. As part of your first deliverable, you should discuss and agree upon an option with your partner. Examples include:
-1. You can share the software and the code freely with anyone with or without a license, regardless of domain, for any use.
-2. You can upload the code to GitHub or other similar publicly available domains.
-3. You will only share the code under an open-source license with the partner but agree to not distribute it in any way to any other entity or individual. 
-4. You will share the code under an open-source license and distribute it as you wish but only the partner can access the system deployed during the course.
-5. You will only reference the work you did in your resume, interviews, etc. You agree to not share the code or software in any capacity with anyone unless your partner has agreed to it.
-
-**Your partner cannot ask you to sign any legal agreements or documents pertaining to non-disclosure, confidentiality, IP ownership, etc.**
-
 UNICEF values contributing to the open source community. Our partner believes that this project will not only be useful for UNICEF, but will also be desired by other companies. Therefore, we have received permission to upload the code on github and share it freely. This corresponds to option 1. 
 
 ----
@@ -78,11 +67,7 @@ UNICEF values contributing to the open source community. Our partner believes th
 
 #### Q6: Have you met with your team?
 
-Do a team-building activity in-person or online. This can be playing an online game, meeting for bubble tea, lunch, or any other activity you all enjoy.
-* Get to know each other on a more personal level.
-* Provide a few sentences on what you did and share a picture or other evidence of your team building activity.
-* Share at least three fun facts from members of you team (total not 3 for each member).
-
+TBD
 
 #### Q7: What are the roles & responsibilities on the team?
 
