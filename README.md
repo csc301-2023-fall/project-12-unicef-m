@@ -24,10 +24,10 @@ Feature Breakdown
 * Version control to update all cloned dashboards when a change is made to the original
 
 ## Instructions for Utilizing the application
-
+TBD
 
 ## Key development requirements installing and running the application
-
+TBD
 
 ## Deployment and Github workflow, where and how are tasks managed (e.g., are you using Linear.app, Jira, GitHub Project...)
 * We will use GitHub project to manage our tasks.
@@ -36,10 +36,10 @@ Feature Breakdown
 * At least one individual will perform a code review before merging it onto the main branch
 
 ## External dependencies and third-party software
-
+TBD
 
 ## Coding Standards and Guidelines
+We aim to keep all new features modular and independant of one another. As we are working with Python, we will stick with snake-case naming convention, and adhere to all other style conventions with respect to coding in Python. We will keep the code well documented and simple to understand for future developers to expand on our codebase.
 
-
-## Liscences 
-
+## Licences 
+UNICEF values contributing to the open source community. Our partner believes that this project will not only be useful for UNICEF, but will also be desired by other companies. Therefore, we have received permission to upload the code on github and share it freely.
