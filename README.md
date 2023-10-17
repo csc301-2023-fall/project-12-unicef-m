@@ -4,7 +4,7 @@ Team Name: Red Pandas
 ## Partner Intro:
 Our primary point of contact for this project is Evan Wheeler (ewheeler@unicef.org). 
 
-UNICEF is a multinational organization dedicated to protecting, assisting, and creating environments for children to grow up with the resources they need. They make data-driven decsions and support humanitarian efforts worldwide. 
+UNICEF is a multinational organization dedicated to protecting, assisting, and creating environments for children to grow up with the resources they need. They make data-driven decisons and support humanitarian efforts worldwide. 
 
 ## Project Description
 We will be building a web interface for the existing command line proof of concept that clones Apache Superset dashboards. Users will have the ability to modify and clone existing dashboards. Additionally, new features, such as a version control that would allow for the propogation of changes from the configuration to the parent dashboard to the cloned children and cloning dashboards across Superset instances. The current problem is difficulty surrounding the use of the cloning tool and redundent testing for staging and production environments, and so with these additions, UNICEF employees will have the tools to quickly and easily visualize any datasource they want. This application will allow larger teams to work together on dashboards across the globe, rather than individual users having their own instances on their accounts. 
