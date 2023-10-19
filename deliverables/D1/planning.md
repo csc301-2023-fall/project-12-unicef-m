@@ -22,9 +22,13 @@ Third, as we have discussed with Evan, he has put forward the need for such a pr
 
 ### Q4: What are the user stories that make up the Minumum Viable Product (MVP)?
 
-User Story 1: As a data analyst at UNICEF, I have many datasets. I would like to see the available dashboards that can be cloned with the other viable data sources I can use as the new datasource for the clone. 
+User Stroy 1a: As a data analyst at UNICEF, I want to be able to view all of my dashboards so that I can pick which one to clone. I also want to be able to pick different datasets for each chart in the chosen dashboard. 
 
-Acceptance Criteria 1: Having multiple screens for available dashboards and viable data sources respectively. Being able to sort datasets in the view according to different features of the data and/or country and having clear indications of whether a dataset is viable with and reasons to why it is not viable.  
+Accepptance Criteria 1a: The web app should display all the dashboards. Once the dashboard is picked, the user should be able to see all the charts in that dashboard and pick a dataset and new name for each chart.
+
+User Story 1b: As a data analyst at UNICEF, I have many datasets. I would like to see the available dashboards that can be cloned with the other viable data sources I can use as the new datasource for the clone. 
+
+Acceptance Criteria 1b: Having multiple screens for available dashboards and viable data sources respectively. Being able to sort datasets in the view according to different features of the data and/or country and having clear indications of whether a dataset is viable with and reasons to why it is not viable.  
 
 User Story 2: As a large team of data analysts, we would like to make use of the dashboard cloning capabilities to deploy ~130 copies for each country’s datasource.
 
