@@ -30,7 +30,8 @@ needs from the back-end. The back-end will make the necessary API calls to provi
 proof-of-concept and having it work with the front end. The version control feature is a direct use case of the database so we are able to both set up 
 Firebase and have an important feature ready.   
 
-#ADD IMAGE HERE
+![Login](architecture.png)
+
 First, the user initiates the update on the update page. Then, an HTTP request is sent to views, that also tells the webpage to update the view with the 
 necessary information. From views.py, that request is sent to api_helpers.py and fetches the information from the superset API. That information is sent 
 to app.py, from which our database is updated and the information is sent to dashboard_handler.py and our necessary views are updated in the frontend. 
