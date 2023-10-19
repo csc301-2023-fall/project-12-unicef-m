@@ -1,0 +1,57 @@
+Meeting notes:
+
+Config file:
+- make it 
+- every chat with dataset and new names 
+
+how do we get the datasets:
+- do they have to know the name?
+- retrieve them from the API 
+
+
+- example datasets and dashboards in the superset repo 
+- cli tool for creating a superuse account -> load examples into the instance
+    - have those examples to use
+    - not have multiple datasets with the same schema in the way that UNICEF uses it 
+    - generate some snethic ones 
+    - dashboard with one or two charts -> enough to test the functionality 
+    - world bank and baby names dataset 
+        - has a time axis -> can be split into decades 
+        - turn one example dataset into many 
+        - close to UNICEF use cases 
+
+
+
+
+- how to check if dataset is viable:
+    - superset keeps track of the schema
+    - retrieve the schema from API
+    - compare the tempates from the 
+
+- cloning across instances
+    - configuring the dashboard in staging, promote it to production instance 
+    - same operation
+    - datasource might have same name but diff on production instance
+    - accross instance
+
+    - different host name for the API endpoints
+    - same API credentials, hot name, IP address 
+        - accorss instance —> creating the dashboard configurations on production instance with the kenya datasource 
+        - two different host names or IP address 
+        - same API calls retrieved in staging 
+
+- dashboard you want to clone that has a datasource 
+- destination might be on the same instance or different instance
+    - config file —> specify what the available instances 
+    - save host name and IP address for each instance 
+    - store the username and password
+    - select the instance before selecting the new datasource
+        - datasources are specific to the instance
+- a new name 
+
+access to superset instance hosted on the cloud with sample data 
+- he can do it yay
+- can get some example datasets 
+- can maybe get it done 
+- has an old version on a venv that he can try to give us access to 
+
