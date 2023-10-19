@@ -19,8 +19,7 @@ There are two main existing software that our project intends to build upon. The
 used to visualize large amounts of data. The second existing piece of software is a proof-of-concept command line cloner, that has the necessary 
 functionality to clone Apache Superset dashboards. The current proof-of-concept will need to be modified in order to work with our application. 
 
-## 2. 1-4 paragraph(s) on how you decided to divide the project and why. Ideally, this will be accompanied by a software architecture diagram 
-and how each component connects to the others.
+## 2. How did you decided to divide the project and why.
 
 We have decided to divide our work into three parts into frontend, backend, and the version control feature which involves initialising the database. 
 This general division is common practice because people have different skill sets and learning goals. One of the most important reasons for this is 
