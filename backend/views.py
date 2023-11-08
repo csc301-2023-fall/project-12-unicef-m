@@ -56,12 +56,21 @@ def clone():
         index += 1
 
     token = get_access_token()
+
+    # hard coded to 6 for now, change to inputting the dashboard id of the dashboard picked
     extracted_folder_name = export_one_dashboard(token, 6)
     charts = get_charts_with_ID(token, dashboard_source)
 
+    # iterating through all the charts
     for i in range(0, index):
+        # getting the uuid for the database that was specified for chart i
         dataset_uuid = get_dataset_uuid(extracted_folder_name + '/datasets/examples/' + chart_tables[i] + '.yaml')
+
+        # building the name of the chart file in the format chart_name_id.yaml
         chart_filename = charts[i][0].replace(" ", "_") + '_' + str(charts[i][1]) + '.yaml'
+
+        # setting the new database uuid in the chart's yaml file
+        # chart_names[i] is the new name of chart i
         set_chart_dataset(extracted_folder_name + '/charts/' + chart_filename, dataset_uuid, chart_names[i])
 
     return render_template("clone.html")

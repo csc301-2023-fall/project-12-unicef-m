@@ -40,6 +40,8 @@ def get_charts(token, dashboard_id):
     return chart_names
 
 
+# this function is not needed, can be merged with the one on top, only added it rn because it was faster
+# than making a bunch of changes else where
 def get_charts_with_ID(token, dashboard_id):
     headers = {"Authorization": "Bearer " + token}
     charts = requests.get(SUPERSET_INSTANCE_URL + DASHBOARD_ENDPOINT + str(dashboard_id) + '/charts',
@@ -76,18 +78,22 @@ def export_one_dashboard(token, dashboard_id):
     with open(local_path, "wb") as f:
         f.write(dashboards.content)
 
+    # extract the folder out of the zip file
     with zipfile.ZipFile('exported_one_dashboard.zip') as myzip:
         myzip.extractall()
-    return myzip.namelist()[0][:32]  # getting the name of extracted folder, change to be dynamic later
+
+    # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
+    # make this dynamic, hard coded for now
+    return myzip.namelist()[0][:32]
 
 
 def get_dataset_uuid(filename):
     with open(filename, 'r') as file:
         dataset_data = yaml.safe_load(file)
-        print(dataset_data["uuid"])
     return dataset_data["uuid"]
 
 
+# this function changes the dataset uuid and name of a given chart
 def set_chart_dataset(filename, new_dataset, new_name):
     with open(filename, 'r') as file:
         chart_data = yaml.safe_load(file)
