@@ -1,0 +1,7 @@
+Flask
+requests
+python-dotenv
+PyYAML
+gunicorn
+pytest
+zipfile
