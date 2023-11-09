@@ -56,3 +56,13 @@ body{
   border:2px solid black;
   height:100px;
 }
+
+.list_grid{
+  display :grid;
+  grid-template-columns: auto 100px;
+
+}
+
+.test-text{
+  color: black;
+}

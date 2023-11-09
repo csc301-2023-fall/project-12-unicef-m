@@ -6,12 +6,14 @@ import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import Badge from '@mui/material/Badge';
 import { useState, useEffect } from "react";
 import axios from "axios";
+
 function Dashboards() {
 
   let {url} = useParams();
   let {username} = useParams();
 
   const notification = true;
+
 
   // const [dashboardlist, setDashboardList] = useState([]);
 
@@ -70,7 +72,7 @@ function Dashboards() {
         </div>
         {/* <div class="scroll-smooth"> */}
         <div class="block gap-20 h-screen scrollable">
-          <div>
+          {/* <div>
             <Link to={`/final_clone/${url}`}>
               <button className="bg-sky-200 w-full h-full" >
                   {
@@ -87,12 +89,23 @@ function Dashboards() {
             </Link>
             <label className="text-sky-400 font-semibold text-xl">Dashboard0</label>
             
-          </div>      
+          </div>       */}
             {
             dashboardlist.map((dashboard_name) => (
               <div className="test mt-10 mb-10">
-                <div className="h-full w-full grid grid-cols2" id={dashboard_name}>
-                  <Link to={`/final_clone/${url}`}><button className="bg-sky-200  w-full h-full"></button></Link>
+                <div className="h-full w-full list_grid" id={dashboard_name}>
+                  <div className="grid-element">
+                    <Link to={`/final_clone/${url}`}><button className="bg-sky-200  w-full h-full"></button></Link>
+                  </div>
+                  <div className="grid-element">
+                    <Link to={`/update/${url}`}>
+                      <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
+                    </Link>
+                    <Badge badgeContent={"!"} color="secondary">
+                        <AutoAwesomeMotionIcon color="action" />
+                    </Badge>
+                  </div>
+                  
                 </div>
                 <label className="text-sky-400 font-semibold text-xl">{dashboard_name}</label>
               </div>
