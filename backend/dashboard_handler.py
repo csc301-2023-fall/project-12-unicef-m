@@ -108,10 +108,6 @@ class DashboardHandler:
         '''
         curr_db = self.get_dashboard(dashboard_id)
         return curr_db["changes"]
-    
-    
-    def detect_updates(self):
-        pass
 
     
     def update_dashboard(self, dashboard_id, changesHandlerInstance, template = None, incoming_changes = None):
@@ -166,10 +162,19 @@ class DashboardHandler:
         '''
         Function to make a particular dashboard accept incoming changes.
         '''
+        # First check for incoming change
         curr_dashboard = self.get_dashboard(dashboard_id)
         new_template = curr_dashboard['incoming_change']
 
         self.update_dashboard(dashboard_id, changesHandlerInstance, incoming_changes=new_template)
+    
+    
+    
+    def check_for_incoming_change(self, dashboard_id, changesHandlerInstance):
+        """
+        """
+        pass
+    
             
     
     def delete_dashboard(self, dashboard_id):
