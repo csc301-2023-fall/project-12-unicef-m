@@ -2,8 +2,8 @@ import requests
 import zipfile
 import yaml
 
-from endpoints import DASHBOARD_ENDPOINT, DATASET_ENDPOINT
-from superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
+from backend.utils.endpoints import DASHBOARD_ENDPOINT, DATASET_ENDPOINT
+from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 
 
 def get_access_token():

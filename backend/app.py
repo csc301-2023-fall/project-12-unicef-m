@@ -8,6 +8,7 @@ from .routes.vc import vc
 from .routes.views import views
 
 app.register_blueprint(vc, url_prefix='/vc')
+app.register_blueprint(views, url_prefix='/view')
 
 # GitHub Authorizaiton, set up auth 0
 

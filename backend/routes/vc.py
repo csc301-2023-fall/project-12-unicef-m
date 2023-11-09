@@ -28,6 +28,10 @@ changes_handler = ChangesHandler()
 #   "template": "string"        # The content of the dashboard after this change
 # }
 
+@vc.route('/')
+def hello_world():
+    return("<p> hello world </p>")
+
 
 """
 Get a dashboard, pass 'dashboard-id' as query parameter
