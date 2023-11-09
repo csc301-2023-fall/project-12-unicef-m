@@ -1,10 +1,8 @@
 from flask import Blueprint, request, jsonify
-from backend.firebase_config import initialize_firebase # This was originally commented out, check this
 from backend.routes.dashboard_handler import DashboardHandler
 from backend.routes.changes_handler import ChangesHandler
 
 vc = Blueprint('vc', __name__)
-initialize_firebase()
 dashboard_handler = DashboardHandler()
 changes_handler = ChangesHandler()
 

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
-from backend.api_helpers import get_access_token, get_dashboards, get_datasets, get_charts, export_one_dashboard, get_charts_with_ID, get_dataset_uuid, set_chart_dataset 
+# from backend.utils.api_helpers import get_access_token, get_dashboards, get_datasets, get_charts, export_one_dashboard, get_charts_with_ID, get_dataset_uuid, set_chart_dataset 
+from backend.utils.api_helpers import *
 
 views = Blueprint('views', __name__)
 

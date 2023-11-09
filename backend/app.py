@@ -1,12 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from .firebase_config import initialize_firebase
 
 app = Flask(__name__)
 initialize_firebase()
 
 from .routes.vc import vc
+from .routes.views import views
 
-app.register_blueprint(vc, url_prefix='/vc/')
+app.register_blueprint(vc, url_prefix='/vc')
 
 # GitHub Authorizaiton, set up auth 0
 
