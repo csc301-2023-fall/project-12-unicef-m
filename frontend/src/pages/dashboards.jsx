@@ -28,16 +28,29 @@ function Dashboards() {
   //   });
   // }),[dashboardlist];
 
+  const [search_query, onSearch] = useState("");
 
-  const dashboardlist = ["Dashboard1", "Dashboard2", "Dashboard3", "Dashboard4", "Dashboard5", "Dashboard6"]
+  const dashboardlist = ["Dashboard1", "Dashboard2", "Dashboard3", "Dashboard4", "Dashboard5", 
+  "Dashboard6", "Dashboard7", "Dashboard8", "Dashboard9", "Dashboard10"]
 
   //TODO 2: along the same vein, retrive information that notifies the user if there is an update available, and render
   //the update button accordingly
 
+
+  const handleSearch = (event) =>{onSearch(event.target.value)}
+  const handleEnter = (event) =>{if(event.key === 'Enter'){
+    scrollToDashboard(search_query)
+  }}
+  const scrollToDashboard = (id) => {
+    const element = document.getElementById(id);
+    if( element){
+      element.scrollIntoView({behavior: "smooth"});
+    }
+  }
   return( 
     <>
     <body className="w-full flex h-full flex justify-center">
-      <div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center gap-y-3">
+      <div className="content-wrapper w-4/5 h-1/2 flex flex-col justify-center gap-y-3">
 
 
         <div class='flex shrink'>
@@ -47,18 +60,24 @@ function Dashboards() {
           <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>
         </div>
         
+        <div>
+          <input type="text" 
+          placeholder='search for dashboard ...'
+          onChange={handleSearch}
+          onEnter={handleEnter}>
+          </input>
 
+        </div>
         {/* <div class="scroll-smooth"> */}
-        <div class="grid grid-cols-3 gap-20 h-screen">
+        <div class="block gap-20 h-screen scrollable">
           <div>
             <Link to={`/final_clone/${url}`}>
-              <button className="bg-sky-200  w-full h-full" >
+              <button className="bg-sky-200 w-full h-full" >
                   {
                     notification && <div className="d-flex flex w-full">
                     <Link to={`/update/${url}`}>
                       <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
                     </Link>
-                   
                     <Badge badgeContent={1} color="secondary">
                         <AutoAwesomeMotionIcon color="action" />
                     </Badge>
@@ -66,14 +85,15 @@ function Dashboards() {
                   }
               </button>
             </Link>
-            <label className="text-sky-400 font-semibold text-xl">Dashboard1</label>
+            <label className="text-sky-400 font-semibold text-xl">Dashboard0</label>
             
           </div>      
-
             {
             dashboardlist.map((dashboard_name) => (
-              <div>
-                <Link to={`/final_clone/${url}`}><button className="bg-sky-200  w-full h-full" ></button></Link>
+              <div className="test mt-10 mb-10">
+                <div className="h-full w-full grid grid-cols2" id={dashboard_name}>
+                  <Link to={`/final_clone/${url}`}><button className="bg-sky-200  w-full h-full"></button></Link>
+                </div>
                 <label className="text-sky-400 font-semibold text-xl">{dashboard_name}</label>
               </div>
             ))
