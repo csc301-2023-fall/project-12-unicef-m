@@ -1,14 +1,14 @@
 from flask import Blueprint, request, jsonify
-# from backend.firebase_config import initialize_firebase
+from backend.firebase_config import initialize_firebase # This was originally commented out, check this
 from backend.routes.dashboard_handler import DashboardHandler
 from backend.routes.changes_handler import ChangesHandler
 
 vc = Blueprint('vc', __name__)
-
+initialize_firebase()
 dashboard_handler = DashboardHandler()
 changes_handler = ChangesHandler()
 
-# Current JSON for dahsboard schema:
+# Current JSON for dashboard schema:
     
 # {
 #   "dashboard_name": "string",     # Name of dashboard
@@ -30,13 +30,9 @@ changes_handler = ChangesHandler()
 #   "template": "string"        # The content of the dashboard after this change
 # }
 
-@vc.route('/')
-def hello_world():
-    return ("<p> hello world </p>")
-
 
 """
-get dashboard, pass 'dashboard-id' as query parameter
+Get a dashboard, pass 'dashboard-id' as query parameter
 """
 @vc.route('/api/get-dashboard/<dashboard_id>', methods=["GET"])
 def get_dashboard(dashboard_id):
@@ -50,7 +46,7 @@ def get_dashboard(dashboard_id):
     
 
 """
-add dashboard, put in query parameters the following:
+Add a dashboard, put in query parameters the following:
 dashboard_name: name of dashboard, 
 superset_id: superset_id of dashboard, 
 template: template of dashboard
@@ -72,6 +68,9 @@ def add_dashboard():
     }), 200
 
 
+"""
+Get the full history of changes for a dashboard, pass 'dashboard-id' as query parameter
+"""
 @vc.route('/api/full-history/<dashboard_id>', methods=["GET"])
 def get_full_history(dashboard_id):
     changes = dashboard_handler.get_full_history(dashboard_id) # changes are in chronological order - i.e. oldest change first
@@ -85,7 +84,7 @@ def get_full_history(dashboard_id):
 
 
 """
-pass in parameters dashboard-id and template
+Pass in parameters dashboard-id and template
 eg /api/update-dashboard/?dashboard-id='<id>'&template='<template>'
 """
 @vc.route('/api/update-dashboard/', methods=["POST"])
@@ -104,11 +103,13 @@ def update_dashboard():
     return jsonify({'message': "success"}), 200
 
 
+
 @vc.route('/api/propagate-changes/<dashboard_id>', methods=["POST"])
 def propagate_changes(dashboard_id):
     dashboard_handler.propogate_changes(dashboard_id, changes_handler)
 
     return jsonify({'Message': "Success"}), 200
+
 
 
 @vc.route('/api/accept-incoming-changes/<dashboard_id>', methods=["POST"])
