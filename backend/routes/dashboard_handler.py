@@ -1,5 +1,5 @@
 from firebase_admin import db
-from utils import create_id, get_datetime
+from backend.utils.utils import create_id, get_datetime
 
 # This file will do the bulk of the database and version control work
 

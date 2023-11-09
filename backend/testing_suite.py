@@ -2,8 +2,8 @@
 To run this test file, run the command: pytest testing_suite.py
 '''
 
-from dashboard_handler import DashboardHandler
-from changes_handler import ChangesHandler
+from backend.routes.dashboard_handler import DashboardHandler
+from backend.routes.changes_handler import ChangesHandler
 from app import app as flask_app
 import pytest
 
