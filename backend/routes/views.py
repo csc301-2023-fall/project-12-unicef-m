@@ -4,6 +4,7 @@ from backend.utils.api_helpers import *
 
 views = Blueprint('views', __name__)
 
+# This needs a username and password endpoint for the front end
 
 @views.route('/')
 def index():

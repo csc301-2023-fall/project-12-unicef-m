@@ -118,7 +118,7 @@ class DashboardHandler:
         dashboard = self.get_dashboard(dashboard_id)
 
         if not dashboard_ref:
-            return
+            return None
 
         if template:
             curr_changes, new_change = dashboard['changes'], changesHandlerInstance.add_changes(template)
@@ -128,7 +128,7 @@ class DashboardHandler:
                 'template': template,
                 'changes': new_changes
             })
-
+        
         if incoming_changes:
             dashboard_ref.update({
                 'incoming_changes': incoming_changes
@@ -151,35 +151,49 @@ class DashboardHandler:
                 continue
 
             visited.add(curr_id)
-            self.update_dashboard(curr_id, changesHandlerInstance, incoming_changes=curr_change)
+            
+            self.add_incoming_change(curr_id, curr_change)
+            # self.update_dashboard(curr_id, changesHandlerInstance, incoming_changes=curr_change)
 
             curr_db = self.get_dashboard(curr_id)
             if curr_db['clones'] != '-1':
                 stack.extend(curr_db['clones'])
-
+                
+                
+    def add_incoming_change(self, dashboard_id, change_id):
+        curr_dashboard = self.get_dashboard(dashboard_id)
+        curr_dashboard['incoming_change'] = change_id
+        
     
     def accept_incoming_change(self, dashboard_id, changesHandlerInstance):
         '''
         Function to make a particular dashboard accept incoming changes.
         '''
-        # First check for incoming change
         curr_dashboard = self.get_dashboard(dashboard_id)
         new_template = curr_dashboard['incoming_change']
 
-        self.update_dashboard(dashboard_id, changesHandlerInstance, incoming_changes=new_template)
+        if new_template:
+            self.update_dashboard(dashboard_id, changesHandlerInstance, incoming_changes=new_template)
     
     
-    
-    def check_for_incoming_change(self, dashboard_id, changesHandlerInstance):
+    def check_for_incoming_change(self, dashboard_id):
         """
+        Function to check if there is an incoming change.
         """
-        pass
+        curr_dashboard = self.get_dashboard(dashboard_id)
+        return curr_dashboard['incoming_change']
     
-            
     
+    def get_dashboard_information(self, dashboard_id):
+        """
+        Function to check if there is an incoming change.
+        """
+        curr_dashboard = self.get_dashboard(dashboard_id)
+        
+      
     def delete_dashboard(self, dashboard_id):
         '''
-        Function to make a particular dashboard accept incoming changes.
+        Function to delete a particular dashboard.
         '''
         dashboard_ref = self.root.child('dashboards').child(dashboard_id)
         dashboard_ref.delete()

@@ -6,6 +6,21 @@ vc = Blueprint('vc', __name__)
 dashboard_handler = DashboardHandler()
 changes_handler = ChangesHandler()
 
+# Important #
+"""
+Before cloning add all dashboards to Firebase with the schema
+
+Prior to cloning have a description option for the user to input information
+
+After the cloning takes place (button is pressed and success message is complete)
+    Add the change to changes in parent dashboard to be displayed
+    In each clone add the description, template, change_id - generated, and timestamp
+    
+When a parent dashboard is updated
+    for all its children, set the incoming change to the newest change_id
+    prompt each child to accept or reject the new change, if rejected, mention it differs from parent
+"""
+
 # Current JSON for dashboard schema:
     
 # {
@@ -25,7 +40,8 @@ changes_handler = ChangesHandler()
 # {
 #   "change_id": "string",      # Unique ID for this change and again, string for UUID
 #   "timestamp": "string",      # When this change was made
-#   "template": "string"        # The content of the dashboard after this change
+#   "template": "string",       # The content of the dashboard after this change
+#   "description": "string"     # TODO once cloning is completed, we need to send a description to all the clones
 # }
 
 @vc.route('/')
@@ -80,7 +96,7 @@ def get_full_history(dashboard_id):
 
     for change in changes:
         curr_change = changes_handler.get_change(change)
-        res[curr_change['timestamp']] = curr_change['template']
+        res[curr_change['timestamp']] = [curr_change['description'], curr_change['template']] # TODO New, test it
 
     return jsonify(res), 200
 
@@ -105,7 +121,9 @@ def update_dashboard():
     return jsonify({'message': "success"}), 200
 
 
-
+"""
+Endpoint for propogating changes to children dashboards
+"""
 @vc.route('/api/propagate-changes/<dashboard_id>', methods=["POST"])
 def propagate_changes(dashboard_id):
     dashboard_handler.propogate_changes(dashboard_id, changes_handler)
@@ -113,7 +131,9 @@ def propagate_changes(dashboard_id):
     return jsonify({'Message': "Success"}), 200
 
 
-
+"""
+Endpoint for accepting an incoming change
+"""
 @vc.route('/api/accept-incoming-changes/<dashboard_id>', methods=["POST"])
 def accept_incoming_changes(dashboard_id):
     dashboard_handler.accept_incoming_change(dashboard_id, changes_handler)
@@ -121,21 +141,13 @@ def accept_incoming_changes(dashboard_id):
     return jsonify({'Message': "Success"}), 200
 
 
-# TODO Test
-# Make this actually connect properly propogate -> accept
+# TODO NEW
+# Needs to work with cloning endpoints 
 """
-Endpoint for displaying incoming change
+Endpoint to check if there is an incoming change
 """
 @vc.route('/api/get-incoming-change/<dashboard_id>', methods=["GET"])
 def get_incoming_changes(dashboard_id):
-    dashboard_handler.check_for_incoming_change(dashboard_id, changes_handler)
-    #message = boolean
-    return jsonify({'Message': True}), 200 #change True to message
- 
- 
-"""
-Endpoint to get dashboard time, desc., name of change_id
-"""
-@vc.route('/api/get-incoming-change/<dashboard_id>', methods=["GET"])
-def get_dashboard_information(dashboard_id):
-    pass
+    message = dashboard_handler.check_for_incoming_change(dashboard_id)
+    
+    return jsonify({'Message': message}), 200 
