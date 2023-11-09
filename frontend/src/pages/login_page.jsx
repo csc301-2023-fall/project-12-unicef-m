@@ -34,7 +34,7 @@ function Login() {
   const checkValid = (event) => {
     event.preventDefault(); 
     if(username==user && password==pass){
-      navigateToDashboards(`/dashboards/${url}`);
+      navigateToDashboards(`/dashboards/${url}/${username}`);
     }
     else{
       setRender(!render)

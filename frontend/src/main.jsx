@@ -31,7 +31,7 @@ const router = createBrowserRouter([
   // },
 
   {
-    path: "/dashboards/:url",
+    path: "/dashboards/:url/:username",
     element: <Dashboards />,
     // test function for seeing if data from login page is passed to test page
   },
