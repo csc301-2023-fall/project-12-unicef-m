@@ -2,7 +2,6 @@
 To run this test file, run the command: pytest testing_suite.py
 '''
 
-
 from dashboard_handler import DashboardHandler
 from changes_handler import ChangesHandler
 from app import app as flask_app
@@ -49,7 +48,8 @@ class TestSuite:
 
     def test_get_dashboard(self, client):
         '''
-        Testing to see if we can access thd ashboard test_4 froom our database successfully        '''
+        Testing to see if we can access thd ashboard test_4 froom our database successfully       
+        '''
         
         response = client.get("deliverable-2-12-3-mistr156-mongarud.vercel.app/api/get-dashboard/41012f4e-7b94-4945-a039-02b65c7af1f9")
 
