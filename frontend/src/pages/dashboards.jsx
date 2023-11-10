@@ -52,26 +52,18 @@ function Dashboards() {
   return( 
     <>
     <body className="w-full flex h-full flex justify-center">
-      <div className="content-wrapper w-4/5 h-1/2 flex flex-col justify-center gap-y-3">
-
-
-        <div class='flex shrink'>
-          <Link to="/"> <button className="bg-sky-400 w-full h-full">←Back to Login</button></Link>
-        </div>
-        <div class='flex shrink justify-center'>
-          <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>
-        </div>
-        
-        <div>
-          <input type="text" 
-          placeholder='search for dashboard ...'
-          onChange={handleSearch}
-          onEnter={handleEnter}>
+      <div className="content-wrapper w-4/5 h-4/5 flex flex-col justify-center gap-y-3">
+        <div class='flex justify-between'>
+          <Link to="/"> <button className="bg-sky-400 h-full text-white">←Back to Login</button></Link>
+          <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>          
+          <input type="text border-solid w-full" 
+            placeholder='search for dashboard ...'
+            onChange={handleSearch}
+            onEnter={handleEnter}>
           </input>
-
         </div>
         {/* <div class="scroll-smooth"> */}
-        <div class="block gap-20 h-screen scrollable">
+        <div class="block gap-20 h-screen scrollable bg-white">
           {/* <div>
             <Link to={`/final_clone/${url}`}>
               <button className="bg-sky-200 w-full h-full" >
@@ -92,18 +84,15 @@ function Dashboards() {
           </div>       */}
             {
             dashboardlist.map((dashboard_name) => (
-              <div className="test mt-10 mb-10">
+              <div className="mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard_name}>
                   <div className="grid-element">
                     <Link to={`/final_clone/${url}`}><button className="bg-sky-200  w-full h-full"></button></Link>
                   </div>
                   <div className="grid-element">
                     <Link to={`/update/${url}`}>
-                      <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
+                      <button className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</button>
                     </Link>
-                    <Badge badgeContent={"!"} color="secondary">
-                        <AutoAwesomeMotionIcon color="action" />
-                    </Badge>
                   </div>
                   
                 </div>

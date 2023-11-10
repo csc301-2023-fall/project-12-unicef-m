@@ -48,13 +48,8 @@ function Login() {
     <>
   
       <body className="w-full flex h-full flex justify-center">
-
-        <div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center">
-          
-          <div className='shrink-0'>
-            <img class="w-96 mx-auto mb-5" src={unicefLogo} className="logo" alt=""/>
-          </div>
-          
+        <div className="content-wrapper h-1/2 flex flex-col justify-center">
+          <img class="max-w-md mb-5" src={unicefLogo} className="logo" alt=""/>
           <label className="text-sky-400 font-semibold text-lg">——————————————————————</label>
           <label className="text-sky-400 font-semibold text-lg">For every child</label>
       
@@ -63,20 +58,20 @@ function Login() {
               <form className="flex flex-col ">
                 <div className="form-group mb-2 mt-5">
                   <label className="text-sky-400 font-semibold text-lg" for="#url" >Dashboard URL: </label>
-                  <input className="clone-input" type="text" id="url"  onInput={handleUrl} required></input>
+                  <input className="clone-input bg-sky-400 text-white" type="text" id="url"  onInput={handleUrl} required></input>
                   {/* <input className="clone-input " type="text" id="url" required></input> */}
                 </div>
                 <div className="form-group mb-2">
                   <label className="text-sky-400 font-semibold text-lg" for="#url">Superset Username: </label>
-                  <input className="clone-input " type="text" id="url" onInput={handleUsername} required></input>
+                  <input className="clone-input bg-sky-400 text-white" type="text" id="url" onInput={handleUsername} required></input>
                 </div>
                 <div className="form-group mb-5">
                   <label className="text-sky-400 font-semibold text-lg" for="#url">Superset Password: </label>
-                  <input  className="clone-input " type="password" id="url" onInput={handlePassword} required></input>
+                  <input  className="clone-input bg-sky-400 text-white" type="password" id="url" onInput={handlePassword} required></input>
                 </div>
                 <div className="button-wrapper flex justify-center">
                   {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-                  <button className="bg-sky-400 w-48" onClick={checkValid}>Sign in</button>
+                  <button className="bg-sky-400 w-48 text-white" onClick={checkValid}>Sign in</button>
                   
                   {/* <button className="bg-sky-400 w-1/2">Sign in</button> */}
 
