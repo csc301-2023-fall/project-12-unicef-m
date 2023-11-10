@@ -1,19 +1,18 @@
+
 from flask import Flask
-from .firebase_config import initialize_firebase
+
+# from .firebase_config import initialize_firebase
 
 app = Flask(__name__)
-initialize_firebase()
+# initialize_firebase()
 
-from .routes.vc import vc
-from .routes.views import views
+# from .routes.vc import vc
+from .routes.views2 import views2
 
-app.register_blueprint(vc, url_prefix='/vc')
-app.register_blueprint(views, url_prefix='/view')
+# app.register_blueprint(vc, url_prefix='/vc')
+app.register_blueprint(views2, url_prefix='/view')
 
 # GitHub Authorizaiton, set up auth 0
-
-
-
 
 
 # Added a sample dashboard to firebase:
@@ -31,7 +30,7 @@ app.register_blueprint(views, url_prefix='/view')
 
 #     dashboard_handler.update_dashboard(d1, changes_handler, template="template_1_v2")
 #     dashboard_handler.propogate_changes(d1, changes_handler)
-    
+
 
 # def delete_all_in_database():
 #     dashboard_handler._delete_all_dashboards()
