@@ -1,12 +1,36 @@
 import './pages.css'
 import { Link, useParams, useNavigate} from 'react-router-dom';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
 
 
 function FinalClone() {
+
+
+  const [chartlist, setChartList] = useState([]);
+  const [sourcelist, setSourceList] = useState([]);
+
+  const chartlistendpoint = ""
+  const sourcelistendpoint= ""
+
+  useEffect(() => {
+    axios.get(chartlistendpoint).then((response) => {
+      const c_list = response.data;
+      setChartList(c_list);
+    });
+
+    axios.get(sourcelistendpoint).then((response) => {
+      const s_list = response.data;
+      setSourceList(s_list);
+    });
+  }),[chartlist, sourcelist];
+  // upon mounting, fetch the chart list from the backend
+
+
+
 
   let {url} = useParams();
   let {username} = useParams();
@@ -21,6 +45,7 @@ function FinalClone() {
   const [chartname,setChartname]=useState(url);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
+
 
 
   //basic hooks to retreive username and password from form element
