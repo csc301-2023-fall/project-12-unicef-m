@@ -68,34 +68,16 @@ function Dashboards() {
           onChange={handleSearch}
           onEnter={handleEnter}>
           </input>
-
         </div>
+
         {/* <div class="scroll-smooth"> */}
         <div class="block gap-20 h-screen scrollable">
-          {/* <div>
-            <Link to={`/final_clone/${url}`}>
-              <button className="bg-sky-200 w-full h-full" >
-                  {
-                    notification && <div className="d-flex flex w-full">
-                    <Link to={`/update/${url}`}>
-                      <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
-                    </Link>
-                    <Badge badgeContent={1} color="secondary">
-                        <AutoAwesomeMotionIcon color="action" />
-                    </Badge>
-                  </div>
-                  }
-              </button>
-            </Link>
-            <label className="text-sky-400 font-semibold text-xl">Dashboard0</label>
-            
-          </div>       */}
             {
             dashboardlist.map((dashboard_name) => (
               <div className="test mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard_name}>
                   <div className="grid-element">
-                    <Link to={`/final_clone/${url}`}><button className="bg-sky-200  w-full h-full"></button></Link>
+                    <Link to={`/final_clone/${url}/${username}`}><button className="bg-sky-200  w-full h-full"></button></Link>
                   </div>
                   <div className="grid-element">
                     <Link to={`/update/${url}`}>
@@ -113,6 +95,24 @@ function Dashboards() {
           }
 
         </div>
+        {/* <div>
+            <Link to={`/final_clone/${url}`}>
+              <button className="bg-sky-200 w-full h-full" >
+                  {
+                    notification && <div className="d-flex flex w-full">
+                    <Link to={`/update/${url}`}>
+                      <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
+                    </Link>
+                    <Badge badgeContent={1} color="secondary">
+                        <AutoAwesomeMotionIcon color="action" />
+                    </Badge>
+                  </div>
+                  }
+              </button>
+            </Link>
+            <label className="text-sky-400 font-semibold text-xl">Dashboard0</label>
+            
+          </div>       */}
 
 
       </div>
