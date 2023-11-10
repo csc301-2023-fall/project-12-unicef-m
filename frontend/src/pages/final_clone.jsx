@@ -108,7 +108,7 @@ function FinalClone() {
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
           {/* <Link to={`/dashboards/${url}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12">←Previous</button></Link>
+          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
            <h1 className="display-1 text-sky-400">{url}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
