@@ -10,23 +10,23 @@ import axios from 'axios';
 function FinalClone() {
 
 
-  const [chartlist, setChartList] = useState([]);
-  const [sourcelist, setSourceList] = useState([]);
+  // const [chartlist, setChartList] = useState([]);
+  // const [sourcelist, setSourceList] = useState([]);
 
-  const chartlistendpoint = ""
-  const sourcelistendpoint= ""
+  // const chartlistendpoint = ""
+  // const sourcelistendpoint= ""
 
-  useEffect(() => {
-    axios.get(chartlistendpoint).then((response) => {
-      const c_list = response.data;
-      setChartList(c_list);
-    });
+  // useEffect(() => {
+  //   axios.get(chartlistendpoint).then((response) => {
+  //     const c_list = response.data;
+  //     setChartList(c_list);
+  //   });
 
-    axios.get(sourcelistendpoint).then((response) => {
-      const s_list = response.data;
-      setSourceList(s_list);
-    });
-  }),[chartlist, sourcelist];
+  //   axios.get(sourcelistendpoint).then((response) => {
+  //     const s_list = response.data;
+  //     setSourceList(s_list);
+  //   });
+  // }),[chartlist, sourcelist];
   // upon mounting, fetch the chart list from the backend
 
 
