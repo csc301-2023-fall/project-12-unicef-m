@@ -15,7 +15,7 @@ function Update() {
         <div className='flex'>
           <Link to={`/dashboards/${url}`}><button className="bg-sky-400 text-white w-48 h-12">←Previous</button></Link>
         </div>
-        <label className="text-sky-400 font-semibold text-3xl h-auto">Dashboard Name</label>
+        <label className="text-sky-400 font-semibold text-3xl h-auto">{url}</label>
         <div class="flex justify-center h-full gap-3 gap-y-3">
           <div>
             <label className="text-sky-400 font-semibold text-lg">Dashboard Version History</label>
