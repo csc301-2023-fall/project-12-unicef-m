@@ -11,25 +11,24 @@ function Update() {
   return( 
     <>
     <body className="w-full flex h-full flex justify-center">
-      <div className="content-wrapper  w-1/2 h-1/2 gap-y-28 flex flex-col justify-center">
-        <div class="h-56 grid grid-cols-3 gap-y-25 content-center">
-          <Link to={`/dashboards/${url}`}><button className="bg-sky-400 w-48 h-12">←Previous</button></Link>
-          <Link to={`/dashboards/${url}`}><button className="bg-sky-400 w-48 h-12">discard changes</button></Link>
-          <Link to={`/dashboards/${url}`}><button className="bg-sky-400 w-48 h-12">propagate changes</button></Link>
+      <div className="content-wrapper  w-1/2 h-4/5 gap-y-3 flex flex-col justify-center">
+        <div className='flex'>
+          <Link to={`/dashboards/${url}`}><button className="bg-sky-400 text-white w-48 h-12">←Previous</button></Link>
         </div>
-        <div class="h-56 grid grid-cols-2 gap-y-3 content-center">
+        <label className="text-sky-400 font-semibold text-3xl h-auto">{url}</label>
+        <div class="flex justify-center h-full gap-3 gap-y-3">
           <div>
-            <div className="bg-sky-200 w-80 h-96"/>
-            <label className="text-sky-400 font-semibold text-2xl">Newest Version</label>
+            <label className="text-sky-400 font-semibold text-lg">Dashboard Version History</label>
+            <div className="bg-sky-200 w-full h-full"/>
           </div>
           <div>
-            <div className="bg-sky-200 w-80 h-96"/>
-            <label className="text-sky-400 font-semibold text-2xl">Current Version</label>
+            <label className="text-sky-400 font-semibold text-lg">List of Changes</label>
+            <div className="bg-sky-200 w-full h-4/5"/>
+            <div class="flex h-auto gap-y-3 gap-x-3 pt-8 justify-center">
+              <Link to={`/dashboards/${url}`}><button className="bg-sky-400 text-white w-48 h-12">discard changes</button></Link>
+              <Link to={`/dashboards/${url}`}><button className="bg-sky-400 text-white w-48 h-12">propagate changes</button></Link>
+            </div>
           </div>
-        </div>
-        <div class="h-56 grid grid-cols-1 content-center">
-          <label className="text-sky-400 font-semibold text-2xl">————————————————————————————</label>
-          <label className="text-sky-400 font-semibold text-md">Info: Dashboard changed __ times, cloned by __ users.</label>
         </div>
       </div>
     </body>
