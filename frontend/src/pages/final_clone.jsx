@@ -11,123 +11,6 @@ function FinalClone() {
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-  const exampleJsonResponse = [
-    {
-      "dashboard_name": "Dashboard1",
-      "dashboard_id": 1,
-      "dashboard_description": "This is the first dashboard",
-      "all_charts": [ 
-        {
-          "chart_name": "Chart1",
-          "chart_id": 1,
-        },
-        {
-          "chart_name": "Chart2",
-          "chart_id": 2,
-        },
-        {
-          "chart_name": "Chart3",
-          "chart_id": 3,
-        },
-        {
-          "chart_name": "Chart4",
-          "chart_id": 4,
-        },
-        {
-          "chart_name": "Chart5",
-          "chart_id": 5,
-        }
-      ]
-    },
-    {
-      "dashboard_name": "Dashboard2",
-      "dashboard_id": 2,
-      "dashboard_description": "This is the second dashboard",
-      "all_charts": [ 
-        {
-          "chart_name": "Chart6",
-          "chart_id": 6,
-        },
-        {
-          "chart_name": "Chart7",
-          "chart_id": 7,
-        },
-        {
-          "chart_name": "Chart8",
-          "chart_id": 8,
-        },
-        {
-          "chart_name": "Chart9",
-          "chart_id": 9,
-        },
-        {
-          "chart_name": "Chart10",
-          "chart_id": 10,
-        }
-      ]
-    },
-    {
-      "dashboard_name": "Dashboard3",
-      "dashboard_id": 3,
-      "dashboard_description": "This is the third dashboard",
-      "all_charts": [ 
-        {
-          "chart_name": "Chart11",
-          "chart_id": 11,
-        },
-        {
-          "chart_name": "Chart12",
-          "chart_id": 12,
-        },
-        {
-          "chart_name": "Chart13",
-          "chart_id": 13,
-        },
-        {
-          "chart_name": "Chart14",
-          "chart_id": 14,
-        },
-        {
-          "chart_name": "Chart15",
-          "chart_id": 15,
-        }
-      ]
-    },
-  ];
- // const chart_list=[]
-  
-
-  // exampleJsonResponse.forEach(dashboard => { 
-  //     if(dashboard.dashboard_name==dashboard_name){
-  //       db_id=dashboard.dashboard_id
-  //       console.log(db_id)
-  //       dashboard.all_charts.forEach(chart => {
-  //         chart_list.push(chart.chart_name)
-  //         console.log(chart.chart_name)
-  //       })
-  //     }
-  // });
-
-  // const exampleSourceJsonResponse = 
-  // [
-  //   {
-  //     "dataset_name": "name1",
-  //     "database_name": "db1"
-  //   },
-  //   {
-  //     "dataset_name": "name2",
-  //     "database_name": "db2"
-  //   },
-  //   {
-  //     "dataset_name": "name3",
-  //     "database_name": "db3"
-  //   }
-  // ]
-  // const source_list=[]
-
-  // exampleSourceJsonResponse.forEach(data_set => { 
-  //   source_list.push(data_set.dataset_name)
-  // })
 
 
   const [chart_list, setChartList] = useState([]);
@@ -170,6 +53,7 @@ function FinalClone() {
   }),[chart_list, sourcelist, dashboard_list_endpoint, source_list_endpoint];
   // upon mounting, fetch the chart list from the backend
 
+  
   // const [DBname,setDBname]=useState("");
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
@@ -199,26 +83,6 @@ function FinalClone() {
       setdb_name(event.target.value);
     }
   }
-    //presumably,we'll have a backend that will check the username and password, but for now we'll
-    //just hard code the user and pass
-    
-  const navigateToDashboards = useNavigate();
-  // const notfication=null;
-  const[render,setRender]= useState(false);
-  // if the information isnt correct in some way, or we've
-  // ecounter an error from the backend, we'll render this
-
-  // const valid=false;
-  // //if the username and password match, dont render anything
-  // const checkValid = (event) => {
-  //   event.preventDefault(); 
-  //   if(language==eng && DBname!=""){
-  //     navigateToDashboards(`/dashboards/${dashboard_name}`);
-  //   }
-  //   else{
-  //     setRender(!render)
-  //   }
-  // }
     const dashboard_old_name = dashboard_name;
     const dashboard_new_name = db_name;
     //also have dashboard id
@@ -343,6 +207,145 @@ function FinalClone() {
     
     </>)
 }
+  //presumably,we'll have a backend that will check the username and password, but for now we'll
+    //just hard code the user and pass
+    
+  // const navigateToDashboards = useNavigate();
+  // const notfication=null;
+  // const[render,setRender]= useState(false);
+  // if the information isnt correct in some way, or we've
+  // ecounter an error from the backend, we'll render this
 
+  // const valid=false;
+  // //if the username and password match, dont render anything
+  // const checkValid = (event) => {
+  //   event.preventDefault(); 
+  //   if(language==eng && DBname!=""){
+  //     navigateToDashboards(`/dashboards/${dashboard_name}`);
+  //   }
+  //   else{
+  //     setRender(!render)
+  //   }
+  // }
+
+   // const chart_list=[]
+  
+
+  // exampleJsonResponse.forEach(dashboard => { 
+  //     if(dashboard.dashboard_name==dashboard_name){
+  //       db_id=dashboard.dashboard_id
+  //       console.log(db_id)
+  //       dashboard.all_charts.forEach(chart => {
+  //         chart_list.push(chart.chart_name)
+  //         console.log(chart.chart_name)
+  //       })
+  //     }
+  // });
+
+  // const exampleSourceJsonResponse = 
+  // [
+  //   {
+  //     "dataset_name": "name1",
+  //     "database_name": "db1"
+  //   },
+  //   {
+  //     "dataset_name": "name2",
+  //     "database_name": "db2"
+  //   },
+  //   {
+  //     "dataset_name": "name3",
+  //     "database_name": "db3"
+  //   }
+  // ]
+  // const source_list=[]
+
+  // exampleSourceJsonResponse.forEach(data_set => { 
+  //   source_list.push(data_set.dataset_name)
+  // })
+
+
+  // const exampleJsonResponse = [
+  //   {
+  //     "dashboard_name": "Dashboard1",
+  //     "dashboard_id": 1,
+  //     "dashboard_description": "This is the first dashboard",
+  //     "all_charts": [ 
+  //       {
+  //         "chart_name": "Chart1",
+  //         "chart_id": 1,
+  //       },
+  //       {
+  //         "chart_name": "Chart2",
+  //         "chart_id": 2,
+  //       },
+  //       {
+  //         "chart_name": "Chart3",
+  //         "chart_id": 3,
+  //       },
+  //       {
+  //         "chart_name": "Chart4",
+  //         "chart_id": 4,
+  //       },
+  //       {
+  //         "chart_name": "Chart5",
+  //         "chart_id": 5,
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     "dashboard_name": "Dashboard2",
+  //     "dashboard_id": 2,
+  //     "dashboard_description": "This is the second dashboard",
+  //     "all_charts": [ 
+  //       {
+  //         "chart_name": "Chart6",
+  //         "chart_id": 6,
+  //       },
+  //       {
+  //         "chart_name": "Chart7",
+  //         "chart_id": 7,
+  //       },
+  //       {
+  //         "chart_name": "Chart8",
+  //         "chart_id": 8,
+  //       },
+  //       {
+  //         "chart_name": "Chart9",
+  //         "chart_id": 9,
+  //       },
+  //       {
+  //         "chart_name": "Chart10",
+  //         "chart_id": 10,
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     "dashboard_name": "Dashboard3",
+  //     "dashboard_id": 3,
+  //     "dashboard_description": "This is the third dashboard",
+  //     "all_charts": [ 
+  //       {
+  //         "chart_name": "Chart11",
+  //         "chart_id": 11,
+  //       },
+  //       {
+  //         "chart_name": "Chart12",
+  //         "chart_id": 12,
+  //       },
+  //       {
+  //         "chart_name": "Chart13",
+  //         "chart_id": 13,
+  //       },
+  //       {
+  //         "chart_name": "Chart14",
+  //         "chart_id": 14,
+  //       },
+  //       {
+  //         "chart_name": "Chart15",
+  //         "chart_id": 15,
+  //       }
+  //     ]
+  //   },
+  // ];
 
 export default FinalClone;
