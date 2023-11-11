@@ -9,6 +9,8 @@ import axios from 'axios';
 
 function FinalClone() {
 
+  let {dashboard_name} = useParams();
+  let {dashboard_id} = useParams();
 
   // const [chartlist, setChartList] = useState([]);
   // const [sourcelist, setSourceList] = useState([]);
@@ -29,20 +31,134 @@ function FinalClone() {
   // }),[chartlist, sourcelist];
   // upon mounting, fetch the chart list from the backend
 
+  const exampleJsonResponse = [
+    {
+      "dashboard_name": "Dashboard1",
+      "dashboard_id": 1,
+      "dashboard_description": "This is the first dashboard",
+      "all_charts": [ 
+        {
+          "chart_name": "Chart1",
+          "chart_id": 1,
+        },
+        {
+          "chart_name": "Chart2",
+          "chart_id": 2,
+        },
+        {
+          "chart_name": "Chart3",
+          "chart_id": 3,
+        },
+        {
+          "chart_name": "Chart4",
+          "chart_id": 4,
+        },
+        {
+          "chart_name": "Chart5",
+          "chart_id": 5,
+        }
+      ]
+    },
+    {
+      "dashboard_name": "Dashboard2",
+      "dashboard_id": 2,
+      "dashboard_description": "This is the second dashboard",
+      "all_charts": [ 
+        {
+          "chart_name": "Chart6",
+          "chart_id": 6,
+        },
+        {
+          "chart_name": "Chart7",
+          "chart_id": 7,
+        },
+        {
+          "chart_name": "Chart8",
+          "chart_id": 8,
+        },
+        {
+          "chart_name": "Chart9",
+          "chart_id": 9,
+        },
+        {
+          "chart_name": "Chart10",
+          "chart_id": 10,
+        }
+      ]
+    },
+    {
+      "dashboard_name": "Dashboard3",
+      "dashboard_id": 3,
+      "dashboard_description": "This is the third dashboard",
+      "all_charts": [ 
+        {
+          "chart_name": "Chart11",
+          "chart_id": 11,
+        },
+        {
+          "chart_name": "Chart12",
+          "chart_id": 12,
+        },
+        {
+          "chart_name": "Chart13",
+          "chart_id": 13,
+        },
+        {
+          "chart_name": "Chart14",
+          "chart_id": 14,
+        },
+        {
+          "chart_name": "Chart15",
+          "chart_id": 15,
+        }
+      ]
+    },
+  ];
+
+  const chart_list=[]
+  let db_id =0
+
+  exampleJsonResponse.forEach(dashboard => { 
+      if(dashboard.dashboard_name==dashboard_name){
+        db_id=dashboard.dashboard_id
+        console.log(db_id)
+        dashboard.all_charts.forEach(chart => {
+          chart_list.push(chart.chart_name)
+          console.log(chart.chart_name)
+        })
+      }
+  });
+
+  const exampleSourceJsonResponse = 
+  [
+    {
+      "dataset_name": "name1",
+      "database_name": "db1"
+    },
+    {
+      "dataset_name": "name2",
+      "database_name": "db2"
+    },
+    {
+      "dataset_name": "name3",
+      "database_name": "db3"
+    }
+  ]
+  const source_list=[]
+
+  exampleSourceJsonResponse.forEach(data_set => { 
+    source_list.push(data_set.dataset_name)
+  })
 
 
-
-  let {url} = useParams();
-  let {username} = useParams();
-
-  const faux_chart_list=["Chart1", "Chart2", "Chart3", "Chart4", "Chart5"]
-  const faux_source_list=["Source1", "Source2", "Source3", "Source4", "Source5"]
-  //later we'll just have a backend that will check the username and password, but for now we'll
+  // const faux_chart_list=["Chart1", "Chart2", "Chart3", "Chart4", "Chart5"]
+  // const faux_source_list=["Source1", "Source2", "Source3", "Source4", "Source5"]
+  //later we'll just have a backend that will check the dashboard_id and password, but for now we'll
   //just hard code list of charts and sources
 
 
   // const [DBname,setDBname]=useState("");
-  const [chartname,setChartname]=useState(url);
+  const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
 
@@ -73,10 +189,10 @@ function FinalClone() {
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
 
-  const handleChartname=(event)=>{
+  const handledb_name=(event)=>{
     console.log(event.target.value)
-    if (event.target.value!= chartname){
-      setChartname(event.target.value);
+    if (event.target.value!= db_name){
+      setdb_name(event.target.value);
     }
   }
     //presumably,we'll have a backend that will check the username and password, but for now we'll
@@ -93,7 +209,7 @@ function FinalClone() {
   // const checkValid = (event) => {
   //   event.preventDefault(); 
   //   if(language==eng && DBname!=""){
-  //     navigateToDashboards(`/dashboards/${url}`);
+  //     navigateToDashboards(`/dashboards/${dashboard_name}`);
   //   }
   //   else{
   //     setRender(!render)
@@ -107,28 +223,28 @@ function FinalClone() {
   {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          {/* <Link to={`/dashboards/${url}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+          {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
+          <Link to={`/dashboards/${dashboard_name}/${dashboard_id}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
-           <h1 className="display-1 text-sky-400">{url}</h1>      
+           <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
   
       <form className="flex flex-col h-full">
         <div className="form-group mb-2 mt-5 flex flex-row ">
-          <label className="text-sky-400 font-semibold text-2xl" for="#url">Rename: </label>
-          {/* <input className="bg-sky-200" type="text" id="url" value={url} onChange={handleChange}></input> */}
-          <input className="clone-input w-3/4 text-center" type="text" id="url" onInput={handleChartname} required></input>
+          <label className="text-sky-400 font-semibold text-2xl" for="#dashboard_name">Rename: </label>
+          {/* <input className="bg-sky-200" type="text" id="dashboard_name" value={dashboard_name} onChange={handleChange}></input> */}
+          <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
         </div>
         <div class="block gap-20 h-4/5 scrollable">
             {
-            faux_chart_list.map((chart_name) =>(
+            chart_list.map((chart_name) =>(
                 <div className="flex flex-row justify-around items-center h-1/3">
                     <h2 className="text-sky-400 font-test">{chart_name}</h2>
                     <select className="w-1/2 h-1/2 bg-sky-400" 
                     onChange={(event) => handleSelect(chart_name, event.target.value) }>
                     <option>Select a source</option>
                       {
-                        faux_source_list.map((source_name) =>(
+                        source_list.map((source_name) =>(
                           
                           <option value={source_name}>{source_name}</option>
                         ))

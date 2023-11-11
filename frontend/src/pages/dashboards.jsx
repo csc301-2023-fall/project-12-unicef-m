@@ -9,11 +9,103 @@ import axios from "axios";
 
 function Dashboards() {
 
-  let {url} = useParams();
+  let {dashboard_name} = useParams();
   let {username} = useParams();
 
   const notification = true;
 
+  //assuming we've called response.get 
+  const exampleJsonResponse = [
+    {
+      "dashboard_name": "Dashboard1",
+      "dashboard_id": 1,
+      "dashboard_description": "This is the first dashboard",
+      "all_charts": [ 
+        {
+          "chart_name": "Chart1",
+          "chart_id": 1,
+        },
+        {
+          "chart_name": "Chart2",
+          "chart_id": 2,
+        },
+        {
+          "chart_name": "Chart3",
+          "chart_id": 3,
+        },
+        {
+          "chart_name": "Chart4",
+          "chart_id": 4,
+        },
+        {
+          "chart_name": "Chart5",
+          "chart_id": 5,
+        }
+      ]
+    },
+    {
+      "dashboard_name": "Dashboard2",
+      "dashboard_id": 2,
+      "dashboard_description": "This is the second dashboard",
+      "all_charts": [ 
+        {
+          "chart_name": "Chart6",
+          "chart_id": 6,
+        },
+        {
+          "chart_name": "Chart7",
+          "chart_id": 7,
+        },
+        {
+          "chart_name": "Chart8",
+          "chart_id": 8,
+        },
+        {
+          "chart_name": "Chart9",
+          "chart_id": 9,
+        },
+        {
+          "chart_name": "Chart10",
+          "chart_id": 10,
+        }
+      ]
+    },
+    {
+      "dashboard_name": "Dashboard3",
+      "dashboard_id": 3,
+      "dashboard_description": "This is the third dashboard",
+      "all_charts": [ 
+        {
+          "chart_name": "Chart11",
+          "chart_id": 11,
+        },
+        {
+          "chart_name": "Chart12",
+          "chart_id": 12,
+        },
+        {
+          "chart_name": "Chart13",
+          "chart_id": 13,
+        },
+        {
+          "chart_name": "Chart14",
+          "chart_id": 14,
+        },
+        {
+          "chart_name": "Chart15",
+          "chart_id": 15,
+        }
+      ]
+    },
+  ];
+
+  const dashboardlist = []
+  exampleJsonResponse.forEach(dashboard => {
+    const dashboard_name = dashboard.dashboard_name;
+    const dashboard_id = dashboard.dashboard_id;
+    const dashboard_description = dashboard.dashboard_description;
+    dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
+  });
 
   // const [dashboardlist, setDashboardList] = useState([]);
 
@@ -32,8 +124,8 @@ function Dashboards() {
 
   const [search_query, onSearch] = useState("");
 
-  const dashboardlist = ["Dashboard1", "Dashboard2", "Dashboard3", "Dashboard4", "Dashboard5", 
-  "Dashboard6", "Dashboard7", "Dashboard8", "Dashboard9", "Dashboard10"]
+  // const dashboardlist = ["Dashboard1", "Dashboard2", "Dashboard3", "Dashboard4", "Dashboard5", 
+  // "Dashboard6", "Dashboard7", "Dashboard8", "Dashboard9", "Dashboard10"]
 
   //TODO 2: along the same vein, retrive information that notifies the user if there is an update available, and render
   //the update button accordingly
@@ -65,39 +157,27 @@ function Dashboards() {
 
         {/* <div class="scroll-smooth"> */}
         <div class="block gap-20 h-screen scrollable bg-white">
-          {/* <div>
-            <Link to={`/final_clone/${url}`}>
-              <button className="bg-sky-200 w-full h-full" >
-                  {
-                    notification && <div className="d-flex flex w-full">
-                    <Link to={`/update/${url}`}>
-                      <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
-                    </Link>
-                    <Badge badgeContent={1} color="secondary">
-                        <AutoAwesomeMotionIcon color="action" />
-                    </Badge>
-                  </div>
-                  }
-              </button>
-            </Link>
-            <label className="text-sky-400 font-semibold text-xl">Dashboard0</label>
-            
-          </div>       */}
             {
-            dashboardlist.map((dashboard_name) => (
+            dashboardlist.map((dashboard) => (
               <div className="mt-10 mb-10">
-                <div className="h-full w-full list_grid" id={dashboard_name}>
-                  <div className="grid-element">
-                    <Link to={`/final_clone/${url}/${username}`}><button className="bg-sky-200  w-full h-full"></button></Link>
+                <div className="h-full w-full list_grid" id={dashboard[0]}>
+                  <div className="grid-element test">
+                    <Link to={`/final_clone/${dashboard[0]}/${dashboard[1]}`}>
+                      <button className="bg-sky-200  w-full h-full">
+                        <h2 className="text-sky-400">{dashboard[2]}</h2>
+                      </button>
+                    </Link>
+                    
                   </div>
+                 
                   <div className="grid-element">
-                    <Link to={`/update/${url}`}>
+                    <Link to={`/update/${dashboard_name}`}>
                       <button className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</button>
                     </Link>
                   </div>
                   
                 </div>
-                <label className="text-sky-400 font-semibold text-xl">{dashboard_name}</label>
+                <label className="text-sky-400 font-semibold text-xl">{dashboard[0]}</label>
               </div>
             ))
           }
