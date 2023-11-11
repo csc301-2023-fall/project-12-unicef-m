@@ -51,6 +51,8 @@ def get_all_dashboards():
 
         dashboard_list.append(curr_dashboard_info)
 
+    print(dashboard_list)
+
     return json.dumps(dashboard_list)
 
 

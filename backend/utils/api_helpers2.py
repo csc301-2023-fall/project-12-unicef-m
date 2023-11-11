@@ -36,7 +36,7 @@ def get_dashboards(access_token):
 # ------------------------------ functions to send data to front end ---------------------------------------------------
 def get_charts(access_token, dashboard_id):
     headers = {"Authorization": "Bearer " + access_token}
-    chart_endpoint = f'{SUPERSET_INSTANCE_URL}{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts/'
+    chart_endpoint = f'{SUPERSET_INSTANCE_URL}{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts'
     charts = requests.get(chart_endpoint, headers=headers).json()
 
     parsed_charts = []
