@@ -4,17 +4,58 @@ from backend.utils.api_helpers2 import *
 views2 = Blueprint('views2', __name__)
 
 
+@views2.route('/all-datasets', methods=['GET'])
+def get_all_datasets():
+    pass
+
+
+@views2.route('/all-dashboards', methods=['GET'])
+def get_all_dashboard():
+    '''
+    Expected Return Format:
+    {
+        {
+            'dashboard_name': "name",
+            'dashboard_id': "id",
+            'dashboard_desc': "desc",
+            'all_charts': {
+                            {
+                                'chart_name': "name",
+                                'chard_id': 'id",
+                            }
+                        }
+        },
+        {...},
+        {...},
+        ...
+    }
+    '''
+    pass
+
+
+
+@views2.route('/export--one-dashboard', methods=['POST'])
+def one_dashboard():
+    access_token = get_access_token()
+    print(access_token)
+
+    dashboard_id = 8
+    extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
+    print(extracted_folder_name)
+
+
+
 @views2.route('/clone', methods=['POST'])
 def clone():
     print("reached clone function")
     dashboard_id = request.form.get("dashboard_id")
     print(dashboard_id)
     dashboard_old_name = request.form.get("dashboard_old_name")
-    print("2")
+    print(dashboard_old_name)
     dashboard_new_name = request.form.get("dashboard_new_name")
-    print("3")
+    print(dashboard_new_name)
     charts = request.form.get("charts")
-    print("4")
+    print(charts)
 
     access_token = get_access_token()
     print(access_token)

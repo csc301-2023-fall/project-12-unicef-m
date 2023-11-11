@@ -58,14 +58,15 @@ def get_datasets(token):
 
 def export_one_dashboard(access_token, dashboard_id):
     # headers = {"Authorization": "Bearer " + access_token}
-    headers = {'Authorization': 'Bearer {}'.format(access_token)}
+    headers = {'Authorization': 'Bearer {}'.format(access_token),
+               'Content-Type': 'application/json'}
     print(headers)
 
-    dashboard_endpoint = f'{SUPERSET_INSTANCE_URL}api/v1/dashboard/export?q=[{dashboard_id}]'
+    dashboard_endpoint = f'{SUPERSET_INSTANCE_URL}api/v1/dashboard/export/?q=[{dashboard_id}]'
     print(dashboard_endpoint)
     dashboards = requests.get(url=dashboard_endpoint, headers=headers)
-    print(dashboards.headers)
-    local_path = "zip/exported_one_dashboard.zip"
+    print(dashboards.content)
+    local_path = "exported_one_dashboard.zip"
     with open(local_path, "wb") as f:
         f.write(dashboards.content)
 
