@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from backend.utils.api_helpers2 import *
 import json
+import os
 views2 = Blueprint('views2', __name__)
 
 
@@ -120,7 +121,25 @@ def clone():
     csrf_token = get_csrf_token(access_token)
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
-    # TODO: delete everything in "zip" folder
+    # set the path to the zip folder
+    # path = "filepath to the zip folder"
+    # delete_zip(path)
+
+
+def delete_zip(path):
+    try:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                os.remove(file_path)
+
+            for directory in dirs:
+                dir_path = os.path.join(root, directory)
+                delete_zip(dir_path)
+                os.rmdir(dir_path)
+
+    except OSError:
+        print("Error occurred while deleting file")
 
 
 def change_chart_details(charts, extracted_folder_name):
