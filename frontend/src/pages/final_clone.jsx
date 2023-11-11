@@ -133,22 +133,24 @@ function FinalClone() {
   const [chart_list, setChartList] = useState([]);
   let db_id =0
   const [sourcelist, setSourceList] = useState([]);
-  const dashboard_list_endpoint = ""
-  const source_list_endpoint = ""
+  const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
+  const source_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-datasets';
 
    useEffect(() => {
     axios.get(dashboard_list_endpoint).then((response) => {
       const d_list = response.data;
       const c_list = [];
       d_list.forEach(dashboard => {
-        db_id=dashboard.dashboard_id
-        console.log(db_id)
+        
         if(dashboard.dashboard_name==dashboard_name){
+          db_id=dashboard.dashboard_id
+          console.log(db_id)
           dashboard.all_charts.forEach(chart => {
             c_list.push(chart.chart_name)
           })
         }
       })
+      console.log(c_list)
       setChartList(c_list);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
@@ -160,11 +162,12 @@ function FinalClone() {
       sources.forEach(source => {
         s_list.push(source.dataset_name)
       })
+      console.log(s_list)
       setSourceList(s_list);
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
     });
-  }),[chart_list, sourcelist];
+  }),[chart_list, sourcelist, dashboard_list_endpoint, source_list_endpoint];
   // upon mounting, fetch the chart list from the backend
 
   // const [DBname,setDBname]=useState("");
@@ -223,7 +226,7 @@ function FinalClone() {
     <>
         <body className="w-full flex h-full flex justify-center">
 
-<div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center">
+<div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing test">
   {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
@@ -243,12 +246,14 @@ function FinalClone() {
             {
             chart_list.map((chart_name) =>(
                 <div className="flex flex-row justify-around items-center h-1/3">
-                    <h2 className="text-sky-400 font-test">{chart_name}</h2>
+                    <div className="test name-container">
+                      <p className="text-sky-400 font-test">{chart_name}</p>
+                    </div>
                     <select className="w-1/2 h-1/2 bg-sky-400" 
                     onChange={(event) => handleSelect(chart_name, event.target.value) }>
                     <option>Select a source</option>
                       {
-                        source_list.map((source_name) =>(
+                        sourcelist.map((source_name) =>(
                           
                           <option value={source_name}>{source_name}</option>
                         ))

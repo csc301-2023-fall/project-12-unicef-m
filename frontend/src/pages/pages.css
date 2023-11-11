@@ -31,6 +31,8 @@ body{
 
 .final-clone-wrapper{
   background-color: var( --water-blue)  ;
+  min-width: 500px;
+  min-height: 300px;
 }
 
 /* .form-group{
@@ -68,5 +70,16 @@ body{
 }
 
 .font-test{
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.name-container{
+  width: 200px;
+  height: 100px;
+}
+
+.content-wrapper-sizing{
+
+  min-width: 500px;
+  min-height: 300px;
 }
