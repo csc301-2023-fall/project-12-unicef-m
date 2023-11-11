@@ -144,13 +144,13 @@ function FinalClone() {
         
         if(dashboard.dashboard_name==dashboard_name){
           db_id=dashboard.dashboard_id
-          console.log(db_id)
+          // console.log(db_id)
           dashboard.all_charts.forEach(chart => {
-            c_list.push(chart.chart_name)
+            c_list.push([chart.chart_name, chart.chart_id])
           })
         }
       })
-      console.log(c_list)
+      // console.log(c_list)
       setChartList(c_list);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
@@ -160,9 +160,9 @@ function FinalClone() {
       const sources = response.data;
       const s_list = [];
       sources.forEach(source => {
-        s_list.push(source.dataset_name)
+        s_list.push([source.dataset_name,source.database_name])
       })
-      console.log(s_list)
+      // console.log(s_list)
       setSourceList(s_list);
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
@@ -174,14 +174,12 @@ function FinalClone() {
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
-
-
   const handleSelect = (chartname, source) => {
     // console.log( (chartname, source) )
 
     let pair = [chartname, source]
-    console.log( pair )
-    console.log( chart_and_source_list )
+    // console.log( pair )
+    // console.log( chart_and_source_list )
   
     for (let i = 0; i < chart_and_source_list.length; i++) { 
       if (chart_and_source_list[i][0] == chartname) {
@@ -196,7 +194,7 @@ function FinalClone() {
   }
 
   const handledb_name=(event)=>{
-    console.log(event.target.value)
+    // console.log(event.target.value)
     if (event.target.value!= db_name){
       setdb_name(event.target.value);
     }
@@ -221,6 +219,72 @@ function FinalClone() {
   //     setRender(!render)
   //   }
   // }
+    const dashboard_old_name = dashboard_name;
+    const dashboard_new_name = db_name;
+    //also have dashboard id
+    const charts = []
+    //chart_list is a list of lists whwere each list is the name of the chart as well and the id of the chart, for a given dashboard
+    //sourcelist is a list of lists, where each list is a pair of source name and database name respectively 
+    //chart_and_source_list is a list of lists, where each list is a pair of chart name and new source name respectively
+    chart_list.forEach(chart_in_chart_list => {
+      const chart_attrib_list=[]
+      const chart_id = chart_in_chart_list[1]
+      const chart_name = chart_in_chart_list[0]
+      chart_attrib_list.push(chart_id)
+      chart_attrib_list.push(chart_name)
+
+      chart_and_source_list.forEach(chart_and_source => {
+        const chart_we_want =chart_in_chart_list[0]
+        if (chart_and_source[0] ==chart_we_want) {
+          // check if the chart name is in the chart_and_source_list
+          // chart_and_source[0] is the chart name
+          const chart_new_dataset = chart_and_source[1]
+          chart_attrib_list.push(chart_new_dataset)
+          //push the source name to the chart attributes
+        }
+
+        sourcelist.forEach(source => {
+          const source_we_want = chart_and_source[1]
+          const source_name = source[0]
+          if (source_name == source_we_want ) {
+            // check if the source name is in the sourcelist
+            const database = source[1]
+            chart_attrib_list.push(database)
+            //push the database name to the chart attributes
+          }
+        })
+      })
+
+      const chart_attributes ={
+        "chart_id": chart_attrib_list[0],
+        "chart_old_name": chart_attrib_list[1],
+        "chart_new_dataset": chart_attrib_list[2],
+        "database": chart_attrib_list[3]
+      }
+
+
+      charts.push(chart_attributes)
+      // should now be a list of json objects, where each object is a chart and its attributes
+    })
+
+    const clone_response_data = {
+      "dashboard_id": db_id,
+      "dashboard_old_name": dashboard_old_name,
+      "dashboard_new_name": dashboard_new_name, 
+      "charts": charts
+    }
+    console.log(clone_response_data)
+    const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/clone';
+    const[error,setError]= useState(null);
+    const handleCloneSubmit = async() => {
+      try{
+        await axios.post(clone_endpoint, clone_response_data)
+        setError(null)
+      } catch(error){
+        setError(error.response ? error.response.data : error.message)
+      }
+    };
+
 
     return( 
     <>
@@ -244,18 +308,18 @@ function FinalClone() {
         </div>
         <div class="block gap-20 h-4/5 scrollable">
             {
-            chart_list.map((chart_name) =>(
+            chart_list.map((chart) =>(
                 <div className="flex flex-row justify-around items-center h-1/3">
                     <div className="test name-container">
-                      <p className="text-sky-400 font-test">{chart_name}</p>
+                      <p className="text-sky-400 font-test">{chart[0]}</p>
                     </div>
                     <select className="w-1/2 h-1/2 bg-sky-400" 
-                    onChange={(event) => handleSelect(chart_name, event.target.value) }>
+                    onChange={(event) => handleSelect(chart[0], event.target.value) }>
                     <option>Select a source</option>
                       {
-                        sourcelist.map((source_name) =>(
+                        sourcelist.map((source) =>(
                           
-                          <option value={source_name}>{source_name}</option>
+                          <option value={source[0]}>{source[0]}</option>
                         ))
                       }
                     </select>
@@ -264,30 +328,11 @@ function FinalClone() {
               ))
             }
         </div>
-        
         <div className="button-wrapper flex justify-center">
           {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-          <button className="bg-sky-400 w-1/2 text-lg">Finalize Clone</button>
+          <button className="bg-sky-400 w-1/2 text-lg" onPress={handleCloneSubmit}>Finalize Clone</button>
         </div>
       </form>
-
-
-      {/* {
-        render && !valid && 
-        <div className="d-flex flex w-full d-flex justify-center">
-            <p className="text-red-500">Something went wrong, please try again !</p>
-
-        </div>
-      }
-
-      {
-        render || valid && 
-        <div className="d-flex flex w-full d-flex justify-center">
-            <p className="text-green-500 ">Cloning Successful!</p>
-
-        </div>
-      } */}
-  
   </div>
 
 </div>
@@ -298,25 +343,6 @@ function FinalClone() {
     
     </>)
 }
-
-  // const [chartlist, setChartList] = useState([]);
-  // const [sourcelist, setSourceList] = useState([]);
-
-  // const chartlistendpoint = ""
-  // const sourcelistendpoint= ""
-
-  // useEffect(() => {
-  //   axios.get(chartlistendpoint).then((response) => {
-  //     const c_list = response.data;
-  //     setChartList(c_list);
-  //   });
-
-  //   axios.get(sourcelistendpoint).then((response) => {
-  //     const s_list = response.data;
-  //     setSourceList(s_list);
-  //   });
-  // }),[chartlist, sourcelist];
-  // upon mounting, fetch the chart list from the backend
 
 
 export default FinalClone;
