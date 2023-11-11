@@ -109,7 +109,7 @@ function Dashboards() {
 
   const [dashboardlist, setDashboardList] = useState([]);
 
-  const dashboard_list_endpoint = ""
+  const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
   // {process.env.REACT_APP_BASEURL} + /views/all-dashboards
   useEffect(() => {
     // upon mounting, fetch the dashboard list from the backend
@@ -120,6 +120,7 @@ function Dashboards() {
         const dashboard_name = dashboard.dashboard_name;
         const dashboard_id = dashboard.dashboard_id;
         const dashboard_description = dashboard.dashboard_description;
+        console.log(dashboard_name, dashboard_id, dashboard_description);
         dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
       })
       setDashboardList(d_list);
