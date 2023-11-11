@@ -50,10 +50,10 @@ function FinalClone() {
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
     });
-  }),[chart_list, sourcelist, dashboard_list_endpoint, source_list_endpoint];
+  }),[dashboard_list_endpoint, source_list_endpoint];
   // upon mounting, fetch the chart list from the backend
 
-  
+
   // const [DBname,setDBname]=useState("");
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
