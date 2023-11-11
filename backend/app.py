@@ -1,9 +1,11 @@
 
 from flask import Flask
+from flask_cors import CORS
 
 # from .firebase_config import initialize_firebase
 
 app = Flask(__name__)
+CORS(app)
 # initialize_firebase()
 
 # from .routes.vc import vc
