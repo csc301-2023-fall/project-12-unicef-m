@@ -1,6 +1,8 @@
 from flask import Blueprint, request
 from backend.utils.api_helpers2 import *
 import json
+import os
+
 views2 = Blueprint('views2', __name__)
 
 
@@ -87,7 +89,6 @@ def get_all_datasets():
     return json.dumps(dataset_list)
 
 
-
 @views2.route('/export--one-dashboard', methods=['POST'])
 def one_dashboard():
     access_token = get_access_token()
@@ -96,7 +97,6 @@ def one_dashboard():
     dashboard_id = 8
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
     print(extracted_folder_name)
-
 
 
 @views2.route('/clone', methods=['POST'])
@@ -130,6 +130,24 @@ def clone():
     print("11")
 
     # TODO: delete everything in "zip" folder
+    # path = "filepath to the zip folder"
+    # delete_zip(path)
+
+
+def delete_zip(path):
+    try:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                os.remove(file_path)
+
+            for directory in dirs:
+                dir_path = os.path.join(root, directory)
+                delete_zip(dir_path)
+                os.rmdir(dir_path)
+
+    except OSError:
+        print("Error occurred while deleting file")
 
 
 def change_chart_details(charts, extracted_folder_name):
