@@ -43,7 +43,7 @@ const router = createBrowserRouter([
   },
   //final_clone
   {
-    path: "/final_clone/:dashboard_name/:dashboard_id",
+    path: "/final_clone/:username/:dashboard_name/:dashboard_id",
     // path: "/",
     element: <FinalClone />,
     // test function for seeing if data from login page is passed to test page

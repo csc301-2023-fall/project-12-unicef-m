@@ -116,19 +116,22 @@ function Dashboards() {
     // upon changes to the dashboard list, update the dashboard list
     axios.get(dashboard_list_endpoint).then((response) => {
       const d_list = response.data;
-      d_list.ForEach(dashboard => { 
+      const new_list = [];
+      d_list.forEach(dashboard => { 
         const dashboard_name = dashboard.dashboard_name;
         const dashboard_id = dashboard.dashboard_id;
         const dashboard_description = dashboard.dashboard_description;
-        console.log(dashboard_name, dashboard_id, dashboard_description);
-        dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
+  
+        new_list.push([dashboard_name, dashboard_id, dashboard_description]);
+        
       })
-      setDashboardList(d_list);
+      setDashboardList(new_list);
+      console.log(dashboardlist)
     })
     .catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
-  }),[dashboardlist];
+  }),[dashboard_list_endpoint];
 
   const [search_query, onSearch] = useState("");
 
@@ -170,7 +173,7 @@ function Dashboards() {
               <div className="mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
                   <div className="grid-element test">
-                    <Link to={`/final_clone/${dashboard[0]}/${dashboard[1]}`}>
+                    <Link to={`/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`}>
                       <button className="bg-sky-200  w-full h-full">
                         <h2 className="text-sky-400">{dashboard[2]}</h2>
                       </button>
