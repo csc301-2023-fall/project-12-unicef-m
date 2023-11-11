@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 function FinalClone() {
-
+  let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
   const exampleJsonResponse = [
@@ -130,7 +130,7 @@ function FinalClone() {
   // })
 
 
-  const [chartlist, setChartList] = useState([]);
+  const [chart_list, setChartList] = useState([]);
   let db_id =0
   const [sourcelist, setSourceList] = useState([]);
   const dashboard_list_endpoint = ""
@@ -164,7 +164,7 @@ function FinalClone() {
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
     });
-  }),[chartlist, sourcelist];
+  }),[chart_list, sourcelist];
   // upon mounting, fetch the chart list from the backend
 
   // const [DBname,setDBname]=useState("");
@@ -218,7 +218,7 @@ function FinalClone() {
   //     setRender(!render)
   //   }
   // }
-  
+
     return( 
     <>
         <body className="w-full flex h-full flex justify-center">
@@ -228,7 +228,7 @@ function FinalClone() {
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
           {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${dashboard_name}/${dashboard_id}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+          <Link to={`/dashboards/${dashboard_name}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
            <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
