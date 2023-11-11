@@ -14,8 +14,6 @@ def get_access_token():
     }
 
     # makes a post request to get access token
-
-    # token = requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data)
     return requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data).json()["access_token"]
 
 
@@ -32,6 +30,7 @@ def get_dashboards(access_token):
     for dashboard in dashboards["result"]:
         parsed_dashboards.append((dashboard["id"], dashboard["dashboard_title"]))
     return parsed_dashboards
+
 
 # ------------------------------ functions to send data to front end ---------------------------------------------------
 def get_charts(access_token, dashboard_id):
@@ -53,30 +52,28 @@ def get_datasets(token):
         parsed_datasets.append((dataset["table_name"], dataset["database"]["database_name"]))
     return parsed_datasets
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 
 def export_one_dashboard(access_token, dashboard_id):
-    # headers = {"Authorization": "Bearer " + access_token}
     headers = {'Authorization': 'Bearer {}'.format(access_token),
                'Content-Type': 'application/json'}
-    print(headers)
 
     dashboard_endpoint = f'{SUPERSET_INSTANCE_URL}api/v1/dashboard/export/?q=[{dashboard_id}]'
-    print(dashboard_endpoint)
     dashboards = requests.get(url=dashboard_endpoint, headers=headers)
-    print(dashboards.content)
-    local_path = "exported_one_dashboard.zip"
+    local_path = "zip/exported_one_dashboard.zip"
     with open(local_path, "wb") as f:
         f.write(dashboards.content)
 
     # extract the folder out of the zip file
     with zipfile.ZipFile(local_path) as myzip:
-        myzip.extractall()
+        myzip.extractall(path='./zip')
 
-    # 36 corresponds to len("zip/dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
+    print(myzip.namelist()[0][:32])
+    # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
     # make this dynamic, hard coded for now
-    return myzip.namelist()[0][:36]
+    return myzip.namelist()[0][:32]
 
 
 def get_dataset_uuid(filename):

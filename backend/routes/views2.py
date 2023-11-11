@@ -99,36 +99,25 @@ def one_dashboard():
     print(extracted_folder_name)
 
 
-
 @views2.route('/clone', methods=['POST'])
 def clone():
-    print("reached clone function")
     dashboard_id = request.form.get("dashboard_id")
-    print(dashboard_id)
     dashboard_old_name = request.form.get("dashboard_old_name")
-    print(dashboard_old_name)
     dashboard_new_name = request.form.get("dashboard_new_name")
-    print(dashboard_new_name)
     charts = request.form.get("charts")
-    print(charts)
 
     access_token = get_access_token()
-    print(access_token)
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
-    print("6")
 
-    dashboard_filename = f'dashboards/{dashboard_old_name}_{dashboard_id}.yaml'
-    print("7")
+    dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
+    dashboard_filename = f'zip/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name)])
-    print("8")
 
     change_chart_details(charts, extracted_folder_name)
-    print("9")
 
     csrf_token = get_csrf_token(access_token)
-    print("10")
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
-    print("11")
 
     # TODO: delete everything in "zip" folder
 
@@ -136,10 +125,10 @@ def clone():
 def change_chart_details(charts, extracted_folder_name):
     for chart in charts:
         chart_id = chart[0]
-        chart_old_name = chart[1]
+        chart_old_name = chart[1].replace(" ", "_")
         chart_new_name = chart[2]
         chart_new_dataset = chart[3]
-        database = chart[4]
+        database = chart[4].replace(" ", "_")
 
         dataset_filename = f'{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
         dataset_uuid = get_dataset_uuid(dataset_filename)
