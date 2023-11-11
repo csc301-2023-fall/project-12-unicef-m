@@ -4,87 +4,87 @@ import json
 views2 = Blueprint('views2', __name__)
 
 
-@views2.route('/all-dashboards', method=['GET'])
-def get_all_dashboards():
-    """
-    Expected Return Format
-    [
-        {
-            "dashboard_id": id,
-            "dashboard_name": "name",
-            "dashboard_desc": "desc",
-            "all_charts": [
-                {
-                    "chart_id": chart_id,
-                    "chart_name": "name"
-                },
-                {
-                    "chart_id": chart_id,
-                    "chart_name": "name"
-                },
-                <More Charts related to the dashboard>
-            ]
-        }
+# @views2.route('/all-dashboards', method=['GET'])
+# def get_all_dashboards():
+#     """
+#     Expected Return Format
+#     [
+#         {
+#             "dashboard_id": id,
+#             "dashboard_name": "name",
+#             "dashboard_desc": "desc",
+#             "all_charts": [
+#                 {
+#                     "chart_id": chart_id,
+#                     "chart_name": "name"
+#                 },
+#                 {
+#                     "chart_id": chart_id,
+#                     "chart_name": "name"
+#                 },
+#                 <More Charts related to the dashboard>
+#             ]
+#         }
 
-        {
-            <More Dashboards>
-        }
-    ]
-    """
-    access_token = get_access_token()
-    dashboards = get_dashboards(access_token)
+#         {
+#             <More Dashboards>
+#         }
+#     ]
+#     """
+#     access_token = get_access_token()
+#     dashboards = get_dashboards(access_token)
 
-    dashboard_list = []
+#     dashboard_list = []
 
-    for dashboard in dashboards:
-        dashboard_id = dashboard[0]
-        dashboard_name = dashboard[1]
+#     for dashboard in dashboards:
+#         dashboard_id = dashboard[0]
+#         dashboard_name = dashboard[1]
 
-        charts = get_charts(access_token, dashboard_id)
+#         charts = get_charts(access_token, dashboard_id)
 
-        curr_dashboard_info = {
-            "dashboard_id": dashboard_id,
-            "dashboard_name": dashboard_name,
-            "dashboard_desc": None,
-            "all_charts": [{"chart_id": chart_id, "chart_name": chart_name} for chart_id, chart_name in charts]
-        }
+#         curr_dashboard_info = {
+#             "dashboard_id": dashboard_id,
+#             "dashboard_name": dashboard_name,
+#             "dashboard_desc": None,
+#             "all_charts": [{"chart_id": chart_id, "chart_name": chart_name} for chart_id, chart_name in charts]
+#         }
 
-        dashboard_list.append(curr_dashboard_info)
+#         dashboard_list.append(curr_dashboard_info)
 
-    return json.dumps(dashboard_list)
+#     return json.dumps(dashboard_list)
 
 
-@views2.route('/all-datasets', method=['GET'])
-def get_all_datasets():
-    """
-        Expected Return Format
-        [
-            {
-                "dataset_name": "name",
-                "database_name": "name"
-            },
-            {
-                <More datasets>
-            }
-        ]
-        """
-    access_token = get_access_token()
-    datasets = get_datasets(access_token)
+# @views2.route('/all-datasets', method=['GET'])
+# def get_all_datasets():
+#     """
+#         Expected Return Format
+#         [
+#             {
+#                 "dataset_name": "name",
+#                 "database_name": "name"
+#             },
+#             {
+#                 <More datasets>
+#             }
+#         ]
+#         """
+#     access_token = get_access_token()
+#     datasets = get_datasets(access_token)
 
-    dataset_list = []
+#     dataset_list = []
 
-    for dataset in datasets:
-        dataset_name = dataset[0]
-        db_name = dataset[1]
+#     for dataset in datasets:
+#         dataset_name = dataset[0]
+#         db_name = dataset[1]
 
-        curr_dataset_info = {
-            "dataset_name": dataset_name,
-            "database_name": db_name
-        }
+#         curr_dataset_info = {
+#             "dataset_name": dataset_name,
+#             "database_name": db_name
+#         }
 
-        dataset_list.append(curr_dataset_info)
+#         dataset_list.append(curr_dataset_info)
 
-    return json.dumps(dataset_list)
+#     return json.dumps(dataset_list)
 
 
 
