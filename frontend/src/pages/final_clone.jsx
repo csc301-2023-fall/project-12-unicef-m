@@ -11,26 +11,6 @@ function FinalClone() {
 
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-
-  // const [chartlist, setChartList] = useState([]);
-  // const [sourcelist, setSourceList] = useState([]);
-
-  // const chartlistendpoint = ""
-  // const sourcelistendpoint= ""
-
-  // useEffect(() => {
-  //   axios.get(chartlistendpoint).then((response) => {
-  //     const c_list = response.data;
-  //     setChartList(c_list);
-  //   });
-
-  //   axios.get(sourcelistendpoint).then((response) => {
-  //     const s_list = response.data;
-  //     setSourceList(s_list);
-  //   });
-  // }),[chartlist, sourcelist];
-  // upon mounting, fetch the chart list from the backend
-
   const exampleJsonResponse = [
     {
       "dashboard_name": "Dashboard1",
@@ -114,61 +94,84 @@ function FinalClone() {
       ]
     },
   ];
+ // const chart_list=[]
+  
 
-  const chart_list=[]
+  // exampleJsonResponse.forEach(dashboard => { 
+  //     if(dashboard.dashboard_name==dashboard_name){
+  //       db_id=dashboard.dashboard_id
+  //       console.log(db_id)
+  //       dashboard.all_charts.forEach(chart => {
+  //         chart_list.push(chart.chart_name)
+  //         console.log(chart.chart_name)
+  //       })
+  //     }
+  // });
+
+  // const exampleSourceJsonResponse = 
+  // [
+  //   {
+  //     "dataset_name": "name1",
+  //     "database_name": "db1"
+  //   },
+  //   {
+  //     "dataset_name": "name2",
+  //     "database_name": "db2"
+  //   },
+  //   {
+  //     "dataset_name": "name3",
+  //     "database_name": "db3"
+  //   }
+  // ]
+  // const source_list=[]
+
+  // exampleSourceJsonResponse.forEach(data_set => { 
+  //   source_list.push(data_set.dataset_name)
+  // })
+
+
+  const [chartlist, setChartList] = useState([]);
   let db_id =0
+  const [sourcelist, setSourceList] = useState([]);
+  const dashboard_list_endpoint = ""
+  const source_list_endpoint = ""
 
-  exampleJsonResponse.forEach(dashboard => { 
-      if(dashboard.dashboard_name==dashboard_name){
+   useEffect(() => {
+    axios.get(dashboard_list_endpoint).then((response) => {
+      const d_list = response.data;
+      const c_list = [];
+      d_list.forEach(dashboard => {
         db_id=dashboard.dashboard_id
         console.log(db_id)
-        dashboard.all_charts.forEach(chart => {
-          chart_list.push(chart.chart_name)
-          console.log(chart.chart_name)
-        })
-      }
-  });
+        if(dashboard.dashboard_name==dashboard_name){
+          dashboard.all_charts.forEach(chart => {
+            c_list.push(chart.chart_name)
+          })
+        }
+      })
+      setChartList(c_list);
+    }).catch((error) => {
+      console.error('Error fetching data from dashboard list endpoint:', error);
+    });
 
-  const exampleSourceJsonResponse = 
-  [
-    {
-      "dataset_name": "name1",
-      "database_name": "db1"
-    },
-    {
-      "dataset_name": "name2",
-      "database_name": "db2"
-    },
-    {
-      "dataset_name": "name3",
-      "database_name": "db3"
-    }
-  ]
-  const source_list=[]
-
-  exampleSourceJsonResponse.forEach(data_set => { 
-    source_list.push(data_set.dataset_name)
-  })
-
-
-  // const faux_chart_list=["Chart1", "Chart2", "Chart3", "Chart4", "Chart5"]
-  // const faux_source_list=["Source1", "Source2", "Source3", "Source4", "Source5"]
-  //later we'll just have a backend that will check the dashboard_id and password, but for now we'll
-  //just hard code list of charts and sources
-
+    axios.get(source_list_endpoint).then((response) => {
+      const sources = response.data;
+      const s_list = [];
+      sources.forEach(source => {
+        s_list.push(source.dataset_name)
+      })
+      setSourceList(s_list);
+    }).catch((error) => {
+      console.error('Error fetching data from source list endpoint:', error);
+    });
+  }),[chartlist, sourcelist];
+  // upon mounting, fetch the chart list from the backend
 
   // const [DBname,setDBname]=useState("");
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
 
-
-
-  //basic hooks to retreive username and password from form element
-
-  // const selectSource=(event)=>{
-  //   setChartAndSourceList([...chart_and_source_list, [chart_name, event.target.value]])
-  // }
 
   const handleSelect = (chartname, source) => {
     // console.log( (chartname, source) )
@@ -215,6 +218,7 @@ function FinalClone() {
   //     setRender(!render)
   //   }
   // }
+  
     return( 
     <>
         <body className="w-full flex h-full flex justify-center">
@@ -289,6 +293,25 @@ function FinalClone() {
     
     </>)
 }
+
+  // const [chartlist, setChartList] = useState([]);
+  // const [sourcelist, setSourceList] = useState([]);
+
+  // const chartlistendpoint = ""
+  // const sourcelistendpoint= ""
+
+  // useEffect(() => {
+  //   axios.get(chartlistendpoint).then((response) => {
+  //     const c_list = response.data;
+  //     setChartList(c_list);
+  //   });
+
+  //   axios.get(sourcelistendpoint).then((response) => {
+  //     const s_list = response.data;
+  //     setSourceList(s_list);
+  //   });
+  // }),[chartlist, sourcelist];
+  // upon mounting, fetch the chart list from the backend
 
 
 export default FinalClone;

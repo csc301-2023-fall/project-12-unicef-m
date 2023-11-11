@@ -99,28 +99,35 @@ function Dashboards() {
     },
   ];
 
-  const dashboardlist = []
-  exampleJsonResponse.forEach(dashboard => {
-    const dashboard_name = dashboard.dashboard_name;
-    const dashboard_id = dashboard.dashboard_id;
-    const dashboard_description = dashboard.dashboard_description;
-    dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
-  });
+  // const dashboardlist = []
+  // exampleJsonResponse.forEach(dashboard => {
+  //   const dashboard_name = dashboard.dashboard_name;
+  //   const dashboard_id = dashboard.dashboard_id;
+  //   const dashboard_description = dashboard.dashboard_description;
+  //   dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
+  // });
 
-  // const [dashboardlist, setDashboardList] = useState([]);
+  const [dashboardlist, setDashboardList] = useState([]);
 
-  // const dashboard_list_endpoint = ""
-  // useEffect(() => {
-  //   // upon mounting, fetch the dashboard list from the backend
-  //   // upon changes to the dashboard list, update the dashboard list
-  //   axios.get(dashboard_list_endpoint).then((response) => {
-  //     const d_list = response.data;
-  //     setDashboardList(d_list);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error fetching data:', error);
-  //   });
-  // }),[dashboardlist];
+  const dashboard_list_endpoint = ""
+  // {process.env.REACT_APP_BASEURL} + /views/all-dashboards
+  useEffect(() => {
+    // upon mounting, fetch the dashboard list from the backend
+    // upon changes to the dashboard list, update the dashboard list
+    axios.get(dashboard_list_endpoint).then((response) => {
+      const d_list = response.data;
+      d_list.ForEach(dashboard => { 
+        const dashboard_name = dashboard.dashboard_name;
+        const dashboard_id = dashboard.dashboard_id;
+        const dashboard_description = dashboard.dashboard_description;
+        dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
+      })
+      setDashboardList(d_list);
+    })
+    .catch((error) => {
+      console.error('Error fetching data from dashboard list endpoint:', error);
+    });
+  }),[dashboardlist];
 
   const [search_query, onSearch] = useState("");
 
