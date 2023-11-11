@@ -1,22 +1,25 @@
-table_name: threads
-main_dttm_col: ts
+table_name: video_game_sales
+main_dttm_col: null
 description: null
 default_endpoint: null
 offset: 0
 cache_timeout: null
 schema: main
-sql: null
-params: null
+sql: ''
+params:
+  remote_id: 64
+  database_name: examples
+  import_time: 1606677834
 template_params: null
 filter_select_enabled: true
 fetch_values_predicate: null
 extra: null
 normalize_columns: false
-uuid: d7438be6-6078-17dd-cf9a-56f0ef546c80
+uuid: 53d47c0c-c03d-47f0-b9ac-81225f808283
 metrics:
 - metric_name: count
   verbose_name: COUNT(*)
-  metric_type: count
+  metric_type: null
   expression: COUNT(*)
   description: null
   d3format: null
@@ -24,11 +27,23 @@ metrics:
   extra: null
   warning_text: null
 columns:
-- column_name: ts
+- column_name: year
   verbose_name: null
   is_dttm: true
-  is_active: true
-  type: TIMESTAMP WITHOUT TIME ZONE
+  is_active: null
+  type: BIGINT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: '%Y'
+  extra: null
+- column_name: global_sales
+  verbose_name: null
+  is_dttm: false
+  is_active: null
+  type: FLOAT64
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -36,11 +51,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: client_msg_id
+- column_name: na_sales
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: FLOAT64
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -48,11 +63,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: channel_id
+- column_name: other_sales
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: FLOAT64
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -60,11 +75,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: thread_ts
+- column_name: eu_sales
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: FLOAT64
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -72,11 +87,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: latest_reply
+- column_name: jp_sales
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
+  is_active: null
+  type: FLOAT64
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -84,58 +99,10 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: team
+- column_name: rank
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: VARCHAR
-  advanced_data_type: null
-  groupby: true
-  filterable: true
-  expression: null
-  description: null
-  python_date_format: null
-  extra: null
-- column_name: type
-  verbose_name: null
-  is_dttm: false
-  is_active: true
-  type: VARCHAR
-  advanced_data_type: null
-  groupby: true
-  filterable: true
-  expression: null
-  description: null
-  python_date_format: null
-  extra: null
-- column_name: user
-  verbose_name: null
-  is_dttm: false
-  is_active: true
-  type: VARCHAR
-  advanced_data_type: null
-  groupby: true
-  filterable: true
-  expression: null
-  description: null
-  python_date_format: null
-  extra: null
-- column_name: subscribed
-  verbose_name: null
-  is_dttm: false
-  is_active: true
-  type: BOOLEAN
-  advanced_data_type: null
-  groupby: true
-  filterable: true
-  expression: null
-  description: null
-  python_date_format: null
-  extra: null
-- column_name: reply_users_count
-  verbose_name: null
-  is_dttm: false
-  is_active: true
+  is_active: null
   type: BIGINT
   advanced_data_type: null
   groupby: true
@@ -144,11 +111,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: reply_count
+- column_name: name
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: BIGINT
+  is_active: null
+  type: STRING
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -156,11 +123,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: reply_users
+- column_name: platform
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: TEXT
+  is_active: null
+  type: STRING
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -168,11 +135,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: blocks
+- column_name: publisher
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: TEXT
+  is_active: null
+  type: STRING
   advanced_data_type: null
   groupby: true
   filterable: true
@@ -180,11 +147,11 @@ columns:
   description: null
   python_date_format: null
   extra: null
-- column_name: text
+- column_name: genre
   verbose_name: null
   is_dttm: false
-  is_active: true
-  type: TEXT
+  is_active: null
+  type: STRING
   advanced_data_type: null
   groupby: true
   filterable: true

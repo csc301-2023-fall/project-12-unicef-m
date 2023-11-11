@@ -1,3 +1,6 @@
+import os
+import shutil
+
 import requests
 import zipfile
 import yaml
@@ -19,6 +22,7 @@ def get_access_token():
 
 def get_csrf_token(access_token):
     headers = {"Authorization": "Bearer " + access_token}
+    print(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT)
     return requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
 
 
@@ -62,6 +66,7 @@ def export_one_dashboard(access_token, dashboard_id):
 
     dashboard_endpoint = f'{SUPERSET_INSTANCE_URL}api/v1/dashboard/export/?q=[{dashboard_id}]'
     dashboards = requests.get(url=dashboard_endpoint, headers=headers)
+    # print(dashboards.content)
     local_path = "zip/exported_one_dashboard.zip"
     with open(local_path, "wb") as f:
         f.write(dashboards.content)
@@ -93,13 +98,54 @@ def set_new_details(filename, params):
 
 
 def import_new_dashboard(access_token, csrf_token, filename):
-    zipfile.ZipFile(filename, mode='w')
-    data = {
-        "formData": filename,
-        "override": False
-    }
+    with zipfile.ZipFile(f'{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipdir(f'zip/{filename}', zipf)
+
+    # zipfile.ZipFile.write(filename, mode='w')
+    # print(filename)
+    # # file = open(filename, "rb")
+    # file = zipfile.ZipFile.open(name=filename, mode='r')
+    # data = {
+    #     "formData": (
+    #     filename,
+    #     open(filename, 'rb'),
+    #     'application/json'
+    # ),
+    # }
+    # headers = {
+    #     "Authorization": "Bearer " + access_token,
+    #     "X-CSRFToken": csrf_token
+    # }
+    # response = requests.post(url=SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, files=data, headers=headers)
+
+    fileobj = open(f'{filename}.zip', 'rb')
+    payload = {'overwrite': True}
     headers = {
-        "Authorization": "Bearer " + access_token,
-        "X-CSRFToken": csrf_token
-    }
-    requests.post(url=SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, data=data, headers=headers)
+                "Authorization": "Bearer " + access_token,
+                "X-CSRFToken": csrf_token
+            }
+    r = requests.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT,
+                      headers=headers, data=payload, files={"formData": f'{filename}.zip'})
+
+    # with open(f'{filename}.zip', 'rb') as file:
+    #     files = {'formData': (f'{filename}.zip', file, 'application/zip')}
+    #     payload = {'overwrite': True}
+    #     headers = {
+    #         "Authorization": "Bearer " + access_token,
+    #         "X-CSRFToken": csrf_token
+    #     }
+    #     # headers = {"Authorization": f"Bearer {}", 'Accept': 'application/json'}
+    #     response = requests.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, headers=headers, files=files, data=payload)
+    #
+    #     if response.status_code != 200:
+    #         raise Exception(f"Failed to import dashboard: {response.text}")
+    #     print("Dashboard imported successfully!")
+
+
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file),
+                       os.path.relpath(os.path.join(root, file),
+                                       os.path.join(path, '..')))

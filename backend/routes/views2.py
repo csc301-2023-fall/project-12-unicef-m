@@ -89,23 +89,34 @@ def get_all_datasets():
     return json.dumps(dataset_list)
 
 
-
-@views2.route('/export--one-dashboard', methods=['POST'])
-def one_dashboard():
-    access_token = get_access_token()
-    print(access_token)
-
-    dashboard_id = 8
-    extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
-    print(extracted_folder_name)
-
-
 @views2.route('/clone', methods=['POST'])
 def clone():
-    dashboard_id = request.form.get("dashboard_id")
-    dashboard_old_name = request.form.get("dashboard_old_name")
-    dashboard_new_name = request.form.get("dashboard_new_name")
-    charts = request.form.get("charts")
+    """
+       {
+           "dashboard_id":
+           "dashboard_old_name":
+           "dashboard_new_name":
+           "charts": [
+                        [
+                        chart_id
+                        chart_old_name
+                        # chart_new_name
+                        chart_new_dataset
+                        database
+                        ]
+                   ]
+       }
+       """
+    print(request)
+    print(request.json)
+    dashboard_id = request.json.get("dashboard_id")
+    print(dashboard_id)
+    dashboard_old_name = request.json.get("dashboard_old_name")
+    print(dashboard_old_name)
+    dashboard_new_name = request.json.get("dashboard_new_name")
+    print(dashboard_new_name)
+    charts = request.json.get("charts")
+    print(charts)
 
     access_token = get_access_token()
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
@@ -121,8 +132,9 @@ def clone():
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
     # TODO: delete everything in "zip" folder
-    # path = "filepath to the zip folder"
-    # delete_zip(path)
+    path = "../zip/"
+    delete_zip(path)
+    return "Hello World"
 
 
 def delete_zip(path):
@@ -143,18 +155,18 @@ def delete_zip(path):
 
 def change_chart_details(charts, extracted_folder_name):
     for chart in charts:
-        chart_id = chart[0]
-        chart_old_name = chart[1].replace(" ", "_")
-        chart_new_name = chart[2]
-        chart_new_dataset = chart[3]
-        database = chart[4].replace(" ", "_")
+        chart_id = chart["chart_id"]
+        chart_old_name = chart["chart_old_name"].replace(" ", "_")
+        # chart_new_name = chart[2]
+        chart_new_dataset = chart["chart_new_dataset"]
+        database = chart["database"].replace(" ", "_")
 
-        dataset_filename = f'{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
+        dataset_filename = f'zip/{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
         dataset_uuid = get_dataset_uuid(dataset_filename)
 
-        chart_filename = f'{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
+        chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
         params = [
             ("dataset_uuid", dataset_uuid),
-            ("slice_name", chart_new_name)
+            # ("slice_name", chart_new_name)
         ]
         set_new_details(chart_filename, params)
