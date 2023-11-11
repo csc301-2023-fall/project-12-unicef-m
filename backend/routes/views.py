@@ -4,6 +4,7 @@ from backend.utils.api_helpers import *
 
 views = Blueprint('views', __name__)
 
+
 # This needs a username and password endpoint for the front end
 
 @views.route('/')
@@ -60,7 +61,9 @@ def clone():
     token = get_access_token()
 
     # hard coded to 6 for now, change to inputting the dashboard id of the dashboard picked
-    extracted_folder_name = export_one_dashboard(token, 6)
+    dashboards = get_dashboards(token)
+    extracted_folder_name = export_one_dashboard(token, dashboards[dashboard_source])
+
     charts = get_charts_with_ID(token, dashboard_source)
 
     # iterating through all the charts

@@ -2,7 +2,7 @@ import requests
 import zipfile
 import yaml
 
-from backend.utils.endpoints import DASHBOARD_ENDPOINT, DATASET_ENDPOINT
+from backend.utils.endpoints import *
 from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 
 
@@ -23,10 +23,12 @@ def get_dashboards(token):
     headers = {"Authorization": "Bearer " + token}
     dashboards = requests.get(SUPERSET_INSTANCE_URL + DASHBOARD_ENDPOINT, headers=headers).json()
 
-    dashboard_names = []
+    parsed_dashboards = {}
     for dashboard in dashboards["result"]:
-        dashboard_names.append((dashboard["id"], dashboard["dashboard_title"]))
-    return dashboard_names
+        # TODO: check if already exists in dictionary first
+        parsed_dashboards[dashboard["dashboard_title"]] = (dashboard["id"])
+    return parsed_dashboards
+
 
 
 def get_charts(token, dashboard_id):
@@ -78,7 +80,7 @@ def export_one_dashboard(token, dashboard_id):
         f.write(dashboards.content)
 
     # extract the folder out of the zip file
-    with zipfile.ZipFile('exported_one_dashboard.zip') as myzip:
+    with zipfile.ZipFile('zip/exported_one_dashboard.zip') as myzip:
         myzip.extractall()
 
     # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
@@ -101,3 +103,25 @@ def set_chart_dataset(filename, new_dataset, new_name):
 
     with open(filename, 'w') as file:
         yaml.dump(chart_data, file, sort_keys=False)
+
+
+def set_new_dashboard_name(filename, new_name):
+    with open(filename, 'r') as file:
+        dashboard_data = yaml.safe_load(file)
+        dashboard_data["dashboard_title"] = new_name
+
+    with open(filename, 'w') as file:
+        yaml.dump(dashboard_data, file, sort_keys=False)
+
+
+def import_new_dashboard(access_token, csrf_token, filename):
+    zipfile.ZipFile(filename, mode='w')
+    data = {
+        "formData": filename,
+        "override": False
+    }
+    headers = {
+        "Authorization": "Bearer " + access_token,
+        "X-CSRFToken": csrf_token
+    }
+    response = requests.post(url=SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, data=data, headers=headers)
