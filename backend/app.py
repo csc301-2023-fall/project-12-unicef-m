@@ -46,7 +46,7 @@ def login():
     return redirect(f"{GITHUB_AUTH_URL}?client_id={CLIENT_ID}&scope={scope}")
 
 
-@app.route("/login/github", methods=['GET'])
+@app.route("/login/github/callback", methods=['GET'])
 def callback():
     code = requests.args.get('code')
     
