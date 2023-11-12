@@ -23,9 +23,8 @@ app.register_blueprint(views2, url_prefix='/view')
 # GitHub Authorizaiton, setting up with OAuth 2.0
 
 """
-Overall flow and information for front-end:
-
-
+Overall flow and information for front-end will 
+be explained in Discord 
 """
 # This information needs to set up through the organizations GitHub in GitHub itself:
 
@@ -39,7 +38,7 @@ GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
 GITHUB_USER_API = "https://api.github.com/user"
 
-@app.route("/login/github")
+@app.route("/login/github", methods=['GET'])
 def login():
     
     # We redirect to GitHub for authorization
@@ -47,7 +46,7 @@ def login():
     return redirect(f"{GITHUB_AUTH_URL}?client_id={CLIENT_ID}&scope={scope}")
 
 
-@app.route("/login/github")
+@app.route("/login/github", methods=['GET'])
 def callback():
     code = requests.args.get('code')
     
@@ -90,11 +89,11 @@ def callback():
     return redirect(frontend_url)
     
     
-@app.route("/logout")
+@app.route("/logout", methods=['GET'])
 def logout():
     session.pop('github_user', None)
     return jsonify({'Message': "Logged Out"}), 200
-
+    # or use session.clear()
 
 
 # Added a sample dashboard to Firebase:
