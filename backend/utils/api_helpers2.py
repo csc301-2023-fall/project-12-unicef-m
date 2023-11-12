@@ -94,6 +94,64 @@ def set_new_details(filename, params):
     with open(filename, 'w') as file:
         yaml.dump(file_data, file, sort_keys=False)
 
+def create_empty_dashboard(access_token, csrf_token, dashboard_id, dashboard_new_name):
+    # TODO: TOKENS NOT BEING RECOGNISED IN THE HEADER
+    headers = {
+        'X-CSRFToken': csrf_token,
+        'Authorization': 'Bearer {}'.format(access_token),
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        "certification_details": None,
+        "certified_by": None,
+        "css": "",
+        "dashboard_title": dashboard_new_name,
+        "is_managed_externally": False,
+        "json_metadata": "",
+        "owners": [],
+        "position_json": "",
+        "published": None,
+        "roles": [],
+        "slug": None
+    }
+    response = requests.post(SUPERSET_INSTANCE_URL + DASHBOARD_ENDPOINT,
+                             headers=headers,
+                             data=payload)
+    return response.json()["id"]
+
+
+def add_chart(access_token, csrf_token, dashboard_id, dataset, dataset_id, chart_new_name):
+    url = "https://superset-dev.unicef.io/api/v1/chart/"
+
+    payload = {
+        "cache_timeout": 0,
+        "certification_details": "string",
+        "certified_by": "string",
+        "dashboards": [
+            dashboard_id
+        ],
+        "datasource_id": dataset_id,
+        "datasource_name": dataset,
+        "datasource_type": "table",
+        "description": "string",
+        "external_url": "string",
+        "is_managed_externally": True,
+        "owners": [],
+        "query_context_generation": True,
+        "slice_name": chart_new_name
+    }
+    headers = {
+        'X-CSRFToken': csrf_token,
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.post(SUPERSET_INSTANCE_URL + CHART_ENDPOINT,
+                             headers=headers,
+                             data=payload)
+    print(response.content)
+
+
 
 def import_new_dashboard(access_token, csrf_token, filename):
     zipfile.ZipFile(filename, mode='w')

@@ -102,15 +102,10 @@ def one_dashboard():
 
 @views2.route('/clone', methods=['POST'])
 def clone():
-    print("reached clone function")
-    dashboard_id = request.form.get("dashboard_id")
-    print(dashboard_id)
-    dashboard_old_name = request.form.get("dashboard_old_name")
-    print(dashboard_old_name)
-    dashboard_new_name = request.form.get("dashboard_new_name")
-    print(dashboard_new_name)
-    charts = request.form.get("charts")
-    print(charts)
+    dashboard_id = request.json.get("dashboard_id")
+    dashboard_old_name = request.json.get("dashboard_old_name")
+    dashboard_new_name = request.json.get("dashboard_new_name")
+    charts = request.json.get("charts")
 
     access_token = get_access_token()
     print(access_token)
@@ -126,9 +121,23 @@ def clone():
     print("9")
 
     csrf_token = get_csrf_token(access_token)
-    print("10")
-    import_new_dashboard(access_token, csrf_token, extracted_folder_name)
-    print("11")
+
+    new_dashboard_id = create_empty_dashboard(access_token, csrf_token, dashboard_id, dashboard_new_name)
+    # print(new_dashboard_id)
+
+    for chart in charts:
+        chart_id = chart["chart_id"]
+        chart_old_name = chart["chart_old_name"].replace(" ", "_")
+        chart_new_dataset = chart["chart_new_dataset"]
+
+        # TODO: add dataset id to the response given by front end, needed for adding charts
+        chart_new_dataset_id = chart["chart_new_dataset_id"]
+        database = chart["database"].replace(" ", "_")
+
+        # access_token, csrf_token, dashboard_id, dataset, dataset_id, chart_new_name
+        add_chart(access_token, csrf_token, 21, chart_new_dataset, chart_new_dataset_id, chart_old_name)
+
+    # import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
     # TODO: delete everything in "zip" folder
 
