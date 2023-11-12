@@ -89,6 +89,16 @@ def get_all_datasets():
     return json.dumps(dataset_list)
 
 
+@views2.route('/clone-test', methods=['POST'])
+def clone_test():
+    print(request)
+    # print(request.json)
+    print('headers: ', request.headers)
+    print('form: ', request.form)
+    print('files: ', request.files)
+    return("hi")
+
+
 @views2.route('/clone', methods=['POST'])
 def clone():
     """
@@ -107,16 +117,16 @@ def clone():
                    ]
        }
        """
-    print(request)
-    print(request.json)
+    # print(request)
+    # print(request.json)
     dashboard_id = request.json.get("dashboard_id")
-    print(dashboard_id)
+    # print(dashboard_id)
     dashboard_old_name = request.json.get("dashboard_old_name")
-    print(dashboard_old_name)
+    # print(dashboard_old_name)
     dashboard_new_name = request.json.get("dashboard_new_name")
-    print(dashboard_new_name)
+    # print(dashboard_new_name)
     charts = request.json.get("charts")
-    print(charts)
+    # print(charts)
 
     access_token = get_access_token()
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)

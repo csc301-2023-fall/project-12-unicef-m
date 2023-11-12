@@ -118,14 +118,26 @@ def import_new_dashboard(access_token, csrf_token, filename):
     # }
     # response = requests.post(url=SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, files=data, headers=headers)
 
-    fileobj = open(f'{filename}.zip', 'rb')
-    payload = {'overwrite': True}
+    # fileobj = open(f'{filename}.zip', 'rb')
+
+    # payload = {'overwrite': 'true'}
+    # f'../{filename}.zip'
+    file_path = os.path.abspath(f'{filename}.zip')
+    print(file_path)
+    payload={'passwords': '{"databases/examples.yaml": ""}',
+             'overwrite': 'true'}
+    files = [('formData',
+              (f'{filename}.zip',
+               open(file_path,'rb'),
+               'application/zip'))]
     headers = {
                 "Authorization": "Bearer " + access_token,
-                "X-CSRFToken": csrf_token
+                "X-CSRFToken": csrf_token,
+                'Accept': 'application/json'
             }
+    print(files)
     r = requests.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT,
-                      headers=headers, data=payload, files={"formData": f'{filename}.zip'})
+                      headers=headers, data=payload, files=files)
 
     # with open(f'{filename}.zip', 'rb') as file:
     #     files = {'formData': (f'{filename}.zip', file, 'application/zip')}
