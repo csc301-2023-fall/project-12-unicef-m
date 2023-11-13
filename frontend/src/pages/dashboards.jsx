@@ -41,15 +41,27 @@ function Dashboards() {
   }),[dashboard_list_endpoint];
 
   const [search_query, onSearch] = useState("");
+  var[render,setRender]= useState(false);
 
-  const handleSearch = (event) =>{onSearch(event.target.value)}
-  const handleEnter = (event) =>{if(event.key === 'Enter'){
-    scrollToDashboard(search_query)
-  }}
+
+  const handleSearch = (event) =>{
+    onSearch(event.target.value);
+  }
+  // const handleSearch = (event) =>{onSearch(event.target.value)}
+  const handleEnter = () =>{
+    scrollToDashboard(search_query);
+  }
+  // const handleEnter = (event) =>{if(event.key === 'Enter'){
+  //   scrollToDashboard(search_query)
+  // }}
   const scrollToDashboard = (id) => {
     const element = document.getElementById(id);
-    if( element){
+    if(element){
       element.scrollIntoView({behavior: "smooth"});
+      setRender(false);
+    }
+    else{
+      setRender(true);
     }
   }
   return( 
@@ -61,9 +73,16 @@ function Dashboards() {
           <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>          
           <input type="text border-solid w-full" 
             placeholder='search for dashboard ...'
-            onChange={handleSearch}
-            onEnter={handleEnter}>
+            onChange={handleSearch}>
           </input>
+          <button onClick={handleEnter}>Search</button>
+          {
+            render &&
+            <div className="d-flex flex w-full d-flex justify-center">
+                <p className="text-red-500">Dashboard does not exist, please try again !</p>
+
+            </div>
+          }
         </div>
 
         {/* <div class="scroll-smooth"> */}
@@ -72,7 +91,7 @@ function Dashboards() {
             dashboardlist.map((dashboard) => (
               <div className="mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
-                  <div className="grid-element test">
+                  <div className="grid-element">
                     <Link to={`/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`}>
                       <button className="bg-sky-200  w-full h-full">
                         <h2 className="text-sky-400">{dashboard[2]}</h2>

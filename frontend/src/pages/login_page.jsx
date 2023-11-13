@@ -29,15 +29,16 @@ function Login() {
 
     const navigateToDashboards = useNavigate();
 
-  const[render,setRender]= useState(false);
+  var[render,setRender]= useState(false);
   //if the username and password match, dont render anything
   const checkValid = (event) => {
     event.preventDefault(); 
     if(username==user && password==pass){
       navigateToDashboards(`/dashboards/${url}/${username}`);
+      setRender(false);
     }
     else{
-      setRender(!render)
+      setRender(true);
     }
   }
 
