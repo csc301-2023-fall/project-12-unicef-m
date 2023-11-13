@@ -4,13 +4,17 @@ To run this test file, run the command: pytest testing_suite.py
 
 from backend.routes.dashboard_handler import DashboardHandler
 from backend.routes.changes_handler import ChangesHandler
-from app import app as flask_app
+from backend.routes.views2 import *
+from backend.utils.api_helpers2 import *
+from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
+import requests
+from flask import app as flask_app
 import pytest
 
 # Initialize instances of the handlers
 
-dashboard_handler = DashboardHandler()
-changes_handler = ChangesHandler()
+# dashboard_handler = DashboardHandler()
+# changes_handler = ChangesHandler()
 
 # Initialize the test client using the pytest fixture
 @pytest.fixture
@@ -38,13 +42,12 @@ def teardown():
 
 class TestSuite:
 
+    # Version Control Tests
     def test_add_dashboard(self, client):
         pass
-        
 
-    def test_propogate_changes(self, client):
+    def test_propagate_changes(self, client):
         pass
-
 
     def test_get_dashboard(self, client):
         '''
@@ -57,8 +60,46 @@ class TestSuite:
 
         assert curr_db['dashboard_name'] == "test_4"
 
-
     def test_delete_dashboard(self, client):
+        pass
+
+    # Superset API Call Tests
+    def test_valid_get_access_token(self):
+        login_data = {
+            "username": SUPERSET_USERNAME,
+            "password": SUPERSET_PASSWORD,
+            "provider": "db"
+        }
+
+        response = requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data)
+
+        assert response.status_code == 200
+        assert 'access_token' in response.json()
+
+
+    def test_valid_get_csrf_token(self):
+        access_token = get_access_token()
+        headers = {"Authorization": "Bearer " + access_token}
+
+        response = requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers)
+
+        assert response.status_code == 200
+        assert 'result' in response.json()
+
+    def test_valid_get_dashboards(self):
+        pass
+
+    def test_valid_get_charts(self):
+        pass
+
+    def test_valid_get_datasets(self):
+        pass
+
+    # Backend API Call Tests
+    def test_valid_get_all_dashboards(self):
+        pass
+
+    def test_valid_get_all_datasets(self):
         pass
 
 
