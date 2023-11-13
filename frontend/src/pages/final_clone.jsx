@@ -154,7 +154,7 @@ function FinalClone() {
     <>
         <body className="w-full flex h-full flex justify-center">
 
-<div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing test">
+<div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing">
   {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
@@ -174,7 +174,7 @@ function FinalClone() {
             {
             chart_list.map((chart) =>(
                 <div className="flex flex-row justify-around items-center h-1/3">
-                    <div className="test name-container">
+                    <div className="name-container">
                       <p className="text-sky-400 font-test">{chart[0]}</p>
                     </div>
                     <select className="w-1/2 h-1/2 bg-sky-400" 
