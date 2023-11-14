@@ -57,8 +57,6 @@ def get_datasets(token):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-
-
 def export_one_dashboard(access_token, dashboard_id):
     headers = {'Authorization': 'Bearer {}'.format(access_token),
                'Content-Type': 'application/json'}
@@ -94,6 +92,25 @@ def set_new_details(filename, params):
             file_data[key] = value
     with open(filename, 'w') as file:
         yaml.dump(file_data, file, sort_keys=False)
+
+
+def change_chart_details(charts, extracted_folder_name):
+    for chart in charts:
+        chart_id = chart["chart_id"]
+        chart_old_name = chart["chart_old_name"].replace(" ", "_")
+        # chart_new_name = chart[2]
+        chart_new_dataset = chart["chart_new_dataset"]
+        database = chart["database"].replace(" ", "_")
+
+        dataset_filename = f'zip/{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
+        dataset_uuid = get_dataset_uuid(dataset_filename)
+
+        chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
+        params = [
+            ("dataset_uuid", dataset_uuid),
+            # ("slice_name", chart_new_name)
+        ]
+        set_new_details(chart_filename, params)
 
 
 def import_new_dashboard(access_token, csrf_token, filename):
@@ -160,3 +177,19 @@ def zipdir(path, ziph):
             ziph.write(os.path.join(root, file),
                        os.path.relpath(os.path.join(root, file),
                                        os.path.join(path, '..')))
+
+
+def delete_zip(path):
+    try:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                os.remove(file_path)
+
+            for directory in dirs:
+                dir_path = os.path.join(root, directory)
+                delete_zip(dir_path)
+                os.rmdir(dir_path)
+
+    except OSError:
+        print("Error occurred while deleting file")

@@ -10,28 +10,28 @@ views = Blueprint('views', __name__)
 def get_all_dashboards():
     """
     Expected Return Format
-    [
-        {
-            "dashboard_id": id,
-            "dashboard_name": "name",
-            "dashboard_desc": "desc",
-            "all_charts": [
-                {
-                    "chart_id": chart_id,
-                    "chart_name": "name"
-                },
-                {
-                    "chart_id": chart_id,
-                    "chart_name": "name"
-                },
-                <More Charts related to the dashboard>
-            ]
-        }
+        [
+            {
+                "dashboard_id": id,
+                "dashboard_name": "name",
+                "dashboard_desc": "desc",
+                "all_charts": [
+                    {
+                        "chart_id": chart_id,
+                        "chart_name": "name"
+                    },
+                    {
+                        "chart_id": chart_id,
+                        "chart_name": "name"
+                    },
+                    <More Charts related to the dashboard>
+                ]
+            }
 
-        {
-            <More Dashboards>
-        }
-    ]
+            {
+                <More Dashboards>
+            }
+        ]
     """
     access_token = get_access_token()
     dashboards = get_dashboards(access_token)
@@ -59,7 +59,7 @@ def get_all_dashboards():
 @views.route('/all-datasets', methods=['GET'])
 def get_all_datasets():
     """
-        Expected Return Format
+    Expected Return Format
         [
             {
                 "dataset_name": "name",
@@ -69,7 +69,7 @@ def get_all_datasets():
                 <More datasets>
             }
         ]
-        """
+    """
     access_token = get_access_token()
     datasets = get_datasets(access_token)
     dataset_list = []
@@ -86,16 +86,6 @@ def get_all_datasets():
         dataset_list.append(curr_dataset_info)
 
     return json.dumps(dataset_list)
-
-
-@views.route('/clone-test', methods=['POST'])
-def clone_test():
-    print(request)
-    # print(request.json)
-    print('headers: ', request.headers)
-    print('form: ', request.form)
-    print('files: ', request.files)
-    return("hi")
 
 
 @views.route('/clone', methods=['POST'])
@@ -134,41 +124,5 @@ def clone():
     csrf_token = get_csrf_token(access_token)
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
-    path = "../zip/"
-    delete_zip(path)
-    return "Hello World"
-
-
-def delete_zip(path):
-    try:
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                os.remove(file_path)
-
-            for directory in dirs:
-                dir_path = os.path.join(root, directory)
-                delete_zip(dir_path)
-                os.rmdir(dir_path)
-
-    except OSError:
-        print("Error occurred while deleting file")
-
-
-def change_chart_details(charts, extracted_folder_name):
-    for chart in charts:
-        chart_id = chart["chart_id"]
-        chart_old_name = chart["chart_old_name"].replace(" ", "_")
-        # chart_new_name = chart[2]
-        chart_new_dataset = chart["chart_new_dataset"]
-        database = chart["database"].replace(" ", "_")
-
-        dataset_filename = f'zip/{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
-        dataset_uuid = get_dataset_uuid(dataset_filename)
-
-        chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
-        params = [
-            ("dataset_uuid", dataset_uuid),
-            # ("slice_name", chart_new_name)
-        ]
-        set_new_details(chart_filename, params)
+    # delete_zip("zip/")
+    return "Cloning Successful"
