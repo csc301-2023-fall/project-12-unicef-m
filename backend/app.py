@@ -15,7 +15,7 @@ CORS(app)
 # initialize_firebase()
 
 # from .routes.vc import vc
-from .routes.views import views
+from backend.routes.views import views
 
 # app.register_blueprint(vc, url_prefix='/vc')
 app.register_blueprint(views, url_prefix='/view')
