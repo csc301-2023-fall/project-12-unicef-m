@@ -1,0 +1,59 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - setting-up-github-actions
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPERSET_INSTANCE_URL: ${{ secrets.SUPERSET_INSTANCE_URL }}
+      SUPERSET_USERNAME: ${{ secrets.SUPERSET_USERNAME }}
+      SUPERSET_PASSWORD: ${{ secrets.SUPERSET_PASSWORD }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 16
+
+    - name: Install Dependencies
+      run: |
+        cd frontend
+        npm install
+        npm update
+
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm test
+        cd ..
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install Python Dependencies
+      run: |
+        cd backend
+        pip install -r requirements.txt
+
+    - name: Set up Environment Variables
+      run: |
+        echo "SUPERSET_INSTANCE_URL=$SUPERSET_INSTANCE_URL"
+        echo "SUPERSET_USERNAME=$SUPERSET_USERNAME"
+        echo "SUPERSET_PASSWORD=$SUPERSET_PASSWORD"
+
+    - name: Run Backend Tests
+      run: |
+        cd backend
+        pytest testing_suite.py

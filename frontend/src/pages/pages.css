@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{
+  --sky-blue: #009aff;
+  --water-blue: #cfedf7;
+  --slate-blue: #c8deed;
+}
+
+#root {
+ 
+  width: 100vw;
+  height:100vh;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* color:var(--sky-blue) */
+}
+
+
+
+body{
+  background-image: url("assets\newbackground.png");
+  background-size: cover; 
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  border-color: 2px solid black;
+}
+
+.final-clone-wrapper{
+  background-color: var( --water-blue)  ;
+  min-width: 500px;
+  min-height: 300px;
+}
+
+/* .form-group{
+  border: 2px solid black;
+} */
+
+.clone-input{
+  background-color: var(--slate-blue);
+  color: var(--sky-blue);
+}
+
+.test{
+  border:2px solid black
+}
+
+.scrollable{
+  overflow-y: scroll;
+  height: 100vh;
+
+}
+
+.test{
+  border:2px solid black;
+  height:100px;
+}
+
+.list_grid{
+  display :grid;
+  grid-template-columns: auto 100px;
+
+}
+
+.test-text{
+  color: black;
+}
+
+.font-test{
+  font-size: 1.2rem;
+}
+
+.name-container{
+  width: 200px;
+  height: 100px;
+}
+
+.content-wrapper-sizing{
+
+  min-width: 500px;
+  min-height: 500px;
+}
