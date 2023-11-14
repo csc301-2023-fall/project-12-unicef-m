@@ -26,6 +26,7 @@ google-resumable-media==2.6.0
 googleapis-common-protos==1.61.0
 grpcio==1.59.2
 grpcio-status==1.59.2
+gunicorn==21.2.0
 httplib2==0.22.0
 idna==3.4
 imageio==2.31.6
@@ -56,8 +57,6 @@ python-dotenv==1.0.0
 PyYAML==6.0.1
 requests==2.31.0
 rsa==4.9
-scikit-image==0.22.0
-scipy==1.11.3
 six==1.16.0
 sympy==1.12
 tifffile==2023.9.26
