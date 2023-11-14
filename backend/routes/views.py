@@ -1,86 +1,174 @@
-from flask import Blueprint, render_template, request, jsonify
-# from backend.utils.api_helpers import get_access_token, get_dashboards, get_datasets, get_charts, export_one_dashboard, get_charts_with_ID, get_dataset_uuid, set_chart_dataset 
+from flask import Blueprint, request
 from backend.utils.api_helpers import *
+import json
+import os
 
 views = Blueprint('views', __name__)
 
 
-# This needs a username and password endpoint for the front end
-
-@views.route('/')
-def index():
-    html_data = get_dataset_to_chart_mapping()
-    return render_template("index.html", html_data=html_data)
-
-
-def get_dataset_to_chart_mapping():
-    token = get_access_token()
-    dashboards = get_dashboards(token)
-    datasets = get_datasets(token)
-
-    dataset_to_chart_map = {}
-    all_charts = []
-    for d1, d1Name in dashboards:
-        charts = get_charts(token, d1)
-        all_charts.append(charts)
-
-        dataset_to_chart_map[d1] = {
-            "charts": charts,
-            "datasets": datasets
+@views.route('/all-dashboards', methods=['GET'])
+def get_all_dashboards():
+    """
+    Expected Return Format
+    [
+        {
+            "dashboard_id": id,
+            "dashboard_name": "name",
+            "dashboard_desc": "desc",
+            "all_charts": [
+                {
+                    "chart_id": chart_id,
+                    "chart_name": "name"
+                },
+                {
+                    "chart_id": chart_id,
+                    "chart_name": "name"
+                },
+                <More Charts related to the dashboard>
+            ]
         }
 
-    html_data = {
-        "dashboards": dashboards,
-        "charts": all_charts,
-        "datasets": datasets,
-        "datasetChartMapping": dataset_to_chart_map
-    }
-    return html_data
+        {
+            <More Dashboards>
+        }
+    ]
+    """
+    access_token = get_access_token()
+    dashboards = get_dashboards(access_token)
+
+    dashboard_list = []
+
+    for dashboard in dashboards:
+        dashboard_id = dashboard[0]
+        dashboard_name = dashboard[1]
+
+        charts = get_charts(access_token, dashboard_id)
+
+        curr_dashboard_info = {
+            "dashboard_id": dashboard_id,
+            "dashboard_name": dashboard_name,
+            "dashboard_desc": None,
+            "all_charts": [{"chart_id": chart_id, "chart_name": chart_name} for chart_id, chart_name in charts]
+        }
+
+        dashboard_list.append(curr_dashboard_info)
+
+    return json.dumps(dashboard_list)
+
+
+@views.route('/all-datasets', methods=['GET'])
+def get_all_datasets():
+    """
+        Expected Return Format
+        [
+            {
+                "dataset_name": "name",
+                "database_name": "name"
+            },
+            {
+                <More datasets>
+            }
+        ]
+        """
+    access_token = get_access_token()
+    datasets = get_datasets(access_token)
+    dataset_list = []
+
+    for dataset in datasets:
+        dataset_name = dataset[0]
+        db_name = dataset[1]
+
+        curr_dataset_info = {
+            "dataset_name": dataset_name,
+            "database_name": db_name
+        }
+
+        dataset_list.append(curr_dataset_info)
+
+    return json.dumps(dataset_list)
+
+
+@views.route('/clone-test', methods=['POST'])
+def clone_test():
+    print(request)
+    # print(request.json)
+    print('headers: ', request.headers)
+    print('form: ', request.form)
+    print('files: ', request.files)
+    return("hi")
 
 
 @views.route('/clone', methods=['POST'])
 def clone():
-    dashboard_source = request.form.get('dashboard_source')
-    destination_name = request.form.get('destination_name')
+    """
+       {
+           "dashboard_id":
+           "dashboard_old_name":
+           "dashboard_new_name":
+           "charts": [
+                        [
+                        chart_id
+                        chart_old_name
+                        # chart_new_name
+                        chart_new_dataset
+                        database
+                        ]
+                   ]
+       }
+    """
+    dashboard_id = request.json.get("dashboard_id")
+    dashboard_old_name = request.json.get("dashboard_old_name")
+    dashboard_new_name = request.json.get("dashboard_new_name")
+    charts = request.json.get("charts")
 
-    chart_names = []
-    chart_tables = []
+    access_token = get_access_token()
+    extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
 
-    index = 0
-    while True:
-        chart_name = request.form.get(f'chart{index}')
-        dataset = request.form.get(f'dataset{index}')
+    dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
+    dashboard_filename = f'zip/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
 
-        if chart_name is None or dataset is None:
-            break
+    set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name)])
 
-        chart_names.append(chart_name)
-        chart_tables.append(dataset)
-        index += 1
+    change_chart_details(charts, extracted_folder_name)
 
-    token = get_access_token()
+    csrf_token = get_csrf_token(access_token)
+    import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
-    # hard coded to 6 for now, change to inputting the dashboard id of the dashboard picked
-    dashboards = get_dashboards(token)
-    extracted_folder_name = export_one_dashboard(token, dashboards[dashboard_source])
-
-    charts = get_charts_with_ID(token, dashboard_source)
-
-    # iterating through all the charts
-    for i in range(0, index):
-        # getting the uuid for the database that was specified for chart i
-        dataset_uuid = get_dataset_uuid(extracted_folder_name + '/datasets/examples/' + chart_tables[i] + '.yaml')
-
-        # building the name of the chart file in the format chart_name_id.yaml
-        chart_filename = charts[i][0].replace(" ", "_") + '_' + str(charts[i][1]) + '.yaml'
-
-        # setting the new database uuid in the chart's yaml file
-        # chart_names[i] is the new name of chart i
-        set_chart_dataset(extracted_folder_name + '/charts/' + chart_filename, dataset_uuid, chart_names[i])
-
-    return render_template("clone.html")
+    path = "../zip/"
+    delete_zip(path)
+    return "Hello World"
 
 
-@views.route('/get_dataset_chart_mapping', methods=['GET'])
-def get_dataset_chart_mapping():
-    return jsonify(get_dataset_to_chart_mapping()["datasetChartMapping"])
+def delete_zip(path):
+    try:
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                os.remove(file_path)
+
+            for directory in dirs:
+                dir_path = os.path.join(root, directory)
+                delete_zip(dir_path)
+                os.rmdir(dir_path)
+
+    except OSError:
+        print("Error occurred while deleting file")
+
+
+def change_chart_details(charts, extracted_folder_name):
+    for chart in charts:
+        chart_id = chart["chart_id"]
+        chart_old_name = chart["chart_old_name"].replace(" ", "_")
+        # chart_new_name = chart[2]
+        chart_new_dataset = chart["chart_new_dataset"]
+        database = chart["database"].replace(" ", "_")
+
+        dataset_filename = f'zip/{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
+        dataset_uuid = get_dataset_uuid(dataset_filename)
+
+        chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
+        params = [
+            ("dataset_uuid", dataset_uuid),
+            # ("slice_name", chart_new_name)
+        ]
+        set_new_details(chart_filename, params)
