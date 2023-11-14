@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - setting-up-github-actions
 
 jobs:
   test:
