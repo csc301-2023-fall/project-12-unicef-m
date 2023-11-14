@@ -49,9 +49,9 @@ jobs:
 
     - name: Set up Environment Variables
       run: |
-        echo "SUPERSET_INSTANCE_URL=$SUPERSET_INSTANCE_URL" >> $GITHUB_ENV
-        echo "SUPERSET_USERNAME=$SUPERSET_USERNAME" >> $GITHUB_ENV
-        echo "SUPERSET_PASSWORD=$SUPERSET_PASSWORD" >> $GITHUB_ENV
+        echo "SUPERSET_INSTANCE_URL=$SUPERSET_INSTANCE_URL"
+        echo "SUPERSET_USERNAME=$SUPERSET_USERNAME"
+        echo "SUPERSET_PASSWORD=$SUPERSET_PASSWORD"
 
     - name: Run Backend Tests
       run: |
