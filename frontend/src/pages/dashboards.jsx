@@ -14,99 +14,6 @@ function Dashboards() {
 
   const notification = true;
 
-  //assuming we've called response.get 
-  const exampleJsonResponse = [
-    {
-      "dashboard_name": "Dashboard1",
-      "dashboard_id": 1,
-      "dashboard_description": "This is the first dashboard",
-      "all_charts": [ 
-        {
-          "chart_name": "Chart1",
-          "chart_id": 1,
-        },
-        {
-          "chart_name": "Chart2",
-          "chart_id": 2,
-        },
-        {
-          "chart_name": "Chart3",
-          "chart_id": 3,
-        },
-        {
-          "chart_name": "Chart4",
-          "chart_id": 4,
-        },
-        {
-          "chart_name": "Chart5",
-          "chart_id": 5,
-        }
-      ]
-    },
-    {
-      "dashboard_name": "Dashboard2",
-      "dashboard_id": 2,
-      "dashboard_description": "This is the second dashboard",
-      "all_charts": [ 
-        {
-          "chart_name": "Chart6",
-          "chart_id": 6,
-        },
-        {
-          "chart_name": "Chart7",
-          "chart_id": 7,
-        },
-        {
-          "chart_name": "Chart8",
-          "chart_id": 8,
-        },
-        {
-          "chart_name": "Chart9",
-          "chart_id": 9,
-        },
-        {
-          "chart_name": "Chart10",
-          "chart_id": 10,
-        }
-      ]
-    },
-    {
-      "dashboard_name": "Dashboard3",
-      "dashboard_id": 3,
-      "dashboard_description": "This is the third dashboard",
-      "all_charts": [ 
-        {
-          "chart_name": "Chart11",
-          "chart_id": 11,
-        },
-        {
-          "chart_name": "Chart12",
-          "chart_id": 12,
-        },
-        {
-          "chart_name": "Chart13",
-          "chart_id": 13,
-        },
-        {
-          "chart_name": "Chart14",
-          "chart_id": 14,
-        },
-        {
-          "chart_name": "Chart15",
-          "chart_id": 15,
-        }
-      ]
-    },
-  ];
-
-  // const dashboardlist = []
-  // exampleJsonResponse.forEach(dashboard => {
-  //   const dashboard_name = dashboard.dashboard_name;
-  //   const dashboard_id = dashboard.dashboard_id;
-  //   const dashboard_description = dashboard.dashboard_description;
-  //   dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
-  // });
-
   const [dashboardlist, setDashboardList] = useState([]);
 
   const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
@@ -134,22 +41,27 @@ function Dashboards() {
   }),[dashboard_list_endpoint];
 
   const [search_query, onSearch] = useState("");
-
-  // const dashboardlist = ["Dashboard1", "Dashboard2", "Dashboard3", "Dashboard4", "Dashboard5", 
-  // "Dashboard6", "Dashboard7", "Dashboard8", "Dashboard9", "Dashboard10"]
-
-  //TODO 2: along the same vein, retrive information that notifies the user if there is an update available, and render
-  //the update button accordingly
+  var[render,setRender]= useState(false);
 
 
-  const handleSearch = (event) =>{onSearch(event.target.value)}
-  const handleEnter = (event) =>{if(event.key === 'Enter'){
-    scrollToDashboard(search_query)
-  }}
+  const handleSearch = (event) =>{
+    onSearch(event.target.value);
+  }
+  // const handleSearch = (event) =>{onSearch(event.target.value)}
+  const handleEnter = () =>{
+    scrollToDashboard(search_query);
+  }
+  // const handleEnter = (event) =>{if(event.key === 'Enter'){
+  //   scrollToDashboard(search_query)
+  // }}
   const scrollToDashboard = (id) => {
     const element = document.getElementById(id);
-    if( element){
+    if(element){
       element.scrollIntoView({behavior: "smooth"});
+      setRender(false);
+    }
+    else{
+      setRender(true);
     }
   }
   return( 
@@ -161,9 +73,16 @@ function Dashboards() {
           <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>          
           <input type="text border-solid w-full" 
             placeholder='search for dashboard ...'
-            onChange={handleSearch}
-            onEnter={handleEnter}>
+            onChange={handleSearch}>
           </input>
+          <button onClick={handleEnter}>Search</button>
+          {
+            render &&
+            <div className="d-flex flex w-full d-flex justify-center">
+                <p className="text-red-500">Dashboard does not exist, please try again !</p>
+
+            </div>
+          }
         </div>
 
         {/* <div class="scroll-smooth"> */}
@@ -172,7 +91,7 @@ function Dashboards() {
             dashboardlist.map((dashboard) => (
               <div className="mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
-                  <div className="grid-element test">
+                  <div className="grid-element">
                     <Link to={`/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`}>
                       <button className="bg-sky-200  w-full h-full">
                         <h2 className="text-sky-400">{dashboard[2]}</h2>
@@ -221,5 +140,97 @@ function Dashboards() {
   )
 }
 
+//assuming we've called response.get 
+  // const exampleJsonResponse = [
+  //   {
+  //     "dashboard_name": "Dashboard1",
+  //     "dashboard_id": 1,
+  //     "dashboard_description": "This is the first dashboard",
+  //     "all_charts": [ 
+  //       {
+  //         "chart_name": "Chart1",
+  //         "chart_id": 1,
+  //       },
+  //       {
+  //         "chart_name": "Chart2",
+  //         "chart_id": 2,
+  //       },
+  //       {
+  //         "chart_name": "Chart3",
+  //         "chart_id": 3,
+  //       },
+  //       {
+  //         "chart_name": "Chart4",
+  //         "chart_id": 4,
+  //       },
+  //       {
+  //         "chart_name": "Chart5",
+  //         "chart_id": 5,
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     "dashboard_name": "Dashboard2",
+  //     "dashboard_id": 2,
+  //     "dashboard_description": "This is the second dashboard",
+  //     "all_charts": [ 
+  //       {
+  //         "chart_name": "Chart6",
+  //         "chart_id": 6,
+  //       },
+  //       {
+  //         "chart_name": "Chart7",
+  //         "chart_id": 7,
+  //       },
+  //       {
+  //         "chart_name": "Chart8",
+  //         "chart_id": 8,
+  //       },
+  //       {
+  //         "chart_name": "Chart9",
+  //         "chart_id": 9,
+  //       },
+  //       {
+  //         "chart_name": "Chart10",
+  //         "chart_id": 10,
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     "dashboard_name": "Dashboard3",
+  //     "dashboard_id": 3,
+  //     "dashboard_description": "This is the third dashboard",
+  //     "all_charts": [ 
+  //       {
+  //         "chart_name": "Chart11",
+  //         "chart_id": 11,
+  //       },
+  //       {
+  //         "chart_name": "Chart12",
+  //         "chart_id": 12,
+  //       },
+  //       {
+  //         "chart_name": "Chart13",
+  //         "chart_id": 13,
+  //       },
+  //       {
+  //         "chart_name": "Chart14",
+  //         "chart_id": 14,
+  //       },
+  //       {
+  //         "chart_name": "Chart15",
+  //         "chart_id": 15,
+  //       }
+  //     ]
+  //   },
+  // ];
+
+  // const dashboardlist = []
+  // exampleJsonResponse.forEach(dashboard => {
+  //   const dashboard_name = dashboard.dashboard_name;
+  //   const dashboard_id = dashboard.dashboard_id;
+  //   const dashboard_description = dashboard.dashboard_description;
+  //   dashboardlist.push([dashboard_name, dashboard_id, dashboard_description]);
+  // });
 
 export default Dashboards;
