@@ -15,10 +15,10 @@ CORS(app)
 # initialize_firebase()
 
 # from .routes.vc import vc
-from .routes.views2 import views2
+from .routes.views import views
 
 # app.register_blueprint(vc, url_prefix='/vc')
-app.register_blueprint(views2, url_prefix='/view')
+app.register_blueprint(views, url_prefix='/view')
 
 # GitHub Authorizaiton, setting up with OAuth 2.0
 

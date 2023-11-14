@@ -6,7 +6,7 @@ from backend.routes.dashboard_handler import DashboardHandler
 from backend.routes.changes_handler import ChangesHandler
 from backend.utils.superset_constants import *
 from backend.utils.endpoints import *
-from backend.utils.api_helpers2 import *
+from backend.utils.api_helpers import *
 from backend.app import app as flask_app
 import pytest
 import requests
