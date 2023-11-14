@@ -6,6 +6,7 @@ import yaml
 
 from backend.utils.endpoints import *
 from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
+from backend.utils.utils import create_id
 
 
 def get_access_token():
@@ -108,6 +109,7 @@ def change_chart_details(charts, extracted_folder_name):
         chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
         params = [
             ("dataset_uuid", dataset_uuid),
+            ("uuid", create_id())
             # ("slice_name", chart_new_name)
         ]
         set_new_details(chart_filename, params)
@@ -117,57 +119,24 @@ def import_new_dashboard(access_token, csrf_token, filename):
     with zipfile.ZipFile(f'{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
         zipdir(f'zip/{filename}', zipf)
 
-    # zipfile.ZipFile.write(filename, mode='w')
-    # print(filename)
-    # # file = open(filename, "rb")
-    # file = zipfile.ZipFile.open(name=filename, mode='r')
-    # data = {
-    #     "formData": (
-    #     filename,
-    #     open(filename, 'rb'),
-    #     'application/json'
-    # ),
-    # }
-    # headers = {
-    #     "Authorization": "Bearer " + access_token,
-    #     "X-CSRFToken": csrf_token
-    # }
-    # response = requests.post(url=SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, files=data, headers=headers)
+    login_data = {
+        "username": SUPERSET_USERNAME,
+        "password": SUPERSET_PASSWORD,
+        "provider": "db"
+    }
+    headers = {"Authorization": "Bearer " + access_token}
+    files = [('formData', (f'{filename}.zip', open(f'{filename}.zip', 'rb'), 'application/zip'))]
 
-    # fileobj = open(f'{filename}.zip', 'rb')
+    session = requests.Session()
+    access_token = session.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data).json()["access_token"]
+    csrf_token = session.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
 
-    # payload = {'overwrite': 'true'}
-    # f'../{filename}.zip'
-    file_path = os.path.abspath(f'{filename}.zip')
-    print(file_path)
-    payload={'passwords': '{"databases/examples.yaml": ""}',
-             'overwrite': 'true'}
-    files = [('formData',
-              (f'{filename}.zip',
-               open(file_path,'rb'),
-               'application/zip'))]
     headers = {
-                "Authorization": "Bearer " + access_token,
-                "X-CSRFToken": csrf_token,
-                'Accept': 'application/json'
-            }
-    print(files)
-    r = requests.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT,
-                      headers=headers, data=payload, files=files)
+        'Authorization': 'Bearer {}'.format(access_token),
+        'X-CSRFToken': csrf_token,
+    }
 
-    # with open(f'{filename}.zip', 'rb') as file:
-    #     files = {'formData': (f'{filename}.zip', file, 'application/zip')}
-    #     payload = {'overwrite': True}
-    #     headers = {
-    #         "Authorization": "Bearer " + access_token,
-    #         "X-CSRFToken": csrf_token
-    #     }
-    #     # headers = {"Authorization": f"Bearer {}", 'Accept': 'application/json'}
-    #     response = requests.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, headers=headers, files=files, data=payload)
-    #
-    #     if response.status_code != 200:
-    #         raise Exception(f"Failed to import dashboard: {response.text}")
-    #     print("Dashboard imported successfully!")
+    response = session.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, headers=headers, files=files)
 
 
 def zipdir(path, ziph):
