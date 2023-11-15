@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, jsonify, session, url_for
+from flask import Flask, redirect, request, jsonify, session, send_from_directory
 from flask_cors import CORS
 from os import environ
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ import requests
 
 # from .firebase_config import initialize_firebase
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='dist')
 CORS(app)
 # initialize_firebase()
 
@@ -94,6 +94,11 @@ def logout():
     session.pop('github_user', None)
     return jsonify({'Message': "Logged Out"}), 200
     # or use session.clear()
+
+
+@app.route("/", defaults={'path':''})
+def serve(path):
+	return send_from_directory(app.static_folder,'index.html')
 
 
 # Added a sample dashboard to Firebase:
