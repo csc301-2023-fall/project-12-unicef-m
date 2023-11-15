@@ -121,7 +121,7 @@ def clone():
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
-    update_dashboard_uuids(f'zip/{extracted_folder_name}/charts/', dashboard_filename)
+    update_dashboard_uuids(charts, f'zip/{extracted_folder_name}/charts/', dashboard_filename)
 
     csrf_token = get_csrf_token(access_token)
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)

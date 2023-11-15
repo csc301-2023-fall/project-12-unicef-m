@@ -113,23 +113,28 @@ def set_new_details(filename, params):
         yaml.dump(file_data, file, sort_keys=False)
 
 
-def update_dashboard_uuids(charts_dir, dashboard_filepath):
+def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
     # Read the dashboard file
     with open(dashboard_filepath, 'r') as dashboard_file:
         dashboard_data = yaml.safe_load(dashboard_file)
 
         # Loop over all files in the charts directory
-        for chart_filename in os.listdir(charts_dir):
+        for i in range(len(charts)):
+            chart_id = charts[i]['chart_id']
+            chart_prefix = charts[i]["chart_old_name"].replace(" ", "_")
+            chart_filename = f'{chart_prefix}_{chart_id}.yaml'
 
             # Read the chart file
             chart_file_path = os.path.join(charts_dir, chart_filename)
+
             assert chart_file_path.endswith('.yaml')
             assert os.path.isfile(chart_file_path)
             with open(chart_file_path, 'r') as chart_file:
                 chart_data = yaml.safe_load(chart_file)
 
+            chart_uuid = chart_data.get('uuid')
             # Update UUID in the dashboard data
-            update_uuid(chart_data, dashboard_data)
+            update_uuid(chart_id, chart_uuid, dashboard_data)
 
             chart_file.close()
 
@@ -138,21 +143,16 @@ def update_dashboard_uuids(charts_dir, dashboard_filepath):
         yaml.dump(dashboard_data, dashboard_file, default_flow_style=False)
 
 
-def update_uuid(chart_data, dashboard_data):
-    slice_name = chart_data.get('slice_name')
-    uuid_to_replace = chart_data.get('uuid')
-    assert slice_name is not None and uuid_to_replace is not None
-
-    for chart_id, chart_info in dashboard_data.get('position', {}).items():
-
-        if chart_info.get('type') == 'CHART':
-            meta = chart_info.get('meta', {})
-
-            # Check if slice name matches
-            if meta.get('sliceName') == slice_name:
-                # Update the UUID
-                meta['uuid'] = uuid_to_replace
-                break
+def update_uuid(chart_id, chart_uuid, dashboard_data):
+    for _, chart_info in dashboard_data.get('position', {}).items():
+        if 'type' in chart_info:
+            if chart_info.get('type') == 'CHART':
+                meta = chart_info.get('meta', {})
+                # Check if slice name matches
+                if meta.get('chartId') == chart_id:
+                    # Update the UUID
+                    meta['uuid'] = chart_uuid
+                    break
 
 
 def import_new_dashboard(access_token, csrf_token, filename):
@@ -177,6 +177,8 @@ def import_new_dashboard(access_token, csrf_token, filename):
     }
 
     response = session.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, headers=headers, files=files)
+
+    return "Imported"
 
 
 def zipdir(path, ziph):
