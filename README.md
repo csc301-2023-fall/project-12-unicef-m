@@ -2,7 +2,7 @@
 
 We have created a video for our D3 submission also linked in the iteration-03-review.md file.
 
-#### Video Link:
+#### Video Link in Docs: https://docs.google.com/document/d/1bYASU4AnV9Rw8COij2wMZFm57ggSoFY9WIWmg3Y8Ekw/edit
 
 Group Number: 12  
 Team Name: Red Pandas  
