@@ -139,7 +139,7 @@ function FinalClone() {
       "charts": charts
     }
     console.log(clone_response_data)
-    const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/clone';
+    const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
     const handleCloneSubmit = async() => {
       try{
