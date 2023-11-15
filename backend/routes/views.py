@@ -3,6 +3,8 @@ from backend.utils.api_helpers import *
 import json
 import os
 
+from backend.utils.utils import create_id
+
 views = Blueprint('views', __name__)
 
 
@@ -117,12 +119,12 @@ def clone():
     dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
     dashboard_filename = f'zip/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
 
-    set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name)])
-
+    set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
+    update_dashboard_uuids(charts, f'zip/{extracted_folder_name}/charts/', dashboard_filename)
 
     csrf_token = get_csrf_token(access_token)
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
-    # delete_zip("zip/")
+    delete_zip("zip/")
     return "Cloning Successful"
