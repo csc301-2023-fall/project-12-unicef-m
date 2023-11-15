@@ -194,8 +194,9 @@ def delete_zip(path):
     try:
         for root, dirs, files in os.walk(path):
             for file in files:
-                file_path = os.path.join(root, file)
-                os.remove(file_path)
+                if file != '.dummy':
+                    file_path = os.path.join(root, file)
+                    os.remove(file_path)
 
             for directory in dirs:
                 dir_path = os.path.join(root, directory)
