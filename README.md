@@ -46,7 +46,7 @@ https://project12-csc301.onrender.com/
 
 Login to the program using the following credentials:
 
-Superset Instance URL: User
+Dashboard Name: User
 
 Superset Username: testuser
 
