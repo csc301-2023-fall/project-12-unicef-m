@@ -115,7 +115,8 @@ def clone():
 
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
     PARENT_DIR = os.path.join(FILE_DIR, os.pardir) 
-    dir_of_interest = os.path.join(PARENT_DIR, 'zip')
+    GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
+    dir_of_interest = os.path.join(GRANDPARENT_DIR, 'zip')
 
     access_token = get_access_token()
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
