@@ -12,6 +12,7 @@ function FinalClone() {
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
   let {url} = useParams();  
+  console.log(url)
 
   const [chart_list, setChartList] = useState([]);
   let db_id =0
@@ -179,7 +180,7 @@ function FinalClone() {
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
           {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${dashboard_name}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
            <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
