@@ -22,7 +22,6 @@ def get_access_token():
 
 def get_csrf_token(access_token):
     headers = {"Authorization": "Bearer " + access_token}
-    print(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT)
     return requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
 
 
@@ -64,7 +63,7 @@ def export_one_dashboard(access_token, dashboard_id):
 
     dashboard_endpoint = f'{SUPERSET_INSTANCE_URL}api/v1/dashboard/export/?q=[{dashboard_id}]'
     dashboards = requests.get(url=dashboard_endpoint, headers=headers)
-    # print(dashboards.content)
+
     local_path = "zip/exported_one_dashboard.zip"
     with open(local_path, "wb") as f:
         f.write(dashboards.content)
@@ -73,7 +72,6 @@ def export_one_dashboard(access_token, dashboard_id):
     with zipfile.ZipFile(local_path) as myzip:
         myzip.extractall(path='./zip')
 
-    print(myzip.namelist()[0][:32])
     # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
     # make this dynamic, hard coded for now
     return myzip.namelist()[0][:32]
@@ -83,16 +81,6 @@ def get_dataset_uuid(filename):
     with open(filename, 'r') as file:
         dataset_data = yaml.safe_load(file)
     return dataset_data["uuid"]
-
-
-# params is of the format [(key, value)]
-def set_new_details(filename, params):
-    with open(filename, 'r') as file:
-        file_data = yaml.safe_load(file)
-        for key, value in params:
-            file_data[key] = value
-    with open(filename, 'w') as file:
-        yaml.dump(file_data, file, sort_keys=False)
 
 
 def change_chart_details(charts, extracted_folder_name):
@@ -113,6 +101,58 @@ def change_chart_details(charts, extracted_folder_name):
             # ("slice_name", chart_new_name)
         ]
         set_new_details(chart_filename, params)
+
+
+# params is of the format [(key, value)]
+def set_new_details(filename, params):
+    with open(filename, 'r') as file:
+        file_data = yaml.safe_load(file)
+        for key, value in params:
+            file_data[key] = value
+    with open(filename, 'w') as file:
+        yaml.dump(file_data, file, sort_keys=False)
+
+
+def update_dashboard_uuids(charts_dir, dashboard_filepath):
+    # Read the dashboard file
+    with open(dashboard_filepath, 'r') as dashboard_file:
+        dashboard_data = yaml.safe_load(dashboard_file)
+
+        # Loop over all files in the charts directory
+        for chart_filename in os.listdir(charts_dir):
+
+            # Read the chart file
+            chart_file_path = os.path.join(charts_dir, chart_filename)
+            assert chart_file_path.endswith('.yaml')
+            assert os.path.isfile(chart_file_path)
+            with open(chart_file_path, 'r') as chart_file:
+                chart_data = yaml.safe_load(chart_file)
+
+            # Update UUID in the dashboard data
+            update_uuid(chart_data, dashboard_data)
+
+            chart_file.close()
+
+    # Write the updated dashboard data back to the dashboard file
+    with open(dashboard_filepath, 'w') as dashboard_file:
+        yaml.dump(dashboard_data, dashboard_file, default_flow_style=False)
+
+
+def update_uuid(chart_data, dashboard_data):
+    slice_name = chart_data.get('slice_name')
+    uuid_to_replace = chart_data.get('uuid')
+    assert slice_name is not None and uuid_to_replace is not None
+
+    for chart_id, chart_info in dashboard_data.get('position', {}).items():
+
+        if chart_info.get('type') == 'CHART':
+            meta = chart_info.get('meta', {})
+
+            # Check if slice name matches
+            if meta.get('sliceName') == slice_name:
+                # Update the UUID
+                meta['uuid'] = uuid_to_replace
+                break
 
 
 def import_new_dashboard(access_token, csrf_token, filename):

@@ -38,7 +38,7 @@ function Dashboards() {
     .catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
-  }),[dashboard_list_endpoint];
+  },[]);
 
   const [search_query, onSearch] = useState("");
   var[render,setRender]= useState(false);
