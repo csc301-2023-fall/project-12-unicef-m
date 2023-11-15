@@ -9,7 +9,7 @@ import axios from "axios";
 
 function Dashboards() {
 
-  let {dashboard_name} = useParams();
+  let {url} = useParams();
   let {username} = useParams();
 
   const notification = true;
@@ -92,7 +92,7 @@ function Dashboards() {
               <div className="mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
                   <div className="grid-element">
-                    <Link to={`/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`}>
+                    <Link to={`/${url}/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`}>
                       <button className="bg-sky-200  w-full h-full">
                         <h2 className="text-sky-400">{dashboard[2]}</h2>
                       </button>
@@ -101,7 +101,7 @@ function Dashboards() {
                   </div>
                  
                   <div className="grid-element">
-                    <Link to={`/update/${dashboard_name}`}>
+                    <Link to={`/update/${url}`}>
                       <button className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</button>
                     </Link>
                   </div>
@@ -111,8 +111,8 @@ function Dashboards() {
               </div>
             ))
           }
-
         </div>
+
         {/* <div>
             <Link to={`/final_clone/${url}`}>
               <button className="bg-sky-200 w-full h-full" >
