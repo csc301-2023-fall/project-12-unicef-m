@@ -4,7 +4,7 @@
 
 We have created a video for our D3 submission.
 
-#### Video Link:
+#### Video Link: https://docs.google.com/document/d/1bYASU4AnV9Rw8COij2wMZFm57ggSoFY9WIWmg3Y8Ekw/edit
 
 ## Review & Retrospect
 
