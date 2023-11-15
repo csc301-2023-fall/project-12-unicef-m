@@ -4,6 +4,8 @@ We have created a video for our D3 submission also linked in the iteration-03-re
 
 #### Video Link:
 
+https://docs.google.com/document/d/15DNbcaayjMLIahSCqLSsfEdc5vjFLFGZHfgA4R6nAxw/edit?usp=sharing
+
 Group Number: 12  
 Team Name: Red Pandas  
 
