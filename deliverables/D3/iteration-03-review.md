@@ -1,5 +1,11 @@
 # Team 12, Red Pandas
 
+## NOTE TO TA FOR D3:
+
+We have created a video for our D3 submission.
+
+#### Video Link:
+
 ## Review & Retrospect
 
  * When: November 1 and 8
