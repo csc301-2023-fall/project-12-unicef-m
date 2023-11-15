@@ -1,3 +1,11 @@
+## NOTE TO TA FOR D3:
+
+We have created two videos for our D3 submission also linked in the iteration-03-review.md file.
+
+#### Video 1, Front End:
+
+#### Video 2, Back End:
+
 Group Number: 12  
 Team Name: Red Pandas  
 
