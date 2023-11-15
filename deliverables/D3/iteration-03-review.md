@@ -6,6 +6,8 @@ We have created a video for our D3 submission.
 
 #### Video Link: https://docs.google.com/document/d/1bYASU4AnV9Rw8COij2wMZFm57ggSoFY9WIWmg3Y8Ekw/edit
 
+https://docs.google.com/document/d/15DNbcaayjMLIahSCqLSsfEdc5vjFLFGZHfgA4R6nAxw/edit?usp=sharing
+
 ## Review & Retrospect
 
  * When: November 1 and 8
