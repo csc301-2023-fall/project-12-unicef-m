@@ -43,6 +43,7 @@ function FinalClone() {
       const sources = response.data;
       const s_list = [];
       sources.forEach(source => {
+        console.log(clone_endpoint, error)
         s_list.push([source.dataset_name,source.database_name])
       })
       // console.log(s_list)
@@ -50,7 +51,7 @@ function FinalClone() {
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
     });
-  }),[dashboard_list_endpoint, source_list_endpoint];
+  },[]);
   // upon mounting, fetch the chart list from the backend
 
 
