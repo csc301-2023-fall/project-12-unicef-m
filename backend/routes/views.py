@@ -126,5 +126,5 @@ def clone():
     csrf_token = get_csrf_token(access_token)
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
-    delete_zip("zip/")
+    #delete_zip("../zip/")
     return "Cloning Successful"
