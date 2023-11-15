@@ -35,7 +35,7 @@ All of the code was decoupled from the start so there were little to no merge co
 
 #### Q4. How was your product demo?
 
-Frontend Demo
+### Frontend Demo
 
 Summary:
 
@@ -50,7 +50,7 @@ We should continue to make our user interface’s more accessible and add in the
 
 To improve our user interface for the target audience that is UNICEF, we will strictly utilise the official UNICEF colour schemes. As we have been provided a link (https://unicef.github.io/design-system/), it will be a simple but visually appealing change for our partners at UNICEF.
 
-Backend Demo
+### Backend Demo
 
 Summary:
 
@@ -64,7 +64,7 @@ Project needs to shift focus now as a useful program is more important than addi
 
 Due to the size of the list of dashboards, charts, and datasets, our initial usage of a dropdown menu, created on our mockup frontend, will be insufficient. We will need to add a search feature to allow the users to quickly narrow down the number of items that they must look at.
 
-Version Control Demo
+### Version Control Demo
 
 Summary:
 
