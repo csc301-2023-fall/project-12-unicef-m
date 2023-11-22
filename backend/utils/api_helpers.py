@@ -106,7 +106,7 @@ def set_new_details(filename, details):
     """
     Set new dashboard_name and dashboard_uuid for the new dashboard file
 
-    @param filename: The filename for the new dashboard
+    @param filename: The filename of the new dashboard
     @param details: A list containing new_dashboard_name and dashboard_uuid in the format [(key, value)]
     @return: None
     """
