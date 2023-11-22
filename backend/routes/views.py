@@ -124,7 +124,6 @@ def clone():
     extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
     dashboard_filename = get_dashboard_filename(dashboard_old_name, dir_of_interest,
                                                 extracted_folder_name, dashboard_id)
-
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
     update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)

@@ -129,10 +129,10 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
 
 
 def import_new_dashboard(request_handler, filename):
-    with zipfile.ZipFile(f'{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
+    with zipfile.ZipFile(f'zip/{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
         _zipdir(f'zip/{filename}', zipf)
 
-    files = [('formData', (f'{filename}.zip', open(f'{filename}.zip', 'rb'), 'application/zip'))]
+    files = [('formData', (f'zip/{filename}.zip', open(f'zip/{filename}.zip', 'rb'), 'application/zip'))]
 
     request_handler.post_request(IMPORT_ENDPOINT, files=files)
 
