@@ -185,20 +185,3 @@ def _zipdir(path, ziph):
             ziph.write(os.path.join(root, file),
                        os.path.relpath(os.path.join(root, file),
                                        os.path.join(path, '..')))
-
-
-# --------------------------------------- Temporary Until Refactoring is complete -----------------------
-def get_access_token():
-    login_data = {
-        "username": SUPERSET_USERNAME,
-        "password": SUPERSET_PASSWORD,
-        "provider": "db"
-    }
-
-    # makes a post request to get access token
-    return requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data).json()["access_token"]
-
-
-def get_csrf_token(access_token):
-    headers = {"Authorization": "Bearer " + access_token}
-    return requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
