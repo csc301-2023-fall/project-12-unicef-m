@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from backend.utils.api_helpers import *
 import json
 import os
+from backend.utils.api_request_handler import APIRequestHandler
 
 from backend.utils.utils import create_id
 
@@ -35,7 +36,8 @@ def get_all_dashboards():
             }
         ]
     """
-    dashboards = get_dashboards()
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    dashboards = get_dashboards(request_handler)
 
     dashboard_list = []
 
@@ -43,7 +45,7 @@ def get_all_dashboards():
         dashboard_id = dashboard[0]
         dashboard_name = dashboard[1]
 
-        charts = get_charts(dashboard_id)
+        charts = get_charts(request_handler, dashboard_id)
 
         curr_dashboard_info = {
             "dashboard_id": dashboard_id,
@@ -71,7 +73,8 @@ def get_all_datasets():
             }
         ]
     """
-    datasets = get_datasets()
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    datasets = get_datasets(request_handler)
     dataset_list = []
 
     for dataset in datasets:
@@ -116,6 +119,7 @@ def clone():
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
     dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
     access_token = get_access_token()
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
 

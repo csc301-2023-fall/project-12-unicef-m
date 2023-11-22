@@ -12,8 +12,7 @@ from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAM
 from backend.utils.utils import create_id
 
 
-def get_dashboards():
-    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+def get_dashboards(request_handler):
     dashboard_response = request_handler.get_request(DASHBOARD_ENDPOINT)
     dashboards = dashboard_response.json()
 
@@ -23,10 +22,9 @@ def get_dashboards():
     return parsed_dashboards
 
 
-def get_charts(dashboard_id):
+def get_charts(request_handler, dashboard_id):
     chart_endpoint = f'{SUPERSET_INSTANCE_URL}{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts'
 
-    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
     chart_response = request_handler.get_request(chart_endpoint)
     charts = chart_response.json()
 
@@ -36,8 +34,7 @@ def get_charts(dashboard_id):
     return parsed_charts
 
 
-def get_datasets():
-    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+def get_datasets(request_handler):
     dataset_response = request_handler.get_request(DATASET_ENDPOINT)
     datasets = dataset_response.json()
 
@@ -48,6 +45,8 @@ def get_datasets():
 
 
 def export_one_dashboard(access_token, dashboard_id):
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+
     headers = {'Authorization': 'Bearer {}'.format(access_token),
                'Content-Type': 'application/json'}
 
@@ -67,23 +66,17 @@ def export_one_dashboard(access_token, dashboard_id):
     return myzip.namelist()[0][:32]
 
 
-def get_dataset_uuid(filename):
-    with open(filename, 'r') as file:
-        dataset_data = yaml.safe_load(file)
-    return dataset_data["uuid"]
-
-
 def change_chart_details(charts, extracted_folder_name):
     for chart in charts:
         chart_id = chart["chart_id"]
-        temp = remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
+        temp = _remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
         chart_old_name = temp.replace(" ", "_")
         # chart_new_name = chart[2]
         chart_new_dataset = chart["chart_new_dataset"]
         database = chart["database"].replace(" ", "_")
 
         dataset_filename = f'zip/{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
-        dataset_uuid = get_dataset_uuid(dataset_filename)
+        dataset_uuid = _get_dataset_uuid(dataset_filename)
 
         chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
         params = [
@@ -92,10 +85,6 @@ def change_chart_details(charts, extracted_folder_name):
             # ("slice_name", chart_new_name)
         ]
         set_new_details(chart_filename, params)
-
-
-def remove_non_alphanumeric_except_spaces(input_string):
-    return re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
 
 
 # params is of the format [(key, value)]
@@ -116,7 +105,7 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
         # Loop over all files in the charts directory
         for i in range(len(charts)):
             chart_id = charts[i]['chart_id']
-            temp = remove_non_alphanumeric_except_spaces(charts[i]["chart_old_name"])
+            temp = _remove_non_alphanumeric_except_spaces(charts[i]["chart_old_name"])
             chart_prefix = temp.replace(" ", "_")
             chart_filename = f'{chart_prefix}_{chart_id}.yaml'
 
@@ -155,7 +144,7 @@ def update_uuid(chart_id, chart_uuid, dashboard_data):
 
 def import_new_dashboard(access_token, csrf_token, filename):
     with zipfile.ZipFile(f'{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipdir(f'zip/{filename}', zipf)
+        _zipdir(f'zip/{filename}', zipf)
 
     login_data = {
         "username": SUPERSET_USERNAME,
@@ -179,15 +168,6 @@ def import_new_dashboard(access_token, csrf_token, filename):
     return "Imported"
 
 
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file),
-                       os.path.relpath(os.path.join(root, file),
-                                       os.path.join(path, '..')))
-
-
 def delete_zip(path):
     try:
         for root, dirs, files in os.walk(path):
@@ -203,3 +183,39 @@ def delete_zip(path):
 
     except OSError:
         print("Error occurred while deleting file")
+
+
+def _get_dataset_uuid(filename):
+    with open(filename, 'r') as file:
+        dataset_data = yaml.safe_load(file)
+    return dataset_data["uuid"]
+
+
+def _remove_non_alphanumeric_except_spaces(input_string):
+    return re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
+
+
+def _zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file),
+                       os.path.relpath(os.path.join(root, file),
+                                       os.path.join(path, '..')))
+
+
+# --------------------------------------- Temporary Until Refactoring is complete -----------------------
+def get_access_token():
+    login_data = {
+        "username": SUPERSET_USERNAME,
+        "password": SUPERSET_PASSWORD,
+        "provider": "db"
+    }
+
+    # makes a post request to get access token
+    return requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data).json()["access_token"]
+
+
+def get_csrf_token(access_token):
+    headers = {"Authorization": "Bearer " + access_token}
+    return requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
