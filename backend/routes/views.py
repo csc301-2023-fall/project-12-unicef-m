@@ -35,8 +35,7 @@ def get_all_dashboards():
             }
         ]
     """
-    access_token = get_access_token()
-    dashboards = get_dashboards(access_token)
+    dashboards = get_dashboards()
 
     dashboard_list = []
 
@@ -44,7 +43,7 @@ def get_all_dashboards():
         dashboard_id = dashboard[0]
         dashboard_name = dashboard[1]
 
-        charts = get_charts(access_token, dashboard_id)
+        charts = get_charts(dashboard_id)
 
         curr_dashboard_info = {
             "dashboard_id": dashboard_id,
@@ -72,8 +71,7 @@ def get_all_datasets():
             }
         ]
     """
-    access_token = get_access_token()
-    datasets = get_datasets(access_token)
+    datasets = get_datasets()
     dataset_list = []
 
     for dataset in datasets:

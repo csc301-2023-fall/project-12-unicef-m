@@ -6,59 +6,47 @@ import yaml
 
 import re
 
+from backend.utils.api_request_handler import APIRequestHandler
 from backend.utils.endpoints import *
 from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
 
 
-def get_access_token():
-    login_data = {
-        "username": SUPERSET_USERNAME,
-        "password": SUPERSET_PASSWORD,
-        "provider": "db"
-    }
-
-    # makes a post request to get access token
-    return requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data).json()["access_token"]
-
-
-def get_csrf_token(access_token):
-    headers = {"Authorization": "Bearer " + access_token}
-    return requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
-
-
-def get_dashboards(access_token):
-    headers = {"Authorization": "Bearer " + access_token}
-    dashboards = requests.get(SUPERSET_INSTANCE_URL + DASHBOARD_ENDPOINT, headers=headers).json()
+def get_dashboards():
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    dashboard_response = request_handler.get_request(DASHBOARD_ENDPOINT)
+    dashboards = dashboard_response.json()
 
     parsed_dashboards = []
-    for dashboard in dashboards["result"]:
+    for dashboard in dashboards.get("result"):
         parsed_dashboards.append((dashboard["id"], dashboard["dashboard_title"]))
     return parsed_dashboards
 
 
-# ------------------------------ functions to send data to front end ---------------------------------------------------
-def get_charts(access_token, dashboard_id):
-    headers = {"Authorization": "Bearer " + access_token}
+def get_charts(dashboard_id):
     chart_endpoint = f'{SUPERSET_INSTANCE_URL}{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts'
-    charts = requests.get(chart_endpoint, headers=headers).json()
+
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    chart_response = request_handler.get_request(chart_endpoint)
+    charts = chart_response.json()
 
     parsed_charts = []
-    for chart in charts["result"]:
+    for chart in charts.get("result"):
         parsed_charts.append((chart["id"], chart["slice_name"]))
     return parsed_charts
 
 
-def get_datasets(token):
-    headers = {"Authorization": "Bearer " + token}
-    datasets = requests.get(SUPERSET_INSTANCE_URL + DATASET_ENDPOINT, headers=headers).json()
+def get_datasets():
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    dataset_response = request_handler.get_request(DATASET_ENDPOINT)
+    datasets = dataset_response.json()
+
     parsed_datasets = []
-    for dataset in datasets["result"]:
+    for dataset in datasets.get("result"):
         parsed_datasets.append((dataset["table_name"], dataset["database"]["database_name"]))
     return parsed_datasets
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 def export_one_dashboard(access_token, dashboard_id):
     headers = {'Authorization': 'Bearer {}'.format(access_token),
                'Content-Type': 'application/json'}
