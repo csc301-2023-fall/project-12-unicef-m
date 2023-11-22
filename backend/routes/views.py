@@ -120,18 +120,16 @@ def clone():
     dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
-    access_token = get_access_token()
-    extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
 
-    dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
-    dashboard_filename = f'{dir_of_interest}/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+    extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
+    dashboard_filename = get_dashboard_filename(dashboard_old_name, dir_of_interest,
+                                                extracted_folder_name, dashboard_id)
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
     update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)
 
-    csrf_token = get_csrf_token(access_token)
-    import_new_dashboard(access_token, csrf_token, extracted_folder_name)
+    import_new_dashboard(request_handler, extracted_folder_name)
 
     delete_zip(f"{dir_of_interest}/")
     return "Cloning Successful"

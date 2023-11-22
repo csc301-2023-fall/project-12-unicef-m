@@ -6,7 +6,6 @@ import yaml
 
 import re
 
-from backend.utils.api_request_handler import APIRequestHandler
 from backend.utils.endpoints import *
 from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
@@ -23,7 +22,7 @@ def get_dashboards(request_handler):
 
 
 def get_charts(request_handler, dashboard_id):
-    chart_endpoint = f'{SUPERSET_INSTANCE_URL}{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts'
+    chart_endpoint = f'{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts'
 
     chart_response = request_handler.get_request(chart_endpoint)
     charts = chart_response.json()
@@ -44,18 +43,13 @@ def get_datasets(request_handler):
     return parsed_datasets
 
 
-def export_one_dashboard(access_token, dashboard_id):
-    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
-
-    headers = {'Authorization': 'Bearer {}'.format(access_token),
-               'Content-Type': 'application/json'}
-
-    dashboard_endpoint = f'{SUPERSET_INSTANCE_URL}api/v1/dashboard/export/?q=[{dashboard_id}]'
-    dashboards = requests.get(url=dashboard_endpoint, headers=headers)
+def export_one_dashboard(request_handler, dashboard_id):
+    export_dashboard_endpoint = f'{EXPORT_ENDPOINT}?q=[{dashboard_id}]'
+    export_response = request_handler.get_request(export_dashboard_endpoint)
 
     local_path = "zip/exported_one_dashboard.zip"
     with open(local_path, "wb") as f:
-        f.write(dashboards.content)
+        f.write(export_response.content)
 
     # extract the folder out of the zip file
     with zipfile.ZipFile(local_path) as myzip:
@@ -66,11 +60,27 @@ def export_one_dashboard(access_token, dashboard_id):
     return myzip.namelist()[0][:32]
 
 
+def get_dashboard_filename(dashboard_old_name, dir_of_interest, extracted_folder_name, dashboard_id):
+    dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
+    dashboard_filename = f'{dir_of_interest}/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+    return dashboard_filename
+
+
+def set_new_details(filename, params):
+    # params is of the format [(key, value)]
+    with open(filename, 'r') as file:
+        file_data = yaml.safe_load(file)
+        for key, value in params:
+            file_data[key] = value
+    with open(filename, 'w') as file:
+        yaml.dump(file_data, file, sort_keys=False)
+
+
 def change_chart_details(charts, extracted_folder_name):
     for chart in charts:
         chart_id = chart["chart_id"]
-        temp = _remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
-        chart_old_name = temp.replace(" ", "_")
+        chart_clean_name = _remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
+        chart_old_name = chart_clean_name.replace(" ", "_")
         # chart_new_name = chart[2]
         chart_new_dataset = chart["chart_new_dataset"]
         database = chart["database"].replace(" ", "_")
@@ -87,16 +97,6 @@ def change_chart_details(charts, extracted_folder_name):
         set_new_details(chart_filename, params)
 
 
-# params is of the format [(key, value)]
-def set_new_details(filename, params):
-    with open(filename, 'r') as file:
-        file_data = yaml.safe_load(file)
-        for key, value in params:
-            file_data[key] = value
-    with open(filename, 'w') as file:
-        yaml.dump(file_data, file, sort_keys=False)
-
-
 def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
     # Read the dashboard file
     with open(dashboard_filepath, 'r') as dashboard_file:
@@ -105,15 +105,13 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
         # Loop over all files in the charts directory
         for i in range(len(charts)):
             chart_id = charts[i]['chart_id']
-            temp = _remove_non_alphanumeric_except_spaces(charts[i]["chart_old_name"])
-            chart_prefix = temp.replace(" ", "_")
+            chart_clean_name = _remove_non_alphanumeric_except_spaces(charts[i]["chart_old_name"])
+            chart_prefix = chart_clean_name.replace(" ", "_")
             chart_filename = f'{chart_prefix}_{chart_id}.yaml'
 
             # Read the chart file
             chart_file_path = os.path.join(charts_dir, chart_filename)
 
-            if not os.path.isfile(chart_file_path):
-                breakpoint()
             assert chart_file_path.endswith('.yaml')
             assert os.path.isfile(chart_file_path)
             with open(chart_file_path, 'r') as chart_file:
@@ -121,7 +119,7 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
 
             chart_uuid = chart_data.get('uuid')
             # Update UUID in the dashboard data
-            update_uuid(chart_id, chart_uuid, dashboard_data)
+            _update_uuid(chart_id, chart_uuid, dashboard_data)
 
             chart_file.close()
 
@@ -130,40 +128,13 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
         yaml.dump(dashboard_data, dashboard_file, default_flow_style=False)
 
 
-def update_uuid(chart_id, chart_uuid, dashboard_data):
-    for _, chart_info in dashboard_data.get('position', {}).items():
-        if 'type' in chart_info:
-            if chart_info.get('type') == 'CHART':
-                meta = chart_info.get('meta', {})
-                # Check if slice name matches
-                if meta.get('chartId') == chart_id:
-                    # Update the UUID
-                    meta['uuid'] = chart_uuid
-                    break
-
-
-def import_new_dashboard(access_token, csrf_token, filename):
+def import_new_dashboard(request_handler, filename):
     with zipfile.ZipFile(f'{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
         _zipdir(f'zip/{filename}', zipf)
 
-    login_data = {
-        "username": SUPERSET_USERNAME,
-        "password": SUPERSET_PASSWORD,
-        "provider": "db"
-    }
-    headers = {"Authorization": "Bearer " + access_token}
     files = [('formData', (f'{filename}.zip', open(f'{filename}.zip', 'rb'), 'application/zip'))]
 
-    session = requests.Session()
-    access_token = session.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data).json()["access_token"]
-    csrf_token = session.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers).json()["result"]
-
-    headers = {
-        'Authorization': 'Bearer {}'.format(access_token),
-        'X-CSRFToken': csrf_token,
-    }
-
-    response = session.post(SUPERSET_INSTANCE_URL + IMPORT_ENDPOINT, headers=headers, files=files)
+    request_handler.post_request(IMPORT_ENDPOINT, files=files)
 
     return "Imported"
 
@@ -193,6 +164,18 @@ def _get_dataset_uuid(filename):
 
 def _remove_non_alphanumeric_except_spaces(input_string):
     return re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
+
+
+def _update_uuid(chart_id, chart_uuid, dashboard_data):
+    for _, chart_info in dashboard_data.get('position', {}).items():
+        if 'type' in chart_info:
+            if chart_info.get('type') == 'CHART':
+                meta = chart_info.get('meta', {})
+                # Check if slice name matches
+                if meta.get('chartId') == chart_id:
+                    # Update the UUID
+                    meta['uuid'] = chart_uuid
+                    break
 
 
 def _zipdir(path, ziph):
