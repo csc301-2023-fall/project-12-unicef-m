@@ -1,7 +1,7 @@
 import './pages.css'
 import { Link, useParams} from 'react-router-dom';
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
-
+import {useLocation} from 'react-router-dom';
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import Badge from '@mui/material/Badge';
 import { useState, useEffect } from "react";
@@ -9,7 +9,10 @@ import axios from "axios";
 
 function Dashboards() {
 
-  let {url} = useParams();
+  // let {url} = useParams();
+  const location = useLocation();
+  const superset_url = location.state;
+  console.log(superset_url);
   let {username} = useParams();
 
   const notification = true;
@@ -92,7 +95,7 @@ function Dashboards() {
               <div className="mt-10 mb-10">
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
                   <div className="grid-element">
-                    <Link to={`/${url}/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`}>
+                    <Link to={`/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`} state={superset_url}>
                       <button className="bg-sky-200  w-full h-full">
                         <h2 className="text-sky-400">{dashboard[2]}</h2>
                       </button>
@@ -101,7 +104,7 @@ function Dashboards() {
                   </div>
                  
                   <div className="grid-element">
-                    <Link to={`/update/${url}`}>
+                    <Link to={`/update/${dashboard[0]}`} state={{superset_url: {superset_url}, username:{username}}}>
                       <button className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</button>
                     </Link>
                   </div>

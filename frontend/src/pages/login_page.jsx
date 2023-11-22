@@ -34,7 +34,8 @@ function Login() {
   const checkValid = (event) => {
     event.preventDefault(); 
     if(username==user && password==pass){
-      navigateToDashboards(`/dashboards/${url}/${username}`);
+      // navigateToDashboards(`/dashboards/${url}/${username}`);
+      navigateToDashboards(`/dashboards/${username}`, {state: url});
       setRender(false);
     }
     else{
@@ -58,7 +59,7 @@ function Login() {
           <div className="form-wrapper">
               <form className="flex flex-col ">
                 <div className="form-group mb-2 mt-5">
-                  <label className="text-sky-400 font-semibold text-lg" for="#url" >Dashboard Name: </label>
+                  <label className="text-sky-400 font-semibold text-lg" for="#url" >Superset Url: </label>
                   <input className="clone-input bg-sky-400 text-white" type="text" id="url"  onInput={handleUrl} required></input>
                   {/* <input className="clone-input " type="text" id="url" required></input> */}
                 </div>

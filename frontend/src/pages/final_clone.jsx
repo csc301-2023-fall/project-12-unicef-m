@@ -1,5 +1,5 @@
 import './pages.css'
-import { Link, useParams, useNavigate} from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -11,8 +11,11 @@ function FinalClone() {
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-  let {url} = useParams();  
-  console.log(url)
+  // let {url} = useParams();  
+  // console.log(url)
+  const location = useLocation();
+  const superset_url = location.state;
+  console.log(superset_url);
 
   const [chart_list, setChartList] = useState([]);
   let db_id =0
@@ -161,7 +164,8 @@ function FinalClone() {
           url: clone_endpoint,
           data: clone_response_data,
         })
-        navigateToDashboards(`/dashboards/${url}/${username}`);
+        // navigateToDashboards(`/dashboards/${url}/${username}`);
+         navigateToDashboards(`/dashboards/${username}`, state={superset_url});
         console.log("Success !")
         // matches w/ url format in main.jsx for re
         setError(null)
@@ -180,7 +184,7 @@ function FinalClone() {
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
           {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+          <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
            <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
