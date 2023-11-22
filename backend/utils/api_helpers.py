@@ -4,6 +4,8 @@ import requests
 import zipfile
 import yaml
 
+import re
+
 from backend.utils.endpoints import *
 from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
@@ -86,7 +88,8 @@ def get_dataset_uuid(filename):
 def change_chart_details(charts, extracted_folder_name):
     for chart in charts:
         chart_id = chart["chart_id"]
-        chart_old_name = chart["chart_old_name"].replace(" ", "_")
+        temp = remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
+        chart_old_name = temp.replace(" ", "_")
         # chart_new_name = chart[2]
         chart_new_dataset = chart["chart_new_dataset"]
         database = chart["database"].replace(" ", "_")
@@ -101,6 +104,10 @@ def change_chart_details(charts, extracted_folder_name):
             # ("slice_name", chart_new_name)
         ]
         set_new_details(chart_filename, params)
+
+
+def remove_non_alphanumeric_except_spaces(input_string):
+    return re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
 
 
 # params is of the format [(key, value)]
@@ -121,12 +128,15 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
         # Loop over all files in the charts directory
         for i in range(len(charts)):
             chart_id = charts[i]['chart_id']
-            chart_prefix = charts[i]["chart_old_name"].replace(" ", "_")
+            temp = remove_non_alphanumeric_except_spaces(charts[i]["chart_old_name"])
+            chart_prefix = temp.replace(" ", "_")
             chart_filename = f'{chart_prefix}_{chart_id}.yaml'
 
             # Read the chart file
             chart_file_path = os.path.join(charts_dir, chart_filename)
 
+            if not os.path.isfile(chart_file_path):
+                breakpoint()
             assert chart_file_path.endswith('.yaml')
             assert os.path.isfile(chart_file_path)
             with open(chart_file_path, 'r') as chart_file:

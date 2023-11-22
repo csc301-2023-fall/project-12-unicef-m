@@ -2,7 +2,7 @@
 
 We have created a video for our D3 submission also linked in the iteration-03-review.md file.
 
-#### Video Link:
+#### Video Link in Docs: https://docs.google.com/document/d/1bYASU4AnV9Rw8COij2wMZFm57ggSoFY9WIWmg3Y8Ekw/edit
 
 https://docs.google.com/document/d/15DNbcaayjMLIahSCqLSsfEdc5vjFLFGZHfgA4R6nAxw/edit?usp=sharing
 
@@ -46,7 +46,7 @@ https://project12-csc301.onrender.com/
 
 Login to the program using the following credentials:
 
-Superset Instance URL: User
+Dashboard Name: User
 
 Superset Username: testuser
 

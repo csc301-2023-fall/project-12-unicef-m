@@ -11,7 +11,8 @@ function FinalClone() {
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-
+  let {url} = useParams();  
+  console.log(url)
 
   const [chart_list, setChartList] = useState([]);
   let db_id =0
@@ -43,7 +44,7 @@ function FinalClone() {
       const sources = response.data;
       const s_list = [];
       sources.forEach(source => {
-        console.log(clone_endpoint, error)
+        // console.log(clone_endpoint, error)
         s_list.push([source.dataset_name,source.database_name])
       })
       // console.log(s_list)
@@ -77,6 +78,7 @@ function FinalClone() {
     
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
+  console.log(chart_and_source_list)
 
   const handledb_name=(event)=>{
     // console.log(event.target.value)
@@ -95,16 +97,18 @@ function FinalClone() {
       const chart_attrib_list=[]
       const chart_id = chart_in_chart_list[1]
       const chart_name = chart_in_chart_list[0]
-      chart_attrib_list.push(chart_id)
-      chart_attrib_list.push(chart_name)
+      chart_attrib_list[0] = chart_id
+      chart_attrib_list[1] = chart_name
 
       chart_and_source_list.forEach(chart_and_source => {
-        const chart_we_want =chart_in_chart_list[0]
+        const chart_we_want = chart_in_chart_list[0]
         if (chart_and_source[0] ==chart_we_want) {
           // check if the chart name is in the chart_and_source_list
           // chart_and_source[0] is the chart name
           const chart_new_dataset = chart_and_source[1]
-          chart_attrib_list.push(chart_new_dataset)
+          console.log(chart_new_dataset)
+          // chart_attrib_list.push(chart_new_dataset)
+          chart_attrib_list[2] = chart_new_dataset
           //push the source name to the chart attributes
         }
 
@@ -114,10 +118,13 @@ function FinalClone() {
           if (source_name == source_we_want ) {
             // check if the source name is in the sourcelist
             const database = source[1]
-            chart_attrib_list.push(database)
+            chart_attrib_list[3] = database
+
+            // chart_attrib_list.push(database)
             //push the database name to the chart attributes
           }
         })
+
       })
 
       const chart_attributes ={
@@ -133,7 +140,7 @@ function FinalClone() {
     })
 
     const clone_response_data = {
-      "dashboard_id": db_id,
+      "dashboard_id": Number(dashboard_id),
       "dashboard_old_name": dashboard_old_name,
       "dashboard_new_name": dashboard_new_name, 
       "charts": charts
@@ -141,9 +148,22 @@ function FinalClone() {
     console.log(clone_response_data)
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
-    const handleCloneSubmit = async() => {
+
+    const navigateToDashboards = useNavigate();
+    const handleCloneSubmit = async(event) => {
+      event.preventDefault();
       try{
-        await axios.post(clone_endpoint, clone_response_data)
+        // await axios.post(clone_endpoint, clone_response_data)
+        
+        // console.log(clone_response_data)
+        await axios({
+          method: 'post',
+          url: clone_endpoint,
+          data: clone_response_data,
+        })
+        navigateToDashboards(`/dashboards/${url}/${username}`);
+        console.log("Success !")
+        // matches w/ url format in main.jsx for re
         setError(null)
       } catch(error){
         setError(error.response ? error.response.data : error.message)
@@ -160,12 +180,11 @@ function FinalClone() {
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
           {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${dashboard_name}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
            <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
-  
-      <form className="flex flex-col h-full">
+      <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
         <div className="form-group mb-2 mt-5 flex flex-row ">
           <label className="text-sky-400 font-semibold text-2xl" for="#dashboard_name">Rename: </label>
           {/* <input className="bg-sky-200" type="text" id="dashboard_name" value={dashboard_name} onChange={handleChange}></input> */}
@@ -195,7 +214,7 @@ function FinalClone() {
         </div>
         <div className="button-wrapper flex justify-center">
           {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-          <button className="bg-sky-400 w-1/2 text-lg" onPress={handleCloneSubmit}>Finalize Clone</button>
+          <button className="bg-sky-400 w-1/2 text-lg" type="submit">Finalize Clone</button>
         </div>
       </form>
   </div>

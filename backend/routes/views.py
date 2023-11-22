@@ -113,18 +113,23 @@ def clone():
     dashboard_new_name = request.json.get("dashboard_new_name")
     charts = request.json.get("charts")
 
+    FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+    PARENT_DIR = os.path.join(FILE_DIR, os.pardir) 
+    GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
+    dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
+
     access_token = get_access_token()
     extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
 
     dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
-    dashboard_filename = f'zip/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+    dashboard_filename = f'{dir_of_interest}/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
-    update_dashboard_uuids(charts, f'zip/{extracted_folder_name}/charts/', dashboard_filename)
+    update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)
 
     csrf_token = get_csrf_token(access_token)
     import_new_dashboard(access_token, csrf_token, extracted_folder_name)
 
-    delete_zip("zip/")
+    delete_zip(f"{dir_of_interest}/")
     return "Cloning Successful"
