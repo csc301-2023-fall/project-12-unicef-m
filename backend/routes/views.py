@@ -1,9 +1,10 @@
 from flask import Blueprint, request
-from backend.utils.api_helpers import *
 import json
 import os
-from backend.utils.api_request_handler import APIRequestHandler
 
+from backend.utils.api_helpers import *
+from backend.utils.api_request_handler import APIRequestHandler
+from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
 
 views = Blueprint('views', __name__)
@@ -94,6 +95,7 @@ def get_all_datasets():
 @views.route('/clone', methods=['POST'])
 def clone():
     """
+    Expected Return Format
        {
            "dashboard_id":
            "dashboard_old_name":
@@ -122,8 +124,9 @@ def clone():
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
     extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
-    dashboard_filename = get_dashboard_filename(dashboard_old_name, dir_of_interest,
-                                                extracted_folder_name, dashboard_id)
+    dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
+                                                dir_of_interest, extracted_folder_name)
+
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
     update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)

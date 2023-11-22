@@ -1,17 +1,20 @@
 import os
 
-import requests
 import zipfile
 import yaml
-
 import re
 
 from backend.utils.endpoints import *
-from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
 
 
 def get_dashboards(request_handler):
+    """
+    Return all dashboards within the SUPERSET_INSTANCE_URL in the APIRequestHandler
+
+    @param request_handler: An initialized APIRequestHandler
+    @return: A list of [dashboard_ids: int, dashboard_title: str]
+    """
     dashboard_response = request_handler.get_request(DASHBOARD_ENDPOINT)
     dashboards = dashboard_response.json()
 
@@ -22,6 +25,14 @@ def get_dashboards(request_handler):
 
 
 def get_charts(request_handler, dashboard_id):
+    """
+    Return all charts related to the specified dashboard id
+    within the SUPERSET_INSTANCE_URL in the APIRequestHandler
+
+    @param request_handler: An initialized APIRequestHandler
+    @param dashboard_id: An integer representing a dashboard within SUPERSET_INSTANCE_URL
+    @return: A list of [chart_id: int, slice_name: str]
+    """
     chart_endpoint = f'{DASHBOARD_ENDPOINT}{str(dashboard_id)}/charts'
 
     chart_response = request_handler.get_request(chart_endpoint)
@@ -34,6 +45,12 @@ def get_charts(request_handler, dashboard_id):
 
 
 def get_datasets(request_handler):
+    """
+    Return all datasets within the SUPERSET_INSTANCE_URL in the APIRequestHandler
+
+    @param request_handler: An initialized APIRequestHandler
+    @return: A list of [table_name: int, database_name: str]
+    """
     dataset_response = request_handler.get_request(DATASET_ENDPOINT)
     datasets = dataset_response.json()
 
@@ -44,6 +61,13 @@ def get_datasets(request_handler):
 
 
 def export_one_dashboard(request_handler, dashboard_id):
+    """
+    Export an existing dashboard from SUPERSET_INSTANCE_URL with dashboard_id into zip folder
+
+    @param request_handler: An initialized APIRequestHandler
+    @param dashboard_id: An integer representing a dashboard within SUPERSET_INSTANCE_URL
+    @return: Returns the folder name with the dashboards information (within the zip folder)
+    """
     export_dashboard_endpoint = f'{EXPORT_ENDPOINT}?q=[{dashboard_id}]'
     export_response = request_handler.get_request(export_dashboard_endpoint)
 
@@ -60,23 +84,48 @@ def export_one_dashboard(request_handler, dashboard_id):
     return myzip.namelist()[0][:32]
 
 
-def get_dashboard_filename(dashboard_old_name, dir_of_interest, extracted_folder_name, dashboard_id):
+def get_dashboard_filename(dashboard_id, dashboard_old_name, dir_of_interest, extracted_folder_name):
+    """
+    Get the full path to the dashboard filename
+
+    @param dashboard_id: The dashboard_id of the dashboard
+    @param dashboard_old_name: The original name of the dashboard
+    @param dir_of_interest: The full path to the zip file
+    @param extracted_folder_name: The folder within the zip file created from export_one_dashboard()
+    @return: The full path of the dashboard file
+    """
     dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
-    dashboard_filename = f'{dir_of_interest}/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+    d1 = f'{dir_of_interest}/{extracted_folder_name}/dashboards/'
+    d2 = f'{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+
+    dashboard_filename = d1 + d2
     return dashboard_filename
 
 
-def set_new_details(filename, params):
-    # params is of the format [(key, value)]
+def set_new_details(filename, details):
+    """
+    Set new dashboard_name and dashboard_uuid for the new dashboard file
+
+    @param filename: The filename for the new dashboard
+    @param details: A list containing new_dashboard_name and dashboard_uuid in the format [(key, value)]
+    @return: None
+    """
     with open(filename, 'r') as file:
         file_data = yaml.safe_load(file)
-        for key, value in params:
+        for key, value in details:
             file_data[key] = value
     with open(filename, 'w') as file:
         yaml.dump(file_data, file, sort_keys=False)
 
 
 def change_chart_details(charts, extracted_folder_name):
+    """
+    Change the details of the charts for the new dashboard
+
+    @param charts: A list of all charts containing [chart_id, chart_old_name]
+    @param extracted_folder_name: The folder within the zip file created from export_one_dashboard()
+    return: None
+    """
     for chart in charts:
         chart_id = chart["chart_id"]
         chart_clean_name = _remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
@@ -98,6 +147,14 @@ def change_chart_details(charts, extracted_folder_name):
 
 
 def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
+    """
+    Update the unique ids of all charts to in dashboard metadata
+
+    @param charts: A list of all charts containing [chart_id, chart_old_name]
+    @param charts_dir: The path to the directory containing all charts
+    @param dashboard_filepath: The path to the dashboard yaml file
+    return: None
+    """
     # Read the dashboard file
     with open(dashboard_filepath, 'r') as dashboard_file:
         dashboard_data = yaml.safe_load(dashboard_file)
@@ -129,6 +186,13 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
 
 
 def import_new_dashboard(request_handler, filename):
+    """
+    Import the new dashboard to SUPERSET_INSTANCE_URL
+
+    @param request_handler: An initialized APIRequestHandler
+    @param filename: The filename of the zip file containing the dashboard info
+    @return: None
+    """
     with zipfile.ZipFile(f'zip/{filename}.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
         _zipdir(f'zip/{filename}', zipf)
 
@@ -140,6 +204,12 @@ def import_new_dashboard(request_handler, filename):
 
 
 def delete_zip(path):
+    """
+    Delete all files (except .dummy) within the zip folder used to store temporary files
+
+    @param path: The full path to the zip folder
+    @return: None
+    """
     try:
         for root, dirs, files in os.walk(path):
             for file in files:
