@@ -31,13 +31,14 @@ const router = createBrowserRouter([
   // },
 
   {
-    path: "/dashboards/:dashboard_name/:username",
+    // path: "/dashboards/:dashboard_name/:username",
+    path: "/dashboards/:username",
     element: <Dashboards />,
     // test function for seeing if data from login page is passed to test page
   },
 
   {
-    path: "/update/:url/",
+    path: "/update/:dashboard_name/",
     element: <Update />,
     // test function for seeing if data from login page is passed to test page
   },

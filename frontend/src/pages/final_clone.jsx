@@ -1,5 +1,5 @@
 import './pages.css'
-import { Link, useParams, useNavigate} from 'react-router-dom';
+import { Link, useParams, useLocation, useNavigate} from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -8,6 +8,10 @@ import axios from 'axios';
 
 
 function FinalClone() {
+  const location = useLocation();
+  const superset_url = location.state;
+  console.log(superset_url);
+
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
@@ -141,9 +145,11 @@ function FinalClone() {
     console.log(clone_response_data)
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
+    const navigateToDashboards = useNavigate();
     const handleCloneSubmit = async() => {
       try{
         await axios.post(clone_endpoint, clone_response_data)
+        navigateToDashboards(`/dashboards/${username}`, {state: superset_url});
         setError(null)
       } catch(error){
         setError(error.response ? error.response.data : error.message)
@@ -160,7 +166,7 @@ function FinalClone() {
   <div class='flex gap-x-24'>
           {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
           {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${dashboard_name}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+          <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
            </div>
            <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
   <div className="final-clone-wrapper h-4/5 ">
@@ -195,7 +201,7 @@ function FinalClone() {
         </div>
         <div className="button-wrapper flex justify-center">
           {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-          <button className="bg-sky-400 w-1/2 text-lg" onPress={handleCloneSubmit}>Finalize Clone</button>
+          <button className="bg-sky-400 w-1/2 text-lg" onClick={handleCloneSubmit}>Finalize Clone</button>
         </div>
       </form>
   </div>
