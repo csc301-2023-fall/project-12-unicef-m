@@ -55,9 +55,9 @@ function FinalClone() {
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
     });
-  },[]);
+  },[chart_list, sourcelist]);
   // upon mounting, fetch the chart list from the backend
-
+  console.log(chart_list, sourcelist)
 
   // const [DBname,setDBname]=useState("");
   const [db_name,setdb_name]=useState(dashboard_name);
@@ -81,7 +81,7 @@ function FinalClone() {
     
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
-  console.log(chart_and_source_list)
+  // console.log(chart_and_source_list)
 
   const handledb_name=(event)=>{
     // console.log(event.target.value)
@@ -148,7 +148,7 @@ function FinalClone() {
       "dashboard_new_name": dashboard_new_name, 
       "charts": charts
     }
-    console.log(clone_response_data)
+    // console.log(clone_response_data)
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
 
