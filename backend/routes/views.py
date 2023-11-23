@@ -1,8 +1,10 @@
 from flask import Blueprint, request
-from backend.utils.api_helpers import *
 import json
 import os
 
+from backend.utils.api_helpers import *
+from backend.utils.api_request_handler import APIRequestHandler
+from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
 
 views = Blueprint('views', __name__)
@@ -35,8 +37,8 @@ def get_all_dashboards():
             }
         ]
     """
-    access_token = get_access_token()
-    dashboards = get_dashboards(access_token)
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    dashboards = get_dashboards(request_handler)
 
     dashboard_list = []
 
@@ -44,7 +46,7 @@ def get_all_dashboards():
         dashboard_id = dashboard[0]
         dashboard_name = dashboard[1]
 
-        charts = get_charts(access_token, dashboard_id)
+        charts = get_charts(request_handler, dashboard_id)
 
         curr_dashboard_info = {
             "dashboard_id": dashboard_id,
@@ -72,8 +74,8 @@ def get_all_datasets():
             }
         ]
     """
-    access_token = get_access_token()
-    datasets = get_datasets(access_token)
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    datasets = get_datasets(request_handler)
     dataset_list = []
 
     for dataset in datasets:
@@ -93,6 +95,7 @@ def get_all_datasets():
 @views.route('/clone', methods=['POST'])
 def clone():
     """
+    Expected Return Format
        {
            "dashboard_id":
            "dashboard_old_name":
@@ -118,18 +121,17 @@ def clone():
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
     dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
-    access_token = get_access_token()
-    extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
-    dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
-    dashboard_filename = f'{dir_of_interest}/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+    extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
+    dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
+                                                dir_of_interest, extracted_folder_name)
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
     update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)
 
-    csrf_token = get_csrf_token(access_token)
-    import_new_dashboard(access_token, csrf_token, extracted_folder_name)
+    import_new_dashboard(request_handler, extracted_folder_name)
 
     delete_zip(f"{dir_of_interest}/")
     return "Cloning Successful"
