@@ -175,61 +175,60 @@ function FinalClone() {
     };
 
 
-    return( 
+  return( 
     <>
-        <body className="w-full flex h-full flex justify-center">
+    <body className="w-full flex h-full flex justify-center">
 
-<div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing">
-  {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
-  <div class='flex gap-x-24'>
-          {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
-           </div>
-           <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
-  <div className="final-clone-wrapper h-4/5 ">
-      <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
-        <div className="form-group mb-2 mt-5 flex flex-row ">
-          <label className="text-sky-400 font-semibold text-2xl" for="#dashboard_name">Rename: </label>
-          {/* <input className="bg-sky-200" type="text" id="dashboard_name" value={dashboard_name} onChange={handleChange}></input> */}
-          <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
-        </div>
-        <div class="block gap-20 h-4/5 scrollable">
-            {
-            chart_list.map((chart) =>(
-                <div className="flex flex-row justify-around items-center h-1/3">
-                    <div className="name-container">
-                      <p className="text-sky-400 font-test">{chart[0]}</p>
+    <div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing">
+      {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
+      <div className='flex gap-x-24'>
+              {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
+              {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
+              <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+              </div>
+              <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
+      <div className="final-clone-wrapper h-4/5 ">
+          <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
+            <div className="form-group mb-2 mt-5 flex flex-row ">
+              <label className="text-sky-400 font-semibold text-2xl" for="#dashboard_name">Rename: </label>
+              {/* <input className="bg-sky-200" type="text" id="dashboard_name" value={dashboard_name} onChange={handleChange}></input> */}
+              <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
+            </div>
+            <div className="block gap-20 h-4/5 scrollable">
+                {
+                chart_list.map((chart) =>(
+                    <div className="flex flex-row justify-around items-center h-1/3">
+                        <div className="name-container">
+                          <p className="text-sky-400 font-test">{chart[0]}</p>
+                        </div>
+                        <select className="w-1/2 h-1/2 bg-sky-400" 
+                        onChange={(event) => handleSelect(chart[0], event.target.value) }>
+                        <option>Select a source</option>
+                          {
+                            sourcelist.map((source) =>(
+                              
+                              <option value={source[0]}>{source[0]}</option>
+                            ))
+                          }
+                        </select>
                     </div>
-                    <select className="w-1/2 h-1/2 bg-sky-400" 
-                    onChange={(event) => handleSelect(chart[0], event.target.value) }>
-                    <option>Select a source</option>
-                      {
-                        sourcelist.map((source) =>(
-                          
-                          <option value={source[0]}>{source[0]}</option>
-                        ))
-                      }
-                    </select>
-                </div>
 
-              ))
-            }
-        </div>
-        <div className="button-wrapper flex justify-center">
-          {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-          <button className="bg-sky-400 w-1/2 text-lg" type="submit">Finalize Clone</button>
-        </div>
-      </form>
-  </div>
-
-</div>
+                  ))
+                }
+            </div>
+            <div className="button-wrapper flex justify-center">
+              {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
+              <button className="bg-sky-400 w-1/2 text-lg" type="submit">Finalize Clone</button>
+            </div>
+          </form>
+      </div>
+    </div>
 </body>
     
     
     
     
-    </>)
+</>)
 }
   //presumably,we'll have a backend that will check the username and password, but for now we'll
     //just hard code the user and pass

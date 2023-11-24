@@ -97,7 +97,7 @@ function Dashboards() {
     <>
     <body className="w-full flex h-full flex justify-center">
       <div className="content-wrapper w-4/5 h-4/5 flex flex-col justify-center gap-y-3">
-        <div class='flex justify-between'>
+        <div className='flex justify-between'>
           <Link to="/"> <button className="bg-sky-400 h-full text-white">←Back to Login</button></Link>
           <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>          
           <input type="text border-solid w-full" 
@@ -115,10 +115,10 @@ function Dashboards() {
         </div>
 
         {/* <div class="scroll-smooth"> */}
-        <div class="block gap-20 h-screen scrollable bg-white">
+        <div className="block gap-20 h-screen scrollable bg-white">
             {
             dashboardlist.map((dashboard) => (
-              <div className="mt-10 mb-10">
+              <div className="mt-10 mb-10" key={dashboard[0]}>
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
                   <div className="grid-element">
                     <Link to={`/final_clone/${username}/${dashboard[0]}/${dashboard[1]}`} state={superset_url}>
