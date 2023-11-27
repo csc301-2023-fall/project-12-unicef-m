@@ -58,15 +58,15 @@ function Login() {
           <div className="form-wrapper">
               <form className="flex flex-col justify-center">
                 <div className="mb-2 mt-5">
-                  <label className="font-semibold text-xl" for="#url" >Superset Url: </label>
+                  <label className="font-semibold text-xl text-sky-500" for="#url" >Superset Url: </label>
                   <input className="clone-input font-semibold" type="text" id="url"  onInput={handleUrl} required></input>
                 </div>
                 <div className="mb-2">
-                  <label className="font-semibold text-xl" for="#url">Superset Username: </label>
+                  <label className="font-semibold text-xl text-sky-500" for="#url">Superset Username: </label>
                   <input className="clone-input font-semibold" type="text" id="url" onInput={handleUsername} required></input>
                 </div>
                 <div className="mb-5">
-                  <label className="font-semibold text-xl" for="#url">Superset Password: </label>
+                  <label className="font-semibold text-xl text-sky-500" for="#url">Superset Password: </label>
                   <input  className="clone-input font-semibold" type="password" id="url" onInput={handlePassword} required></input>
                 </div>
                 <div className="button-wrapper flex justify-center">
