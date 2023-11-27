@@ -3,7 +3,8 @@
 @tailwind utilities;
 :root{
   --sky-blue: #009aff;
-  --water-blue: #cfedf7;
+  --bg-grey: #f4f4f4;
+  /* --water-blue: #cfedf7; */
   --slate-blue: #c8deed;
 }
 
@@ -30,7 +31,7 @@ body{
 }
 
 .final-clone-wrapper{
-  background-color: var( --water-blue)  ;
+  background-color: var(--bg-grey)  ;
   min-width: 500px;
   min-height: 300px;
 }
@@ -41,7 +42,6 @@ body{
 
 .clone-input{
   background-color: var(--slate-blue);
-  color: var(--sky-blue);
 }
 
 .test{
@@ -76,6 +76,7 @@ body{
 .name-container{
   width: 200px;
   height: 100px;
+  justify-content: center;
 }
 
 .content-wrapper-sizing{

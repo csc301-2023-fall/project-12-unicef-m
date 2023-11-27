@@ -6,6 +6,7 @@ import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import Badge from '@mui/material/Badge';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import '../unicef.scss';
 
 function Dashboards() {
 
@@ -76,13 +77,9 @@ function Dashboards() {
   const handleSearch = (event) =>{
     onSearch(event.target.value);
   }
-  // const handleSearch = (event) =>{onSearch(event.target.value)}
   const handleEnter = () =>{
     scrollToDashboard(search_query);
   }
-  // const handleEnter = (event) =>{if(event.key === 'Enter'){
-  //   scrollToDashboard(search_query)
-  // }}
   const scrollToDashboard = (id) => {
     const element = document.getElementById(id);
     if(element){
@@ -100,20 +97,20 @@ function Dashboards() {
         <div className='flex justify-between'>
           <Link to="/"> <button className="bg-sky-400 h-full text-white">←Back to Login</button></Link>
           <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>          
-          <input type="text border-solid w-full" 
+          <input className="border-solid w-half" type="text" 
             placeholder='search for dashboard ...'
             onChange={handleSearch}>
           </input>
-          <button onClick={handleEnter}>Search</button>
+          <button className="bg-sky-400 text-white"onClick={handleEnter}>Search</button>
+        </div>
+          <div>
           {
             render &&
-            <div className="d-flex flex w-full d-flex justify-center">
-                <p className="text-red-500">Dashboard does not exist, please try again !</p>
-
+            <div class="alert alert-danger" role="alert">
+            <strong>Dashboard does not exist, please try again !</strong>
             </div>
           }
-        </div>
-
+          </div>
         {/* <div class="scroll-smooth"> */}
         <div className="block gap-20 h-screen scrollable bg-white">
             {
@@ -131,44 +128,22 @@ function Dashboards() {
                  
                   <div className="grid-element">
                     <Link to={`/update/${dashboard[0]}`} state={{superset_url: {superset_url}, username:{username}}}>
-                      <button className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</button>
+                      <button className="text-sky-600 mr-2px hover:text-sky-800 ">Update Available</button>
                     </Link>
                   </div>
                   
                 </div>
-                <label className="text-sky-400 font-semibold text-xl">{dashboard[0]}</label>
+                <label className="text-sky-500 font-semibold text-xl">{dashboard[0]}</label>
               </div>
             ))
           }
         </div>
-
-        {/* <div>
-            <Link to={`/final_clone/${url}`}>
-              <button className="bg-sky-200 w-full h-full" >
-                  {
-                    notification && <div className="d-flex flex w-full">
-                    <Link to={`/update/${url}`}>
-                      <p className="text-sky-400 mr-2px hover:text-sky-600 ">Update Available</p>
-                    </Link>
-                    <Badge badgeContent={1} color="secondary">
-                        <AutoAwesomeMotionIcon color="action" />
-                    </Badge>
-                  </div>
-                  }
-              </button>
-            </Link>
-            <label className="text-sky-400 font-semibold text-xl">Dashboard0</label>
-            
-          </div>       */}
-
-
       </div>
-      {/* </div> */}
     </body>
     </>
   )
 }
-
+//below is an example we used for testing
 //assuming we've called response.get 
   // const exampleJsonResponse = [
   //   {

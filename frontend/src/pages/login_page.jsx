@@ -2,6 +2,7 @@
 import { useState } from "react";
 import unicefLogo from "./assets/UNICEF-logo.png"
 import './pages.css'
+import '../unicef.scss';
 // import {useNavigate } from 'react-router-dom';
 // import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -54,37 +55,28 @@ function Login() {
           <img class="max-w-md mb-5" src={unicefLogo} className="logo" alt=""/>
           <label className="text-sky-400 font-semibold text-lg">——————————————————————</label>
           <label className="text-sky-400 font-semibold text-lg">For every child</label>
-      
-          {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
           <div className="form-wrapper">
-              <form className="flex flex-col ">
-                <div className="form-group mb-2 mt-5">
-                  <label className="text-sky-400 font-semibold text-lg" for="#url" >Superset Url: </label>
-                  <input className="clone-input bg-sky-400 text-white" type="text" id="url"  onInput={handleUrl} required></input>
-                  {/* <input className="clone-input " type="text" id="url" required></input> */}
+              <form className="flex flex-col justify-center">
+                <div className="mb-2 mt-5">
+                  <label className="font-semibold text-xl" for="#url" >Superset Url: </label>
+                  <input className="clone-input font-semibold" type="text" id="url"  onInput={handleUrl} required></input>
                 </div>
-                <div className="form-group mb-2">
-                  <label className="text-sky-400 font-semibold text-lg" for="#url">Superset Username: </label>
-                  <input className="clone-input bg-sky-400 text-white" type="text" id="url" onInput={handleUsername} required></input>
+                <div className="mb-2">
+                  <label className="font-semibold text-xl" for="#url">Superset Username: </label>
+                  <input className="clone-input font-semibold" type="text" id="url" onInput={handleUsername} required></input>
                 </div>
-                <div className="form-group mb-5">
-                  <label className="text-sky-400 font-semibold text-lg" for="#url">Superset Password: </label>
-                  <input  className="clone-input bg-sky-400 text-white" type="password" id="url" onInput={handlePassword} required></input>
+                <div className="mb-5">
+                  <label className="font-semibold text-xl" for="#url">Superset Password: </label>
+                  <input  className="clone-input font-semibold" type="password" id="url" onInput={handlePassword} required></input>
                 </div>
                 <div className="button-wrapper flex justify-center">
-                  {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
                   <button className="bg-sky-400 w-48 text-white" onClick={checkValid}>Sign in</button>
-                  
-                  {/* <button className="bg-sky-400 w-1/2">Sign in</button> */}
-
-                  
                 </div>
               </form>
               {
                 render && 
-                  <div className="d-flex flex w-full d-flex justify-center">
-                    <p className="text-red-500">Invalid Username or Password, please try again!</p>
-
+                  <div class="alert alert-danger" role="alert">
+                    <strong>Invalid Credentials, please try again!</strong>
                   </div>
               }
           </div>
