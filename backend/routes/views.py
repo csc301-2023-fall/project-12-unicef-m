@@ -101,8 +101,7 @@ def clone2():
            "dashboard_id":
            "dashboard_old_name":
            "dashboard_new_name":
-           "dataset": dataset_name
-           "database": database_name
+           "dataset_id":
            "charts": [
                         [
                         chart_id
@@ -117,7 +116,6 @@ def clone2():
     dashboard_new_name = request.json.get("dashboard_new_name")
     charts = request.json.get("charts")
     dataset_id = request.json.get("dataset_id")
-    database_id = request.json.get("database_id")
 
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
     PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
@@ -128,7 +126,6 @@ def clone2():
 
     extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
     update_dataset(request_handler, extracted_folder_name, dataset_id)
-    update_database(request_handler, extracted_folder_name, database_id)
     breakpoint()
     dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
                                                 dir_of_interest, extracted_folder_name)
