@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import '../unicef.scss';
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
 
 
@@ -55,7 +55,8 @@ function FinalClone() {
     }).catch((error) => {
       console.error('Error fetching data from source list endpoint:', error);
     });
-  },[chart_list, sourcelist]);
+  },[]);
+  // chart_list, sourcelist
   // upon mounting, fetch the chart list from the backend
   console.log(chart_list, sourcelist)
 
@@ -180,18 +181,14 @@ function FinalClone() {
     <body className="w-full flex h-full flex justify-center">
 
     <div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing">
-      {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
       <div className='flex gap-x-24'>
-              {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-              {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
               <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
               </div>
-              <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
-      <div className="final-clone-wrapper h-4/5 ">
+              <h2 className="display-1 text-sky-400">{dashboard_name}</h2>      
+      <div className="final-clone-wrapper h-4/5">
           <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
             <div className="form-group mb-2 mt-5 flex flex-row ">
-              <label className="text-sky-400 font-semibold text-2xl" for="#dashboard_name">Rename: </label>
-              {/* <input className="bg-sky-200" type="text" id="dashboard_name" value={dashboard_name} onChange={handleChange}></input> */}
+              <label className="text-sky-400 font-bold text-2xl w-1/6" for="#dashboard_name">Rename: </label>
               <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
             </div>
             <div className="block gap-20 h-4/5 scrollable">
@@ -201,7 +198,7 @@ function FinalClone() {
                         <div className="name-container">
                           <p className="text-sky-400 font-test">{chart[0]}</p>
                         </div>
-                        <select className="w-1/2 h-1/2 bg-sky-400" 
+                        <select className="w-1/2 h-1/2 bg-sky-400 text-white" 
                         onChange={(event) => handleSelect(chart[0], event.target.value) }>
                         <option>Select a source</option>
                           {
@@ -217,8 +214,7 @@ function FinalClone() {
                 }
             </div>
             <div className="button-wrapper flex justify-center">
-              {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-              <button className="bg-sky-400 w-1/2 text-lg" type="submit">Finalize Clone</button>
+              <button className="bg-sky-400 w-1/2 text-lg text-white" type="submit">Finalize Clone</button>
             </div>
           </form>
       </div>
