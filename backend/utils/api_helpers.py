@@ -103,7 +103,7 @@ def update_data(request_handler, zip_dir, dashboard_export, dataset_id):
 
     _replace_subfolder(zip_dir, dataset_export, dashboard_export, 'databases')
     _replace_subfolder(zip_dir, dataset_export, dashboard_export, 'datasets')
-    breakpoint()
+
     return dataset_export
 
 
