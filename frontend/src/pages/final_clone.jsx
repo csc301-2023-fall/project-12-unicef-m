@@ -10,8 +10,7 @@ function FinalClone() {
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-  // let {url} = useParams();  
-  // console.log(url)
+
   const location = useLocation();
   const superset_url = location.state;
   console.log(superset_url);
@@ -27,16 +26,13 @@ function FinalClone() {
       const d_list = response.data;
       const c_list = [];
       d_list.forEach(dashboard => {
-        
         if(dashboard.dashboard_name==dashboard_name){
           db_id=dashboard.dashboard_id
-          // console.log(db_id)
           dashboard.all_charts.forEach(chart => {
             c_list.push([chart.chart_name, chart.chart_id])
           })
         }
       })
-      // console.log(c_list)
       setChartList(c_list);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
@@ -57,21 +53,15 @@ function FinalClone() {
       console.error('Error fetching data from source list endpoint:', error);
     });
   },[]);
-  // chart_list, sourcelist
   // upon mounting, fetch the chart list from the backend
-  console.log(chart_list, sourcelist)
 
-  // const [DBname,setDBname]=useState("");
+ //--------------------------------------------------------------------------------------------------
+  
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
   const handleSelect = (chartname, source) => {
-    // console.log( (chartname, source) )
-
-    let pair = [chartname, source]
-    // console.log( pair )
-    // console.log( chart_and_source_list )
-  
+    let pair = [chartname, source]  
     for (let i = 0; i < chart_and_source_list.length; i++) { 
       if (chart_and_source_list[i][0] == chartname) {
         chart_and_source_list[i][1] = source
@@ -80,17 +70,14 @@ function FinalClone() {
       }
     }
     // do a check to see if the chartname is already in the list, and if it is, just update the source
-    
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
-  // console.log(chart_and_source_list)
-
   const handledb_name=(event)=>{
-    // console.log(event.target.value)
     if (event.target.value!= db_name){
       setdb_name(event.target.value);
     }
   }
+   //--------------------------------------------------------------------------------------------------
     const dashboard_old_name = dashboard_name;
     const dashboard_new_name = db_name;
     //also have dashboard id
@@ -111,7 +98,6 @@ function FinalClone() {
           // check if the chart name is in the chart_and_source_list
           // chart_and_source[0] is the chart name
           const chart_new_dataset = chart_and_source[1]
-          console.log(chart_new_dataset)
           // chart_attrib_list.push(chart_new_dataset)
           chart_attrib_list[2] = chart_new_dataset
           //push the source name to the chart attributes
@@ -138,8 +124,6 @@ function FinalClone() {
         "chart_new_dataset": chart_attrib_list[2],
         "database": chart_attrib_list[3]
       }
-
-
       charts.push(chart_attributes)
       // should now be a list of json objects, where each object is a chart and its attributes
     })
@@ -151,17 +135,14 @@ function FinalClone() {
       "dataset_id": Number(dataset_id),
       "charts": charts
     }
-    // console.log(clone_response_data)
+
+
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
-
     const navigateToDashboards = useNavigate();
     const handleCloneSubmit = async(event) => {
       event.preventDefault();
       try{
-        // await axios.post(clone_endpoint, clone_response_data)
-        
-        // console.log(clone_response_data)
         await axios({
           method: 'post',
           url: clone_endpoint,
@@ -170,7 +151,6 @@ function FinalClone() {
         // navigateToDashboards(`/dashboards/${url}/${username}`);
          navigateToDashboards(`/dashboards/${username}`, state={superset_url});
         console.log("Success !")
-        // matches w/ url format in main.jsx for re
         setError(null)
       } catch(error){
         setError(error.response ? error.response.data : error.message)
