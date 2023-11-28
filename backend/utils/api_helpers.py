@@ -56,7 +56,8 @@ def get_datasets(request_handler):
 
     parsed_datasets = []
     for dataset in datasets.get("result"):
-        parsed_datasets.append((dataset["table_name"], dataset["database"]["database_name"]))
+        parsed_datasets.append((dataset["table_name"], dataset["database"]["database_name"],
+                                dataset["id"], dataset["database"]["id"]))
     return parsed_datasets
 
 
@@ -82,6 +83,27 @@ def export_one_dashboard(request_handler, dashboard_id):
     # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
     # make this dynamic, hard coded for now
     return myzip.namelist()[0][:32]
+
+
+def update_dataset(request_handler, extracted_folder_name, dataset_name, database_name):
+    """
+    Updates the database and dataset folders within extracted_folder_name
+    """
+    export_database_endpoint = f"api/v1/dataset/export/?q=[12]"
+    breakpoint()
+    export_response = request_handler.get_request(export_database_endpoint)
+    breakpoint()
+    local_path = "zip/all_datasets.zip"
+    with open(local_path, "wb") as f:
+        f.write(export_response.content)
+
+    # extract the folder out of the zip file
+    with zipfile.ZipFile(local_path) as myzip:
+        myzip.extractall(path='./zip')
+    breakpoint()
+    # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
+    # make this dynamic, hard coded for now
+    return None
 
 
 def get_dashboard_filename(dashboard_id, dashboard_old_name, dir_of_interest, extracted_folder_name):
