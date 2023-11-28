@@ -84,3 +84,7 @@ body{
   min-width: 500px;
   min-height: 500px;
 }
+
+.alert{
+  background-color: #f9d3d1;
+}
