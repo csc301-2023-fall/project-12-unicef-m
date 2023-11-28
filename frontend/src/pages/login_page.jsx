@@ -2,7 +2,6 @@
 import { useState } from "react";
 import unicefLogo from "./assets/UNICEF-logo.png"
 import './pages.css'
-import '../unicef.scss';
 // import {useNavigate } from 'react-router-dom';
 // import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';

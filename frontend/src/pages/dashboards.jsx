@@ -6,8 +6,6 @@ import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import Badge from '@mui/material/Badge';
 import { useState, useEffect } from "react";
 import axios from "axios";
-import '../unicef.scss';
-
 function Dashboards() {
 
   // let {url} = useParams();

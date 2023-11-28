@@ -3,7 +3,6 @@ import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../unicef.scss';
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
 
 
@@ -184,11 +183,11 @@ function FinalClone() {
       <div className='flex gap-x-24'>
               <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
               </div>
-              <h2 className="display-1 text-sky-400">{dashboard_name}</h2>      
+              <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
       <div className="final-clone-wrapper h-4/5">
           <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
             <div className="form-group mb-2 mt-5 flex flex-row ">
-              <label className="text-sky-400 font-bold text-2xl w-1/6" for="#dashboard_name">Rename: </label>
+              <label className="text-sky-400 font-bold text-xl w-1/6" for="#dashboard_name">Rename: </label>
               <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
             </div>
             <div className="block gap-20 h-4/5 scrollable">
