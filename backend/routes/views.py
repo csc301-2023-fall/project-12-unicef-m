@@ -138,6 +138,7 @@ def clone():
     update_dashboard_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/charts/', dashboard_filename)
     update_chart_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
     update_dataset_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
+
     import_new_dashboard(request_handler, dashboard_export_name)
 
     delete_zip(f"{ZIP_DIR}/")
