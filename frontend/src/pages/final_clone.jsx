@@ -21,7 +21,7 @@ function FinalClone() {
   const [sourcelist, setSourceList] = useState([]);
   const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
   const source_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-datasets';
-
+  let dataset_id=0
    useEffect(() => {
     axios.get(dashboard_list_endpoint).then((response) => {
       const d_list = response.data;
@@ -42,8 +42,10 @@ function FinalClone() {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
 
+    
     axios.get(source_list_endpoint).then((response) => {
       const sources = response.data;
+      dataset_id = sources[0].dataset_id
       const s_list = [];
       sources.forEach(source => {
         // console.log(clone_endpoint, error)
@@ -146,6 +148,7 @@ function FinalClone() {
       "dashboard_id": Number(dashboard_id),
       "dashboard_old_name": dashboard_old_name,
       "dashboard_new_name": dashboard_new_name, 
+      "dataset_id": Number(dataset_id),
       "charts": charts
     }
     // console.log(clone_response_data)
