@@ -120,23 +120,23 @@ def clone2():
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
     PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
-    dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
+    ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
     extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
-    update_dataset(request_handler, extracted_folder_name, dataset_id)
-    breakpoint()
+    update_data(request_handler, ZIP_DIR, extracted_folder_name, dataset_id)
+
     dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
-                                                dir_of_interest, extracted_folder_name)
+                                                ZIP_DIR, extracted_folder_name)
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
-    update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)
+    update_dashboard_uuids(charts, f'{ZIP_DIR}/{extracted_folder_name}/charts/', dashboard_filename)
 
     import_new_dashboard(request_handler, extracted_folder_name)
 
-    #delete_zip(f"{dir_of_interest}/")
+    delete_zip(f"{ZIP_DIR}/")
     return "Cloning Successful"
 
 
