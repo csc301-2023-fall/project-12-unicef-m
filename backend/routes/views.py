@@ -140,5 +140,5 @@ def clone():
     update_dataset_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
     import_new_dashboard(request_handler, dashboard_export_name)
 
-    #delete_zip(f"{ZIP_DIR}/")
+    delete_zip(f"{ZIP_DIR}/")
     return "Cloning Successful"
