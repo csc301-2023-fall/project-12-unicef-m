@@ -67,7 +67,6 @@ def get_all_datasets():
                 "dataset_name": "name",
                 "database_name": "name"
                 "dataset_id": dataset_id,
-                "database_id": database_id
             },
             {
                 <More datasets>
@@ -82,13 +81,11 @@ def get_all_datasets():
         dataset_name = dataset[0]
         db_name = dataset[1]
         dataset_id = dataset[2]
-        db_id = dataset[3]
 
         curr_dataset_info = {
             "dataset_name": dataset_name,
             "database_name": db_name,
             "dataset_id": dataset_id,
-            "database_id": db_id
         }
 
         dataset_list.append(curr_dataset_info)
@@ -119,8 +116,8 @@ def clone2():
     dashboard_old_name = request.json.get("dashboard_old_name")
     dashboard_new_name = request.json.get("dashboard_new_name")
     charts = request.json.get("charts")
-    dataset_name = request.json.get("dataset")
-    database_name = request.json.get("database")
+    dataset_id = request.json.get("dataset_id")
+    database_id = request.json.get("database_id")
 
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
     PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
@@ -129,9 +126,10 @@ def clone2():
 
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
-    #extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
-    extracted_folder_name = "temp"
-    update_dataset(request_handler, extracted_folder_name, dataset_name, database_name)
+    extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
+    update_dataset(request_handler, extracted_folder_name, dataset_id)
+    update_database(request_handler, extracted_folder_name, database_id)
+    breakpoint()
     dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
                                                 dir_of_interest, extracted_folder_name)
 
@@ -153,8 +151,6 @@ def clone():
            "dashboard_id":
            "dashboard_old_name":
            "dashboard_new_name":
-           "dataset_id"
-           "database_id"
            "charts": [
                         [
                         chart_id
