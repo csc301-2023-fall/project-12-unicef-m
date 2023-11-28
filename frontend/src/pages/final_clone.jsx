@@ -7,6 +7,7 @@ import axios from 'axios';
 
 
 function FinalClone() {
+  // code for fetching information from api calls
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
@@ -56,7 +57,8 @@ function FinalClone() {
   // upon mounting, fetch the chart list from the backend
 
  //--------------------------------------------------------------------------------------------------
-  
+ // code for handling user input 
+
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
@@ -78,6 +80,7 @@ function FinalClone() {
     }
   }
    //--------------------------------------------------------------------------------------------------
+   // this is the packaging code for building the json object to send to the backend
     const dashboard_old_name = dashboard_name;
     const dashboard_new_name = db_name;
     //also have dashboard id
