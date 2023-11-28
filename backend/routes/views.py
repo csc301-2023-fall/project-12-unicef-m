@@ -41,7 +41,6 @@ def get_all_dashboards():
     dashboards = get_dashboards(request_handler)
 
     dashboard_list = []
-
     for dashboard in dashboards:
         dashboard_id = dashboard[0]
         dashboard_name = dashboard[1]
@@ -54,7 +53,6 @@ def get_all_dashboards():
             "dashboard_desc": None,
             "all_charts": [{"chart_id": chart_id, "chart_name": chart_name} for chart_id, chart_name in charts]
         }
-
         dashboard_list.append(curr_dashboard_info)
 
     return json.dumps(dashboard_list)
@@ -68,6 +66,7 @@ def get_all_datasets():
             {
                 "dataset_name": "name",
                 "database_name": "name"
+                "dataset_id": dataset_id,
             },
             {
                 <More datasets>
@@ -81,10 +80,12 @@ def get_all_datasets():
     for dataset in datasets:
         dataset_name = dataset[0]
         db_name = dataset[1]
+        dataset_id = dataset[2]
 
         curr_dataset_info = {
             "dataset_name": dataset_name,
-            "database_name": db_name
+            "database_name": db_name,
+            "dataset_id": dataset_id,
         }
 
         dataset_list.append(curr_dataset_info)
@@ -100,13 +101,12 @@ def clone():
            "dashboard_id":
            "dashboard_old_name":
            "dashboard_new_name":
+           "dataset_id":
            "charts": [
                         [
                         chart_id
                         chart_old_name
-                        # chart_new_name
-                        chart_new_dataset
-                        database
+                        chart_new_name
                         ]
                    ]
        }
@@ -115,23 +115,26 @@ def clone():
     dashboard_old_name = request.json.get("dashboard_old_name")
     dashboard_new_name = request.json.get("dashboard_new_name")
     charts = request.json.get("charts")
+    dataset_id = request.json.get("dataset_id")
 
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
-    PARENT_DIR = os.path.join(FILE_DIR, os.pardir) 
+    PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
-    dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
+    ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
     extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
+    update_data(request_handler, ZIP_DIR, extracted_folder_name, dataset_id)
+
     dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
-                                                dir_of_interest, extracted_folder_name)
+                                                ZIP_DIR, extracted_folder_name)
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
     change_chart_details(charts, extracted_folder_name)
-    update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)
+    update_dashboard_uuids(charts, f'{ZIP_DIR}/{extracted_folder_name}/charts/', dashboard_filename)
 
     import_new_dashboard(request_handler, extracted_folder_name)
 
-    delete_zip(f"{dir_of_interest}/")
+    delete_zip(f"{ZIP_DIR}/")
     return "Cloning Successful"
