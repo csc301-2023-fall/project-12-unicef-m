@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-grid-layout": "^1.4.2",
     "react-router-dom": "^6.16.0",
+    "react-spinners": "^0.13.8",
     "sass": "^1.69.5",
     "sort-by": "^0.0.2"
   },

@@ -6,11 +6,14 @@ import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import Badge from '@mui/material/Badge';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import SyncLoader from "react-spinners/SyncLoader";
+
 function Dashboards() {
 
   // let {url} = useParams();
   const location = useLocation();
   const superset_url = location.state;
+  var [loading, setLoading]=useState(true);
   console.log(superset_url);
   let {username} = useParams();
 
@@ -19,37 +22,15 @@ function Dashboards() {
   const [dashboardlist, setDashboardList] = useState([]);
 
   const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
-  // {process.env.REACT_APP_BASEURL} + /views/all-dashboards
-  // useEffect(() => {
-  //   // upon mounting, fetch the dashboard list from the backend
-  //   // upon changes to the dashboard list, update the dashboard list
-    
-  //   axios.get(dashboard_list_endpoint).then((response) => {
-  //     const d_list = response.data;
-  //     const new_list = [];
-  //     d_list.forEach(dashboard => { 
-  //       const dashboard_name = dashboard.dashboard_name;
-  //       const dashboard_id = dashboard.dashboard_id;
-  //       const dashboard_description = dashboard.dashboard_description;
-  
-  //       new_list.push([dashboard_name, dashboard_id, dashboard_description]);
-        
-  //     })
-  //     setDashboardList(new_list);
-  //     console.log(dashboardlist)
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error fetching data from dashboard list endpoint:', error);
-  //   });
-  // },[]);
 
   useEffect(() => {
     let isMounted = true;
-  
+    setLoading(true);
+
     const fetchData = async () => {
+      console.log("fetching");
       try {
         const response = await axios.get(dashboard_list_endpoint);
-  
         if (isMounted) {
           const d_list = response.data;
           const new_list = d_list.map(dashboard => [dashboard.dashboard_name, dashboard.dashboard_id, dashboard.dashboard_description]);
@@ -59,15 +40,16 @@ function Dashboards() {
       } catch (error) {
         console.error('Error fetching data from dashboard list endpoint:', error);
       }
+      setLoading(false);
+    console.log("fetched");
     };
   
     fetchData();
-  
     return () => {
       isMounted = false;
     };
   }, []);
-  console.log(dashboardlist)
+  console.log(dashboardlist);
   const [search_query, onSearch] = useState("");
   var[render,setRender]= useState(false);
 
@@ -109,9 +91,9 @@ function Dashboards() {
             </div>
           }
           </div>
-        {/* <div class="scroll-smooth"> */}
         <div className="block gap-20 h-screen scrollable bg-white">
-            {
+          <SyncLoader loading={loading} size={10} color='#1CABE2'></SyncLoader>
+          {
             dashboardlist.map((dashboard) => (
               <div className="mt-10 mb-10" key={dashboard[0]}>
                 <div className="h-full w-full list_grid" id={dashboard[0]}>
@@ -123,12 +105,13 @@ function Dashboards() {
                     </Link>
                     
                   </div>
-                 
-                  <div className="grid-element">
+                  {/* below are code for buttons to access updates in version control, UNICEF didn't want this functionality anymore thus commented out*/}
+                  {/* buttons usage: buttons only pop up if there are any updates in version control, this would lead you to the version control page, code see update.jsx */}
+                  {/* <div className="grid-element">
                     <Link to={`/update/${dashboard[0]}`} state={{superset_url: {superset_url}, username:{username}}}>
                       <button className="text-sky-600 mr-2px hover:text-sky-800 ">Update Available</button>
                     </Link>
-                  </div>
+                  </div> */}
                   
                 </div>
                 <label className="text-sky-500 font-semibold text-xl">{dashboard[0]}</label>
@@ -141,6 +124,7 @@ function Dashboards() {
     </>
   )
 }
+
 //below is an example we used for testing
 //assuming we've called response.get 
   // const exampleJsonResponse = [

@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import SyncLoader from "react-spinners/SyncLoader";
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
 
 
@@ -15,6 +16,7 @@ function FinalClone() {
   const location = useLocation();
   const superset_url = location.state;
   console.log(superset_url);
+  var [loading, setLoading]=useState(true);
 
   const [chart_list, setChartList] = useState([]);
   let db_id =0
@@ -23,6 +25,7 @@ function FinalClone() {
   const source_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-datasets';
 
    useEffect(() => {
+    setLoading(true);
     axios.get(dashboard_list_endpoint).then((response) => {
       const d_list = response.data;
       const c_list = [];
@@ -38,6 +41,7 @@ function FinalClone() {
       })
       // console.log(c_list)
       setChartList(c_list);
+      setLoading(false);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
@@ -191,6 +195,7 @@ function FinalClone() {
               <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
             </div>
             <div className="block gap-20 h-4/5 scrollable">
+            <SyncLoader loading={loading} size={10} color='#1CABE2'></SyncLoader>
                 {
                 chart_list.map((chart) =>(
                     <div className="flex flex-row justify-around items-center h-1/3">
