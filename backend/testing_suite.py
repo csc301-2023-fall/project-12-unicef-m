@@ -7,6 +7,7 @@ from backend.routes.changes_handler import ChangesHandler
 from backend.utils.superset_constants import *
 from backend.utils.endpoints import *
 from backend.utils.api_helpers import *
+from backend.utils.api_request_handler import APIRequestHandler
 from backend.app import app as flask_app
 import pytest
 import requests
@@ -47,7 +48,7 @@ class TestSuite(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.access_token = get_access_token()
+        cls.request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
     # def test_add_dashboard(self, client):
     #     pass
@@ -77,25 +78,18 @@ class TestSuite(unittest.TestCase):
             "provider": "db"
         }
 
-        response = requests.post(SUPERSET_INSTANCE_URL + ACCESS_TOKEN_ENDPOINT, json=login_data)
-
+        response = self.request_handler.post_request(ACCESS_TOKEN_ENDPOINT, json=login_data)
         assert response.status_code == 200
         assert 'access_token' in response.json()
 
     def test_valid_get_csrf_token(self):
-        access_token = self.access_token
-        headers = {"Authorization": "Bearer " + access_token}
-
-        response = requests.get(SUPERSET_INSTANCE_URL + CSRF_TOKEN_ENDPOINT, headers=headers)
+        response = self.request_handler.get_request(CSRF_TOKEN_ENDPOINT)
 
         assert response.status_code == 200
         assert 'result' in response.json()
 
     def test_valid_response_get_dashboards(self):
-        access_token = self.access_token
-        headers = {"Authorization": "Bearer " + access_token}
-
-        response = requests.get(SUPERSET_INSTANCE_URL + DASHBOARD_ENDPOINT, headers=headers)
+        response = self.request_handler.get_request(DASHBOARD_ENDPOINT)
 
         assert response.status_code == 200
         assert 'result' in response.json()
@@ -104,13 +98,10 @@ class TestSuite(unittest.TestCase):
             assert 'dashboard_title' in response.json()['result'][0]
 
     def test_valid_get_charts(self):
-        access_token = self.access_token
-        headers = {"Authorization": "Bearer " + access_token}
-        dashboard = get_dashboards(access_token)[0]
+        dashboard = get_dashboards(self.request_handler)[0]
 
-        chart_endpoint = f'{SUPERSET_INSTANCE_URL}{DASHBOARD_ENDPOINT}{str(dashboard[0])}/charts'
-
-        response = requests.get(chart_endpoint, headers=headers)
+        chart_endpoint = f'{DASHBOARD_ENDPOINT}{str(dashboard[0])}/charts'
+        response = self.request_handler.get_request(chart_endpoint)
 
         assert response.status_code == 200
         assert 'result' in response.json()
@@ -119,10 +110,7 @@ class TestSuite(unittest.TestCase):
             assert 'slice_name' in response.json()['result'][0]
 
     def test_valid_get_datasets(self):
-        access_token = self.access_token
-        headers = {"Authorization": "Bearer " + access_token}
-
-        response = requests.get(SUPERSET_INSTANCE_URL + DATASET_ENDPOINT, headers=headers)
+        response = self.request_handler.get_request(DATASET_ENDPOINT)
 
         assert response.status_code == 200
         assert 'result' in response.json()
