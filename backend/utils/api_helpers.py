@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import zipfile
 import yaml
@@ -56,7 +57,7 @@ def get_datasets(request_handler):
 
     parsed_datasets = []
     for dataset in datasets.get("result"):
-        parsed_datasets.append((dataset["table_name"], dataset["database"]["database_name"]))
+        parsed_datasets.append((dataset["table_name"], dataset["database"]["database_name"], dataset["id"]))
     return parsed_datasets
 
 
@@ -71,7 +72,7 @@ def export_one_dashboard(request_handler, dashboard_id):
     export_dashboard_endpoint = f'{EXPORT_ENDPOINT}?q=[{dashboard_id}]'
     export_response = request_handler.get_request(export_dashboard_endpoint)
 
-    local_path = "zip/exported_one_dashboard.zip"
+    local_path = "zip/dashboard.zip"
     with open(local_path, "wb") as f:
         f.write(export_response.content)
 
@@ -79,23 +80,45 @@ def export_one_dashboard(request_handler, dashboard_id):
     with zipfile.ZipFile(local_path) as myzip:
         myzip.extractall(path='./zip')
 
-    # 32 corresponds to len("dashboard_export_) + 15 (15 numbers at the end) to get name of extracted folder
-    # make this dynamic, hard coded for now
-    return myzip.namelist()[0][:32]
+    dashboard_export_name = myzip.namelist()[0].split('/', 1)[0]
+
+    return dashboard_export_name
 
 
-def get_dashboard_filename(dashboard_id, dashboard_old_name, dir_of_interest, extracted_folder_name):
+def swap_dataset_and_database(request_handler, zip_dir, dashboard_export, dataset_id):
+    """
+    Updates the dataset folders within extracted_folder_name
+    """
+    export_dataset_endpoint = f'api/v1/dataset/export/?q=[{dataset_id}]'
+    export_response = request_handler.get_request(export_dataset_endpoint)
+    local_path = "zip/dataset.zip"
+    with open(local_path, "wb") as f:
+        f.write(export_response.content)
+
+    # extract the folder out of the zip file
+    with zipfile.ZipFile(local_path) as myzip:
+        myzip.extractall(path='./zip')
+
+    dataset_export = myzip.namelist()[0].split('/', 1)[0]
+
+    _replace_subfolder(zip_dir, dataset_export, dashboard_export, 'databases')
+    _replace_subfolder(zip_dir, dataset_export, dashboard_export, 'datasets')
+
+    return dataset_export
+
+
+def get_dashboard_filename(dashboard_id, dashboard_old_name, zip_dir, extracted_folder_name):
     """
     Get the full path to the dashboard filename
 
     @param dashboard_id: The dashboard_id of the dashboard
     @param dashboard_old_name: The original name of the dashboard
-    @param dir_of_interest: The full path to the zip file
+    @param zip_dir: The full path to the zip file
     @param extracted_folder_name: The folder within the zip file created from export_one_dashboard()
     @return: The full path of the dashboard file
     """
     dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
-    d1 = f'{dir_of_interest}/{extracted_folder_name}/dashboards/'
+    d1 = f'{zip_dir}/{extracted_folder_name}/dashboards/'
     d2 = f'{dashboard_old_name_parsed}_{dashboard_id}.yaml'
 
     dashboard_filename = d1 + d2
@@ -148,7 +171,7 @@ def change_chart_details(charts, extracted_folder_name):
 
 def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
     """
-    Update the unique ids of all charts to in dashboard metadata
+    Update the unique ids of all charts in dashboard metadata
 
     @param charts: A list of all charts containing [chart_id, chart_old_name]
     @param charts_dir: The path to the directory containing all charts
@@ -176,13 +199,51 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
 
             chart_uuid = chart_data.get('uuid')
             # Update UUID in the dashboard data
-            _update_uuid(chart_id, chart_uuid, dashboard_data)
+            _update_dataset_uuid(chart_id, chart_uuid, dashboard_data)
 
             chart_file.close()
 
     # Write the updated dashboard data back to the dashboard file
     with open(dashboard_filepath, 'w') as dashboard_file:
         yaml.dump(dashboard_data, dashboard_file, default_flow_style=False)
+
+
+def update_chart_uuids(charts, dashboard_export_dir):
+    """
+    Update the dataset_uuid on each of the chart.yaml files
+    """
+    database_name = charts[0]["database"]
+    dataset_name = charts[0]["chart_new_dataset"]
+    dataset_filepath = f'{dashboard_export_dir}datasets/{database_name}/{dataset_name}.yaml'
+
+    with open(dataset_filepath, 'r') as dataset_file:
+        dataset_data = yaml.safe_load(dataset_file)
+        dataset_uuid = dataset_data.get('uuid')
+
+    charts_filepath = f'{dashboard_export_dir}charts/'
+    for root, _, files in os.walk(charts_filepath):
+        for filename in files:
+            chart_filepath = os.path.join(root, filename)
+            _update_chart_uuid(chart_filepath, dataset_uuid)
+
+
+def update_dataset_uuids(charts, dashboard_export_dir):
+    """
+    Update the database_uuid in the dataset.yaml file
+    """
+    database_name = charts[0]["database"]
+    database_filepath = f'{dashboard_export_dir}databases/{database_name}.yaml'
+
+    with open(database_filepath, 'r') as database_file:
+        database_data = yaml.safe_load(database_file)
+        database_uuid = database_data.get('uuid')
+
+    dataset_name = charts[0]["chart_new_dataset"]
+    dataset_filepath = f'{dashboard_export_dir}datasets/{database_name}/{dataset_name}.yaml'
+
+    with open(dataset_filepath, 'r') as dataset_file:
+        dataset_data = yaml.safe_load(dataset_file)
+        dataset_data['database_uuid'] = database_uuid
 
 
 def import_new_dashboard(request_handler, filename):
@@ -226,6 +287,17 @@ def delete_zip(path):
         print("Error occurred while deleting file")
 
 
+def _replace_subfolder(filepath, source, destination, subfolder_name):
+    source_subfolder = os.path.join(source, subfolder_name)
+    destination_subfolder = os.path.join(destination, subfolder_name)
+
+    # Remove the existing destination subfolder
+    if os.path.exists(f'{filepath}/{destination_subfolder}'):
+        shutil.rmtree(f'{filepath}/{destination_subfolder}')
+
+    shutil.copytree(f'{filepath}/{source_subfolder}', f'{filepath}/{destination_subfolder}')
+
+
 def _get_dataset_uuid(filename):
     with open(filename, 'r') as file:
         dataset_data = yaml.safe_load(file)
@@ -236,7 +308,7 @@ def _remove_non_alphanumeric_except_spaces(input_string):
     return re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
 
 
-def _update_uuid(chart_id, chart_uuid, dashboard_data):
+def _update_dataset_uuid(chart_id, chart_uuid, dashboard_data):
     for _, chart_info in dashboard_data.get('position', {}).items():
         if 'type' in chart_info:
             if chart_info.get('type') == 'CHART':
@@ -246,6 +318,16 @@ def _update_uuid(chart_id, chart_uuid, dashboard_data):
                     # Update the UUID
                     meta['uuid'] = chart_uuid
                     break
+
+
+def _update_chart_uuid(chart_filepath, new_dataset_uuid):
+    with open(chart_filepath, 'r') as chart_file:
+        chart_data = yaml.safe_load(chart_file)
+
+        chart_data['dataset_uuid'] = new_dataset_uuid
+
+    with open(chart_filepath, 'w') as chart_file:
+        yaml.dump(chart_data, chart_file, default_flow_style=False)
 
 
 def _zipdir(path, ziph):
