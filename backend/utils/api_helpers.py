@@ -154,7 +154,7 @@ def change_chart_details(charts, extracted_folder_name):
         chart_clean_name = _remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
         chart_old_name = chart_clean_name.replace(" ", "_")
         # chart_new_name = chart[2]
-        chart_new_dataset = chart["chart_new_dataset"]
+        chart_new_dataset = chart["chart_new_dataset"].replace(" ", "_")
         database = chart["database"].replace(" ", "_")
 
         dataset_filename = f'zip/{extracted_folder_name}/datasets/{database}/{chart_new_dataset}.yaml'
@@ -213,7 +213,7 @@ def update_chart_uuids(charts, dashboard_export_dir):
     Update the dataset_uuid on each of the chart.yaml files
     """
     database_name = charts[0]["database"]
-    dataset_name = charts[0]["chart_new_dataset"]
+    dataset_name = charts[0]["chart_new_dataset"].replace(" ", "_")
     dataset_filepath = f'{dashboard_export_dir}datasets/{database_name}/{dataset_name}.yaml'
 
     with open(dataset_filepath, 'r') as dataset_file:
@@ -238,7 +238,7 @@ def update_dataset_uuids(charts, dashboard_export_dir):
         database_data = yaml.safe_load(database_file)
         database_uuid = database_data.get('uuid')
 
-    dataset_name = charts[0]["chart_new_dataset"]
+    dataset_name = charts[0]["chart_new_dataset"].replace(" ", "_")
     dataset_filepath = f'{dashboard_export_dir}datasets/{database_name}/{dataset_name}.yaml'
 
     with open(dataset_filepath, 'r') as dataset_file:
