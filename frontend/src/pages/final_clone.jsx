@@ -34,6 +34,7 @@ function FinalClone() {
         }
       })
       setChartList(c_list);
+      
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
@@ -68,7 +69,7 @@ function FinalClone() {
       }
     }
     // do a check to see if the chartname is already in the list, and if it is, just update the source
-    
+
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
   const handledb_name=(event)=>{
