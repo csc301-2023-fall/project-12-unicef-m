@@ -1,51 +1,66 @@
 import './pages.css'
-import { Link, useParams, useNavigate} from 'react-router-dom';
-
+import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import SyncLoader from "react-spinners/SyncLoader";
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
 
 
 function FinalClone() {
+  // code for fetching information from api calls
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-  let {url} = useParams();  
-  console.log(url)
+  const location = useLocation();
+  const superset_url = location.state;
+  console.log(superset_url);
+  var [loading, setLoading]=useState(true);
 
   const [chart_list, setChartList] = useState([]);
   let db_id =0
   const [sourcelist, setSourceList] = useState([]);
   const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
   const source_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-datasets';
+  // let dataset_id=0
 
+
+  const [dataset_id, setDatasetId] = useState(0);
    useEffect(() => {
+    setLoading(true);
     axios.get(dashboard_list_endpoint).then((response) => {
+      // getting dashboard info
       const d_list = response.data;
       const c_list = [];
       d_list.forEach(dashboard => {
-        
         if(dashboard.dashboard_name==dashboard_name){
           db_id=dashboard.dashboard_id
-          // console.log(db_id)
           dashboard.all_charts.forEach(chart => {
             c_list.push([chart.chart_name, chart.chart_id])
           })
         }
       })
-      // console.log(c_list)
       setChartList(c_list);
+      
+      // console.log(c_list)
+      setChartList(c_list);  // upon mounting, fetch the chart list from the backend
+      setLoading(false);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
 
+    
     axios.get(source_list_endpoint).then((response) => {
+      // getting source info
       const sources = response.data;
+      console.log("sources",response.data)
+      // let d_id = sources[0].dataset_id
+      // setDatasetId(d_id)
+      // console.log("dataset id inner", dataset_id)
       const s_list = [];
       sources.forEach(source => {
         // console.log(clone_endpoint, error)
-        s_list.push([source.dataset_name,source.database_name])
+        console.log([source.dataset_name,source.database_name, source.dataset_id])
+        s_list.push([source.dataset_name,source.database_name, source.dataset_id])
       })
       // console.log(s_list)
       setSourceList(s_list);
@@ -53,20 +68,27 @@ function FinalClone() {
       console.error('Error fetching data from source list endpoint:', error);
     });
   },[]);
+
+  console.log("source list ", sourcelist)
+  console.log("chart list ", chart_list)
+
+
+
   // upon mounting, fetch the chart list from the backend
+  // console.log("dataset id outer", dataset_id)
+  // console.log(chart_list, sourcelist)//debugging purposes
 
-
-  // const [DBname,setDBname]=useState("");
   const [db_name,setdb_name]=useState(dashboard_name);
-  const [chart_and_source_list, appendChartAndSourceList] = useState([]);
-  //list of charts, and the source that the user wants to use for each chart
+  const [chart_and_source_list, appendChartAndSourceList] = useState([]); //list of charts, and the source that the user wants to use for each chart
   const handleSelect = (chartname, source) => {
-    // console.log( (chartname, source) )
 
-    let pair = [chartname, source]
-    // console.log( pair )
-    // console.log( chart_and_source_list )
-  
+    let dataset_id = 0
+    sourcelist.forEach(sourceIndex => {
+      if (sourceIndex[0] == source) {
+        dataset_id = sourceIndex[2]
+      }
+    })
+    let trio = [chartname, source, dataset_id]  
     for (let i = 0; i < chart_and_source_list.length; i++) { 
       if (chart_and_source_list[i][0] == chartname) {
         chart_and_source_list[i][1] = source
@@ -75,17 +97,19 @@ function FinalClone() {
       }
     }
     // do a check to see if the chartname is already in the list, and if it is, just update the source
-    
-    appendChartAndSourceList([...chart_and_source_list, pair])
-  }
-  console.log(chart_and_source_list)
 
+    //otherwise add to list
+    appendChartAndSourceList([...chart_and_source_list, trio])
+  }
+
+  console.log("chart and source list", chart_and_source_list)
   const handledb_name=(event)=>{
-    // console.log(event.target.value)
     if (event.target.value!= db_name){
       setdb_name(event.target.value);
     }
   }
+   //--------------------------------------------------------------------------------------------------
+   // this is the packaging code for building the json object to send to the backend
     const dashboard_old_name = dashboard_name;
     const dashboard_new_name = db_name;
     //also have dashboard id
@@ -106,7 +130,6 @@ function FinalClone() {
           // check if the chart name is in the chart_and_source_list
           // chart_and_source[0] is the chart name
           const chart_new_dataset = chart_and_source[1]
-          console.log(chart_new_dataset)
           // chart_attrib_list.push(chart_new_dataset)
           chart_attrib_list[2] = chart_new_dataset
           //push the source name to the chart attributes
@@ -133,100 +156,103 @@ function FinalClone() {
         "chart_new_dataset": chart_attrib_list[2],
         "database": chart_attrib_list[3]
       }
-
-
       charts.push(chart_attributes)
       // should now be a list of json objects, where each object is a chart and its attributes
     })
 
-    const clone_response_data = {
+    const clone_response_data1 = {
       "dashboard_id": Number(dashboard_id),
       "dashboard_old_name": dashboard_old_name,
       "dashboard_new_name": dashboard_new_name, 
+      "dataset_id": Number(dataset_id),
       "charts": charts
     }
-    console.log(clone_response_data)
+    console.log("clone response data1", clone_response_data1)
+
+
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
-
     const navigateToDashboards = useNavigate();
     const handleCloneSubmit = async(event) => {
+      const clone_response_data2 = {
+        "dashboard_id": Number(dashboard_id),
+        "dashboard_old_name": dashboard_old_name,
+        "dashboard_new_name": dashboard_new_name, 
+        "dataset_id": chart_and_source_list[0][2],
+        "charts": charts
+      }
+      console.log("clone response data2", clone_response_data2)
       event.preventDefault();
       try{
-        // await axios.post(clone_endpoint, clone_response_data)
-        
-        // console.log(clone_response_data)
         await axios({
           method: 'post',
           url: clone_endpoint,
-          data: clone_response_data,
+          data: clone_response_data2,
         })
-        navigateToDashboards(`/dashboards/${url}/${username}`);
+         navigateToDashboards(`/dashboards/${username}`, {state: superset_url});
         console.log("Success !")
-        // matches w/ url format in main.jsx for re
         setError(null)
       } catch(error){
         setError(error.response ? error.response.data : error.message)
       }
+      // navigateToDashboards(`/dashboards/${username}`, state={superset_url});
     };
 
 
-    return( 
+  return( 
     <>
-        <body className="w-full flex h-full flex justify-center">
+    <body className="w-full flex h-full flex justify-center">
 
-<div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing">
-  {/* <div className="form-wrapper" onSubmit={handleSubmit}> */}
-  <div class='flex gap-x-24'>
-          {/* <Link to="/dashboards"> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          {/* <Link to={`/dashboards/${dashboard_name}`}> <button className="bg-sky-400 w-48 h-12">←Previous</button></Link> */}
-          <Link to={`/dashboards/${url}/${username}`}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
-           </div>
-           <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
-  <div className="final-clone-wrapper h-4/5 ">
-      <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
-        <div className="form-group mb-2 mt-5 flex flex-row ">
-          <label className="text-sky-400 font-semibold text-2xl" for="#dashboard_name">Rename: </label>
-          {/* <input className="bg-sky-200" type="text" id="dashboard_name" value={dashboard_name} onChange={handleChange}></input> */}
-          <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
-        </div>
-        <div class="block gap-20 h-4/5 scrollable">
-            {
-            chart_list.map((chart) =>(
-                <div className="flex flex-row justify-around items-center h-1/3">
-                    <div className="name-container">
-                      <p className="text-sky-400 font-test">{chart[0]}</p>
+    <div className="content-wrapper  w-1/2 h-1/2 flex flex-col justify-center content-wrapper-sizing">
+      <div className='flex gap-x-24'>
+              <Link to={`/dashboards/${username}`} state={superset_url}><button className="bg-sky-400 w-48 h-12 text-white">←Previous</button></Link>
+              </div>
+              <h1 className="display-1 text-sky-400">{dashboard_name}</h1>      
+      <div className="final-clone-wrapper h-4/5">
+          <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
+            <div className="form-group mb-2 mt-5 flex flex-row ">
+              <label className="text-sky-400 font-bold text-xl w-1/6" for="#dashboard_name">Rename: </label>
+              <input className="clone-input w-3/4 text-center text-black" type="text" id="dashboard_name" onInput={handledb_name} required></input>
+            </div>
+            <div className="block gap-20 h-4/5 scrollable">
+              {/* loading animation */}
+            <SyncLoader loading={loading} size={10} color='#1CABE2'></SyncLoader>
+                {
+                  // mapping source to charts
+                chart_list.map((chart) =>(
+                    <div className="flex flex-row justify-around items-center h-1/3">
+                        <div className="name-container">
+                          <p className="text-sky-400 font-test">{chart[0]}</p>
+                        </div>
+                        <select className="w-1/2 h-1/2 bg-sky-400 text-white" 
+                        onChange={(event) => handleSelect(chart[0], event.target.value) }>
+                        <option>Select a source</option>
+                          {
+                            sourcelist.map((source) =>(
+                              
+                              <option value={source[0]}>{source[0]}</option>
+                            ))
+                          }
+                        </select>
                     </div>
-                    <select className="w-1/2 h-1/2 bg-sky-400" 
-                    onChange={(event) => handleSelect(chart[0], event.target.value) }>
-                    <option>Select a source</option>
-                      {
-                        sourcelist.map((source) =>(
-                          
-                          <option value={source[0]}>{source[0]}</option>
-                        ))
-                      }
-                    </select>
-                </div>
 
-              ))
-            }
-        </div>
-        <div className="button-wrapper flex justify-center">
-          {/* <button className="bg-sky-400 w-1/2 " onClick={handleSubmit}>Sign in</button> */}
-          <button className="bg-sky-400 w-1/2 text-lg" type="submit">Finalize Clone</button>
-        </div>
-      </form>
-  </div>
-
-</div>
+                  ))
+                }
+            </div>
+            <div className="button-wrapper flex justify-center">
+              <button className="bg-sky-400 w-1/2 text-lg text-white" type="submit">Finalize Clone</button>
+            </div>
+          </form>
+      </div>
+    </div>
 </body>
     
     
     
     
-    </>)
+</>)
 }
+//below are hardcoded data we used for test and debug
   //presumably,we'll have a backend that will check the username and password, but for now we'll
     //just hard code the user and pass
     

@@ -1,8 +1,10 @@
 from flask import Blueprint, request
-from backend.utils.api_helpers import *
 import json
 import os
 
+from backend.utils.api_helpers import *
+from backend.utils.api_request_handler import APIRequestHandler
+from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
 from backend.utils.utils import create_id
 
 views = Blueprint('views', __name__)
@@ -35,16 +37,15 @@ def get_all_dashboards():
             }
         ]
     """
-    access_token = get_access_token()
-    dashboards = get_dashboards(access_token)
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    dashboards = get_dashboards(request_handler)
 
     dashboard_list = []
-
     for dashboard in dashboards:
         dashboard_id = dashboard[0]
         dashboard_name = dashboard[1]
 
-        charts = get_charts(access_token, dashboard_id)
+        charts = get_charts(request_handler, dashboard_id)
 
         curr_dashboard_info = {
             "dashboard_id": dashboard_id,
@@ -52,7 +53,6 @@ def get_all_dashboards():
             "dashboard_desc": None,
             "all_charts": [{"chart_id": chart_id, "chart_name": chart_name} for chart_id, chart_name in charts]
         }
-
         dashboard_list.append(curr_dashboard_info)
 
     return json.dumps(dashboard_list)
@@ -66,23 +66,26 @@ def get_all_datasets():
             {
                 "dataset_name": "name",
                 "database_name": "name"
+                "dataset_id": dataset_id,
             },
             {
                 <More datasets>
             }
         ]
     """
-    access_token = get_access_token()
-    datasets = get_datasets(access_token)
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    datasets = get_datasets(request_handler)
     dataset_list = []
 
     for dataset in datasets:
         dataset_name = dataset[0]
         db_name = dataset[1]
+        dataset_id = dataset[2]
 
         curr_dataset_info = {
             "dataset_name": dataset_name,
-            "database_name": db_name
+            "database_name": db_name,
+            "dataset_id": dataset_id,
         }
 
         dataset_list.append(curr_dataset_info)
@@ -93,17 +96,19 @@ def get_all_datasets():
 @views.route('/clone', methods=['POST'])
 def clone():
     """
+    Expected Return Format
        {
            "dashboard_id":
            "dashboard_old_name":
            "dashboard_new_name":
+           "dataset_id":
            "charts": [
                         [
                         chart_id
                         chart_old_name
-                        # chart_new_name
-                        chart_new_dataset
-                        database
+                        chart_new_name
+                        "chart_new_dataset": "covid_vaccines",
+                        "database": "examples"
                         ]
                    ]
        }
@@ -112,24 +117,29 @@ def clone():
     dashboard_old_name = request.json.get("dashboard_old_name")
     dashboard_new_name = request.json.get("dashboard_new_name")
     charts = request.json.get("charts")
+    dataset_id = request.json.get("dataset_id")
 
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
-    PARENT_DIR = os.path.join(FILE_DIR, os.pardir) 
+    PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
-    dir_of_interest = os.path.join(GRANDPARENT_DIR, 'backend/zip')
+    ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
-    access_token = get_access_token()
-    extracted_folder_name = export_one_dashboard(access_token, dashboard_id)
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
-    dashboard_old_name_parsed = dashboard_old_name.replace(" ", "_")
-    dashboard_filename = f'{dir_of_interest}/{extracted_folder_name}/dashboards/{dashboard_old_name_parsed}_{dashboard_id}.yaml'
+    dashboard_export_name = export_one_dashboard(request_handler, dashboard_id)
+    swap_dataset_and_database(request_handler, ZIP_DIR, dashboard_export_name, dataset_id)
+
+    dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
+                                                ZIP_DIR, dashboard_export_name)
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
-    change_chart_details(charts, extracted_folder_name)
-    update_dashboard_uuids(charts, f'{dir_of_interest}/{extracted_folder_name}/charts/', dashboard_filename)
+    change_chart_details(charts, dashboard_export_name)
 
-    csrf_token = get_csrf_token(access_token)
-    import_new_dashboard(access_token, csrf_token, extracted_folder_name)
+    update_dashboard_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/charts/', dashboard_filename)
+    update_chart_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
+    update_dataset_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
 
-    delete_zip(f"{dir_of_interest}/")
+    import_new_dashboard(request_handler, dashboard_export_name)
+
+    delete_zip(f"{ZIP_DIR}/")
     return "Cloning Successful"
