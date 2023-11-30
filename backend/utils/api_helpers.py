@@ -152,7 +152,7 @@ def change_chart_details(charts, extracted_folder_name):
     for chart in charts:
         chart_id = chart["chart_id"]
         chart_clean_name = _remove_non_alphanumeric_except_spaces(chart["chart_old_name"])
-        chart_old_name = chart_clean_name.replace(" ", "_")
+        chart_old_name = chart_clean_name.replace(" ", "_").lstrip('_')
         # chart_new_name = chart[2]
         chart_new_dataset = chart["chart_new_dataset"].replace(" ", "_")
         database = chart["database"].replace(" ", "_")
@@ -186,7 +186,7 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
         for i in range(len(charts)):
             chart_id = charts[i]['chart_id']
             chart_clean_name = _remove_non_alphanumeric_except_spaces(charts[i]["chart_old_name"])
-            chart_prefix = chart_clean_name.replace(" ", "_")
+            chart_prefix = chart_clean_name.replace(" ", "_").lstrip('_')
             chart_filename = f'{chart_prefix}_{chart_id}.yaml'
 
             # Read the chart file
@@ -305,7 +305,7 @@ def _get_dataset_uuid(filename):
 
 
 def _remove_non_alphanumeric_except_spaces(input_string):
-    return re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
+    return re.sub(r'[^a-zA-Z0-9\s\-_]', '', input_string)
 
 
 def _update_dataset_uuid(chart_id, chart_uuid, dashboard_data):
