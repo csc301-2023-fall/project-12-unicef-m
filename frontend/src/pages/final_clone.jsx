@@ -11,7 +11,6 @@ function FinalClone() {
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-
   const location = useLocation();
   const superset_url = location.state;
   console.log(superset_url);
@@ -56,9 +55,6 @@ function FinalClone() {
   },[]);
   // upon mounting, fetch the chart list from the backend
 
- //--------------------------------------------------------------------------------------------------
- // code for handling user input 
-
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]);
   //list of charts, and the source that the user wants to use for each chart
@@ -72,6 +68,7 @@ function FinalClone() {
       }
     }
     // do a check to see if the chartname is already in the list, and if it is, just update the source
+    
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
   const handledb_name=(event)=>{
