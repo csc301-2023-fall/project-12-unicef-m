@@ -49,6 +49,7 @@ function FinalClone() {
     axios.get(source_list_endpoint).then((response) => {
       // getting source info
       const sources = response.data;
+      console.log("sources",sources)
       dataset_id = sources[0].dataset_id
       const s_list = [];
       sources.forEach(source => {
