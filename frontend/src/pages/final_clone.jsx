@@ -49,6 +49,7 @@ function FinalClone() {
     axios.get(source_list_endpoint).then((response) => {
       // getting source info
       const sources = response.data;
+      console.log("sources",sources)
       dataset_id = sources[0].dataset_id
       const s_list = [];
       sources.forEach(source => {
@@ -159,12 +160,13 @@ function FinalClone() {
           url: clone_endpoint,
           data: clone_response_data,
         })
-         navigateToDashboards(`/dashboards/${username}`, state={superset_url});
+         navigateToDashboards(`/dashboards/${username}`, {state: superset_url});
         console.log("Success !")
         setError(null)
       } catch(error){
         setError(error.response ? error.response.data : error.message)
       }
+      // navigateToDashboards(`/dashboards/${username}`, state={superset_url});
     };
 
 
@@ -181,7 +183,7 @@ function FinalClone() {
           <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
             <div className="form-group mb-2 mt-5 flex flex-row ">
               <label className="text-sky-400 font-bold text-xl w-1/6" for="#dashboard_name">Rename: </label>
-              <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
+              <input className="clone-input w-3/4 text-center text-black" type="text" id="dashboard_name" onInput={handledb_name} required></input>
             </div>
             <div className="block gap-20 h-4/5 scrollable">
               {/* loading animation */}
