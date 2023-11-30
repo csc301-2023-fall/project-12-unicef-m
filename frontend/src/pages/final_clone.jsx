@@ -1,8 +1,8 @@
 import './pages.css'
 import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import SyncLoader from "react-spinners/SyncLoader";
 //page for finalizing the cloning process along with a couple other fields for the user to fill out
 
 
@@ -14,6 +14,7 @@ function FinalClone() {
   const location = useLocation();
   const superset_url = location.state;
   console.log(superset_url);
+  var [loading, setLoading]=useState(true);
 
   const [chart_list, setChartList] = useState([]);
   let db_id =0
@@ -22,7 +23,9 @@ function FinalClone() {
   const source_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-datasets';
   let dataset_id=0
    useEffect(() => {
+    setLoading(true);
     axios.get(dashboard_list_endpoint).then((response) => {
+      // getting dashboard info
       const d_list = response.data;
       const c_list = [];
       d_list.forEach(dashboard => {
@@ -35,12 +38,16 @@ function FinalClone() {
       })
       setChartList(c_list);
       
+      // console.log(c_list)
+      setChartList(c_list);  // upon mounting, fetch the chart list from the backend
+      setLoading(false);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
 
     
     axios.get(source_list_endpoint).then((response) => {
+      // getting source info
       const sources = response.data;
       dataset_id = sources[0].dataset_id
       const s_list = [];
@@ -56,9 +63,11 @@ function FinalClone() {
   },[]);
   // upon mounting, fetch the chart list from the backend
 
+  console.log(chart_list, sourcelist)//debugging purposes
+
   const [db_name,setdb_name]=useState(dashboard_name);
-  const [chart_and_source_list, appendChartAndSourceList] = useState([]);
-  //list of charts, and the source that the user wants to use for each chart
+  const [chart_and_source_list, appendChartAndSourceList] = useState([]); //list of charts, and the source that the user wants to use for each chart
+  
   const handleSelect = (chartname, source) => {
     let pair = [chartname, source]  
     for (let i = 0; i < chart_and_source_list.length; i++) { 
@@ -70,6 +79,7 @@ function FinalClone() {
     }
     // do a check to see if the chartname is already in the list, and if it is, just update the source
 
+    //otherwise add to list
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
   const handledb_name=(event)=>{
@@ -149,7 +159,6 @@ function FinalClone() {
           url: clone_endpoint,
           data: clone_response_data,
         })
-        // navigateToDashboards(`/dashboards/${url}/${username}`);
          navigateToDashboards(`/dashboards/${username}`, state={superset_url});
         console.log("Success !")
         setError(null)
@@ -175,7 +184,10 @@ function FinalClone() {
               <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
             </div>
             <div className="block gap-20 h-4/5 scrollable">
+              {/* loading animation */}
+            <SyncLoader loading={loading} size={10} color='#1CABE2'></SyncLoader>
                 {
+                  // mapping source to charts
                 chart_list.map((chart) =>(
                     <div className="flex flex-row justify-around items-center h-1/3">
                         <div className="name-container">
@@ -209,6 +221,7 @@ function FinalClone() {
     
 </>)
 }
+//below are hardcoded data we used for test and debug
   //presumably,we'll have a backend that will check the username and password, but for now we'll
     //just hard code the user and pass
     

@@ -16,49 +16,46 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    // path: "/login",
     element: <Login />,
     // login is our root page
   },
-  {
-    path: "/test",
-    element: <TestFunc />,
-    // test function for seeing if data from login page is passed to test page
-  },
-  // {
-  //   path: "/dashboards",
-  //   element: <Dashboards />,
-  // },
 
   {
-    // path: "/dashboards/:url/:username",
     path: "/dashboards/:username",
-    // path: "/dashboards/:dashboard_name/:username",
     element: <Dashboards />,
-    // test function for seeing if data from login page is passed to test page
   },
 
-  {
-    // path: "/update/:url/",
-    path: "/update/:dashboard_name/",
-    element: <Update />,
-    // test function for seeing if data from login page is passed to test page
-  },
   //final_clone
   {
-    // path: "/:url/final_clone/:username/:dashboard_name/:dashboard_id",
-    // path: "/",
     path: "/final_clone/:username/:dashboard_name/:dashboard_id",
     element: <FinalClone />,
-    // test function for seeing if data from login page is passed to test page
   },
-  
+  // add pages here following the format of   
+  // {
+  //   path: "/urlname",
+  //   element: <Pagename />,
+  // },
+
+  // abandoned pages
+  // {
+  //   // path: "/update/:url/",
+  //   path: "/update/:dashboard_name/",
+  //   element: <Update />,
+  //   // test function for seeing if data from login page is passed to test page
+  // },  
+  // {
+  //   path: "/test",
+  //   element: <TestFunc />,
+  //   // test function for seeing if data from login page is passed to test page
+  // },
 ]);
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    {/* <App /> */}
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+  <RouterProvider router={router} />
+  //below are code for strict mode, which will make the page render twice
+  // <React.StrictMode>
+  //   {/* <App /> */}
+  //   <RouterProvider router={router} />
+  // </React.StrictMode>,
 )
