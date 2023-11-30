@@ -107,6 +107,8 @@ def clone():
                         chart_id
                         chart_old_name
                         chart_new_name
+                        "chart_new_dataset": "covid_vaccines",
+                        "database": "examples"
                         ]
                    ]
        }
@@ -124,17 +126,20 @@ def clone():
 
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
 
-    extracted_folder_name = export_one_dashboard(request_handler, dashboard_id)
-    update_data(request_handler, ZIP_DIR, extracted_folder_name, dataset_id)
+    dashboard_export_name = export_one_dashboard(request_handler, dashboard_id)
+    swap_dataset_and_database(request_handler, ZIP_DIR, dashboard_export_name, dataset_id)
 
     dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
-                                                ZIP_DIR, extracted_folder_name)
+                                                ZIP_DIR, dashboard_export_name)
 
     set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
-    change_chart_details(charts, extracted_folder_name)
-    update_dashboard_uuids(charts, f'{ZIP_DIR}/{extracted_folder_name}/charts/', dashboard_filename)
+    change_chart_details(charts, dashboard_export_name)
 
-    import_new_dashboard(request_handler, extracted_folder_name)
+    update_dashboard_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/charts/', dashboard_filename)
+    update_chart_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
+    update_dataset_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
+
+    import_new_dashboard(request_handler, dashboard_export_name)
 
     delete_zip(f"{ZIP_DIR}/")
     return "Cloning Successful"
