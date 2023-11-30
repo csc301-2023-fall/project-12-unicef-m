@@ -10,10 +10,9 @@ import SyncLoader from "react-spinners/SyncLoader";
 
 function Dashboards() {
 
-  // let {url} = useParams();
   const location = useLocation();
   const superset_url = location.state;
-  var [loading, setLoading]=useState(true);
+  var [loading, setLoading]=useState(true); //for loading animation
   console.log(superset_url);
   let {username} = useParams();
 
@@ -28,7 +27,8 @@ function Dashboards() {
     setLoading(true);
 
     const fetchData = async () => {
-      console.log("fetching");
+      // fetch data from superset 
+      console.log("fetching");//debugging purpose
       try {
         const response = await axios.get(dashboard_list_endpoint);
         if (isMounted) {
@@ -41,7 +41,7 @@ function Dashboards() {
         console.error('Error fetching data from dashboard list endpoint:', error);
       }
       setLoading(false);
-    console.log("fetched");
+    console.log("fetched");//debugging purpose
     };
   
     fetchData();
@@ -49,11 +49,11 @@ function Dashboards() {
       isMounted = false;
     };
   }, []);
-  console.log(dashboardlist);
+  console.log(dashboardlist);//debugging purpose
+  
+  //search functions
   const [search_query, onSearch] = useState("");
   var[render,setRender]= useState(false);
-
-
   const handleSearch = (event) =>{
     onSearch(event.target.value);
   }
@@ -70,10 +70,12 @@ function Dashboards() {
       setRender(true);
     }
   }
+
   return( 
     <>
     <body className="w-full flex h-full flex justify-center">
       <div className="content-wrapper w-4/5 h-4/5 flex flex-col justify-center gap-y-3">
+        {/* all the header stuff: back,name,search */}
         <div className='flex justify-between'>
           <Link to="/"> <button className="bg-sky-400 h-full text-white">←Back to Login</button></Link>
           <label className="text-sky-400 font-semibold text-3xl">Dashboards for {username}</label>          
@@ -84,6 +86,7 @@ function Dashboards() {
           <button className="bg-sky-400 text-white"onClick={handleEnter}>Search</button>
         </div>
           <div>
+          {/* error message */}
           {
             render &&
             <div class="alert alert-danger" role="alert">
@@ -92,7 +95,9 @@ function Dashboards() {
           }
           </div>
         <div className="block gap-20 h-screen scrollable bg-white">
+          {/* loading animation */}
           <SyncLoader loading={loading} size={10} color='#1CABE2'></SyncLoader>
+          {/* mapping the dashboards */}
           {
             dashboardlist.map((dashboard) => (
               <div className="mt-10 mb-10" key={dashboard[0]}>
@@ -114,7 +119,7 @@ function Dashboards() {
                   </div> */}
                   
                 </div>
-                <label className="text-sky-500 font-semibold text-xl">{dashboard[0]}</label>
+                <label className="text-sky-500 font-semibold text-xl">{dashboard[0]}</label> 
               </div>
             ))
           }

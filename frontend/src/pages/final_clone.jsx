@@ -1,6 +1,5 @@
 import './pages.css'
 import { Link, useParams, useNavigate, useLocation} from 'react-router-dom';
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import SyncLoader from "react-spinners/SyncLoader";
@@ -11,8 +10,6 @@ function FinalClone() {
   let {username} = useParams();
   let {dashboard_name} = useParams();
   let {dashboard_id} = useParams();
-  // let {url} = useParams();  
-  // console.log(url)
   const location = useLocation();
   const superset_url = location.state;
   console.log(superset_url);
@@ -27,6 +24,7 @@ function FinalClone() {
    useEffect(() => {
     setLoading(true);
     axios.get(dashboard_list_endpoint).then((response) => {
+      // getting dashboard info
       const d_list = response.data;
       const c_list = [];
       d_list.forEach(dashboard => {
@@ -40,13 +38,14 @@ function FinalClone() {
         }
       })
       // console.log(c_list)
-      setChartList(c_list);
+      setChartList(c_list);  // upon mounting, fetch the chart list from the backend
       setLoading(false);
     }).catch((error) => {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
 
     axios.get(source_list_endpoint).then((response) => {
+      // getting source info
       const sources = response.data;
       const s_list = [];
       sources.forEach(source => {
@@ -59,14 +58,12 @@ function FinalClone() {
       console.error('Error fetching data from source list endpoint:', error);
     });
   },[]);
-  // chart_list, sourcelist
-  // upon mounting, fetch the chart list from the backend
-  console.log(chart_list, sourcelist)
 
-  // const [DBname,setDBname]=useState("");
+  console.log(chart_list, sourcelist)//debugging purposes
+
   const [db_name,setdb_name]=useState(dashboard_name);
-  const [chart_and_source_list, appendChartAndSourceList] = useState([]);
-  //list of charts, and the source that the user wants to use for each chart
+  const [chart_and_source_list, appendChartAndSourceList] = useState([]); //list of charts, and the source that the user wants to use for each chart
+  
   const handleSelect = (chartname, source) => {
     // console.log( (chartname, source) )
 
@@ -74,15 +71,15 @@ function FinalClone() {
     // console.log( pair )
     // console.log( chart_and_source_list )
   
-    for (let i = 0; i < chart_and_source_list.length; i++) { 
+    for (let i = 0; i < chart_and_source_list.length; i++) {
+      // iterate to check if the chartname is already in the list, and if it is, just update the source
       if (chart_and_source_list[i][0] == chartname) {
         chart_and_source_list[i][1] = source
         appendChartAndSourceList([...chart_and_source_list])
         return
       }
     }
-    // do a check to see if the chartname is already in the list, and if it is, just update the source
-    
+    //otherwise add to list
     appendChartAndSourceList([...chart_and_source_list, pair])
   }
   // console.log(chart_and_source_list)
@@ -160,15 +157,11 @@ function FinalClone() {
     const handleCloneSubmit = async(event) => {
       event.preventDefault();
       try{
-        // await axios.post(clone_endpoint, clone_response_data)
-        
-        // console.log(clone_response_data)
         await axios({
           method: 'post',
           url: clone_endpoint,
           data: clone_response_data,
         })
-        // navigateToDashboards(`/dashboards/${url}/${username}`);
          navigateToDashboards(`/dashboards/${username}`, state={superset_url});
         console.log("Success !")
         // matches w/ url format in main.jsx for re
@@ -195,8 +188,10 @@ function FinalClone() {
               <input className="clone-input w-3/4 text-center" type="text" id="dashboard_name" onInput={handledb_name} required></input>
             </div>
             <div className="block gap-20 h-4/5 scrollable">
+              {/* loading animation */}
             <SyncLoader loading={loading} size={10} color='#1CABE2'></SyncLoader>
                 {
+                  // mapping source to charts
                 chart_list.map((chart) =>(
                     <div className="flex flex-row justify-around items-center h-1/3">
                         <div className="name-container">
@@ -230,6 +225,7 @@ function FinalClone() {
     
 </>)
 }
+//below are hardcoded data we used for test and debug
   //presumably,we'll have a backend that will check the username and password, but for now we'll
     //just hard code the user and pass
     

@@ -1,9 +1,6 @@
-// import { useState } from 'react'
 import { useState } from "react";
 import unicefLogo from "./assets/UNICEF-logo.png"
 import './pages.css'
-// import {useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 function Login() {
 
@@ -14,7 +11,6 @@ function Login() {
   const handleUsername=(event)=>{
     setUsername(event.target.value);
   }
-
   const handlePassword=(event)=>{
       setPassword(event.target.value);
   }
@@ -23,18 +19,17 @@ function Login() {
   };
 
     //presumably,we'll have a backend that will check the username and password, but for now we'll
-    //just hard code the user and pass
+    //just hard code the user and pass, url can be anything since its hardcoded
     const user ="testuser";
     const pass ="testpass";
 
     const navigateToDashboards = useNavigate();
 
   var[render,setRender]= useState(false);
-  //if the username and password match, dont render anything
   const checkValid = (event) => {
+    // checking if the username and password match
     event.preventDefault(); 
     if(username==user && password==pass){
-      // navigateToDashboards(`/dashboards/${url}/${username}`);
       navigateToDashboards(`/dashboards/${username}`, {state: url});
       setRender(false);
     }
