@@ -21,7 +21,10 @@ function FinalClone() {
   const [sourcelist, setSourceList] = useState([]);
   const dashboard_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-dashboards';
   const source_list_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/all-datasets';
-  let dataset_id=0
+  // let dataset_id=0
+
+
+  const [dataset_id, setDatasetId] = useState(0);
    useEffect(() => {
     setLoading(true);
     axios.get(dashboard_list_endpoint).then((response) => {
@@ -49,12 +52,15 @@ function FinalClone() {
     axios.get(source_list_endpoint).then((response) => {
       // getting source info
       const sources = response.data;
-      console.log("sources",sources)
-      dataset_id = sources[0].dataset_id
+      console.log("sources",response.data)
+      // let d_id = sources[0].dataset_id
+      // setDatasetId(d_id)
+      // console.log("dataset id inner", dataset_id)
       const s_list = [];
       sources.forEach(source => {
         // console.log(clone_endpoint, error)
-        s_list.push([source.dataset_name,source.database_name])
+        console.log([source.dataset_name,source.database_name, source.dataset_id])
+        s_list.push([source.dataset_name,source.database_name, source.dataset_id])
       })
       // console.log(s_list)
       setSourceList(s_list);
@@ -62,15 +68,27 @@ function FinalClone() {
       console.error('Error fetching data from source list endpoint:', error);
     });
   },[]);
-  // upon mounting, fetch the chart list from the backend
 
-  console.log(chart_list, sourcelist)//debugging purposes
+  console.log("source list ", sourcelist)
+  console.log("chart list ", chart_list)
+
+
+
+  // upon mounting, fetch the chart list from the backend
+  // console.log("dataset id outer", dataset_id)
+  // console.log(chart_list, sourcelist)//debugging purposes
 
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_source_list, appendChartAndSourceList] = useState([]); //list of charts, and the source that the user wants to use for each chart
-  
   const handleSelect = (chartname, source) => {
-    let pair = [chartname, source]  
+
+    let dataset_id = 0
+    sourcelist.forEach(sourceIndex => {
+      if (sourceIndex[0] == source) {
+        dataset_id = sourceIndex[2]
+      }
+    })
+    let trio = [chartname, source, dataset_id]  
     for (let i = 0; i < chart_and_source_list.length; i++) { 
       if (chart_and_source_list[i][0] == chartname) {
         chart_and_source_list[i][1] = source
@@ -81,8 +99,10 @@ function FinalClone() {
     // do a check to see if the chartname is already in the list, and if it is, just update the source
 
     //otherwise add to list
-    appendChartAndSourceList([...chart_and_source_list, pair])
+    appendChartAndSourceList([...chart_and_source_list, trio])
   }
+
+  console.log("chart and source list", chart_and_source_list)
   const handledb_name=(event)=>{
     if (event.target.value!= db_name){
       setdb_name(event.target.value);
@@ -140,25 +160,34 @@ function FinalClone() {
       // should now be a list of json objects, where each object is a chart and its attributes
     })
 
-    const clone_response_data = {
+    const clone_response_data1 = {
       "dashboard_id": Number(dashboard_id),
       "dashboard_old_name": dashboard_old_name,
       "dashboard_new_name": dashboard_new_name, 
       "dataset_id": Number(dataset_id),
       "charts": charts
     }
+    console.log("clone response data1", clone_response_data1)
 
 
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
     const navigateToDashboards = useNavigate();
     const handleCloneSubmit = async(event) => {
+      const clone_response_data2 = {
+        "dashboard_id": Number(dashboard_id),
+        "dashboard_old_name": dashboard_old_name,
+        "dashboard_new_name": dashboard_new_name, 
+        "dataset_id": chart_and_source_list[0][2],
+        "charts": charts
+      }
+      console.log("clone response data2", clone_response_data2)
       event.preventDefault();
       try{
         await axios({
           method: 'post',
           url: clone_endpoint,
-          data: clone_response_data,
+          data: clone_response_data2,
         })
          navigateToDashboards(`/dashboards/${username}`, {state: superset_url});
         console.log("Success !")
