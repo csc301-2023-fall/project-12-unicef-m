@@ -113,6 +113,42 @@ def clone():
                    ]
        }
     """
+    dashboard_details = mutate_dashboard(request)
+
+    dashboard_export_name = dashboard_details[0]
+    ZIP_DIR = dashboard_details[1]
+    request_handler = dashboard_details[2]
+
+    import_new_dashboard(request_handler, dashboard_export_name)
+    delete_zip(f"{ZIP_DIR}/")
+    return "Cloning Successful"
+
+
+@views.route('/across-instance-clone', methods=['POST'])
+def across_instances():
+    dashboard_details = mutate_dashboard(request)
+    dashboard_export_name = dashboard_details[0]
+    ZIP_DIR = dashboard_details[1]
+
+    second_superset_instance_url = request.json.get("second_instance_url")
+    second_superset_username = request.json.get("second_instance_username")
+    second_superset_password = request.json.get("second_instance_password")
+
+    new_request_handler = APIRequestHandler(second_superset_instance_url, second_superset_username,
+                                            second_superset_password)
+    import_new_dashboard(new_request_handler, dashboard_export_name)
+    delete_zip(f"{ZIP_DIR}/")
+    return "Across instance Cloning Successful"
+
+
+def mutate_dashboard(request):
+    """
+        Takes in a HTTP Request Object and modifies the dashboards files to update it with new datasets
+
+        @param request: the HTTP request (POST request)
+        @return: Returns a list with the folder name with the dashboards information (within the zip folder),
+                 and the file path of the zip folder, and the request handler
+        """
     dashboard_id = request.json.get("dashboard_id")
     dashboard_old_name = request.json.get("dashboard_old_name")
     dashboard_new_name = request.json.get("dashboard_new_name")
@@ -139,7 +175,4 @@ def clone():
     update_chart_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
     update_dataset_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
 
-    import_new_dashboard(request_handler, dashboard_export_name)
-
-    delete_zip(f"{ZIP_DIR}/")
-    return "Cloning Successful"
+    return [dashboard_export_name, ZIP_DIR, request_handler]
