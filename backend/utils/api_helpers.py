@@ -181,6 +181,7 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
     # Read the dashboard file
     with open(dashboard_filepath, 'r') as dashboard_file:
         dashboard_data = yaml.safe_load(dashboard_file)
+        dashboard_data['slug'] = 'null'
 
         # Loop over all files in the charts directory
         for i in range(len(charts)):
