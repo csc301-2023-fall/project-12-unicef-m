@@ -1,11 +1,15 @@
+"""
+This file contains all backend endpoints the frontend may call
+"""
+
 from flask import Blueprint, request
 import json
 
-from backend.utils.api_helpers import *
-from backend.utils.api_request_handler import APIRequestHandler
 from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
-from backend.utils.utils import create_id
+from backend.utils.api_request_handler import APIRequestHandler
 from backend.utils.dashboard_details import DashboardDetails
+from backend.utils.api_helpers import *
+from backend.utils.data_helpers import *
 
 views = Blueprint('views', __name__)
 
@@ -116,9 +120,8 @@ def clone():
     dashboard_details = get_details(request)
     dashboard_export_name, zip_directory, request_handler = modify_details(dashboard_details)
 
-    import_new_dashboard(request_handler, dashboard_export_name)
-    delete_zip(f"{zip_directory}/")
-
+    import_new_dashboard(request_handler, dashboard_export_name, zip_directory)
+    delete_zip(zip_directory)
     return "Cloning Successful"
 
 
@@ -134,10 +137,8 @@ def across_instances():
     new_request_handler = APIRequestHandler(second_superset_instance_url, second_superset_username,
                                             second_superset_password)
 
-    import_new_dashboard(new_request_handler, dashboard_export_name)
-
-    delete_zip(f"{zip_directory}/")
-
+    import_new_dashboard(new_request_handler, dashboard_export_name, zip_directory)
+    delete_zip(zip_directory)
     return "Across instance Cloning Successful"
 
 
