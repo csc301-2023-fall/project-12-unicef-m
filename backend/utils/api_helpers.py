@@ -60,7 +60,7 @@ def get_datasets(request_handler):
     return parsed_datasets
 
 
-def export_one_dashboard(request_handler, dashboard_id):
+def export_old_dashboard(request_handler, dashboard_id):
     """
     Export an existing dashboard from SUPERSET_INSTANCE_URL with dashboard_id into zip folder
 
@@ -84,7 +84,7 @@ def export_one_dashboard(request_handler, dashboard_id):
     return dashboard_export_name
 
 
-def import_new_dashboard(request_handler, filename, zip_directory):
+def import_new_dashboard(request_handler, filename):
     """
     Import the new dashboard to SUPERSET_INSTANCE_URL
 

@@ -2,12 +2,54 @@
 This file will be used for any operations related to data manipulation within any dashboard file
 """
 
-import os
 import shutil
-import zipfile
 import yaml
 
 from backend.utils.utils import create_id, cleaned_filename
+from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
+from backend.utils.api_request_handler import APIRequestHandler
+from backend.utils.api_helpers import *
+
+
+def modify_details(data_object, main_dir):
+    """
+    Takes a DashboardDetail Object and changes all files to prepare for the cloning process
+
+    @param data_object: An initialized DashboardDetail object
+    @param main_dir: The main directory where all data is stored
+    """
+    # Retrieve all info
+    dashboard_id = data_object.dashboard_id
+    dashboard_old_name = data_object.dashboard_old_name
+    dashboard_new_name = data_object.dashboard_new_name
+    dataset_id = data_object.dataset_id
+    dataset_name = data_object.dataset_name
+    database_name = data_object.database_name
+    charts = data_object.charts
+
+    # Initialize a request handler which will be used to make any and all requests to Superset API
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+
+    # Get the files relating to the template dashboard
+    dashboard_export_name = export_old_dashboard(request_handler, dashboard_id)
+    dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
+                                                main_dir, dashboard_export_name)
+
+    # Swap out the old dataset and database with the chosen ones
+    modify_dataset_and_database(request_handler, main_dir, dashboard_export_name, dataset_id)
+
+    # At this point, we have a folder zip/dashboard_export_name
+    # We must change all the details within the files that the user specified to change
+    # 1) Change names that are referenced in each file
+    change_dashboard_details(dashboard_filename, dashboard_new_name)
+    change_chart_details(charts, dashboard_export_name, dataset_name, database_name)
+
+    # 2) Change uuids that are referenced in each file
+    update_dashboard_uuids(charts, f'{main_dir}/{dashboard_export_name}/charts/', dashboard_filename)
+    update_chart_uuids(f'{main_dir}/{dashboard_export_name}/', dataset_name, database_name)
+    update_dataset_uuids(f'{main_dir}/{dashboard_export_name}/', dataset_name, database_name)
+
+    return dashboard_export_name, main_dir, request_handler
 
 
 def get_dashboard_filename(dashboard_id, dashboard_old_name, zip_dir, extracted_folder_name):

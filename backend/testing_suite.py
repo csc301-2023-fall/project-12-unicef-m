@@ -2,15 +2,11 @@
 To run this test file, run the command: pytest testing_suite.py
 '''
 
-from backend.routes.dashboard_handler import DashboardHandler
-from backend.routes.changes_handler import ChangesHandler
 from backend.utils.superset_constants import *
-from backend.utils.endpoints import *
 from backend.utils.api_helpers import *
 from backend.utils.api_request_handler import APIRequestHandler
 from backend.app import app as flask_app
 import pytest
-import requests
 import unittest
 
 # Initialize instances of the handlers

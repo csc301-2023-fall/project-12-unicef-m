@@ -5,10 +5,7 @@ This file contains all backend endpoints the frontend may call
 from flask import Blueprint, request
 import json
 
-from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
-from backend.utils.api_request_handler import APIRequestHandler
-from backend.utils.dashboard_details import DashboardDetails
-from backend.utils.api_helpers import *
+from backend.utils.dashboard_details_helper import *
 from backend.utils.data_helpers import *
 
 views = Blueprint('views', __name__)
@@ -118,9 +115,16 @@ def clone():
        }
     """
     dashboard_details = get_details(request)
-    dashboard_export_name, zip_directory, request_handler = modify_details(dashboard_details)
 
-    import_new_dashboard(request_handler, dashboard_export_name, zip_directory)
+    # Initialized all paths directly to avoid issues with relativity
+    FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+    PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
+    GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
+    ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
+
+    dashboard_export_name, zip_directory, request_handler = modify_details(dashboard_details, ZIP_DIR)
+
+    import_new_dashboard(request_handler, dashboard_export_name)
     delete_zip(zip_directory)
     return "Cloning Successful"
 
@@ -137,95 +141,6 @@ def across_instances():
     new_request_handler = APIRequestHandler(second_superset_instance_url, second_superset_username,
                                             second_superset_password)
 
-    import_new_dashboard(new_request_handler, dashboard_export_name, zip_directory)
+    import_new_dashboard(new_request_handler, dashboard_export_name)
     delete_zip(zip_directory)
     return "Across instance Cloning Successful"
-
-
-def get_details(request):
-    """
-    Takes in a HTTP Request Object and modifies the dashboards files to update it with new datasets
-
-    @param request: the HTTP request (POST request)
-    @return: Returns a DashboardDetails object with all fields initialized
-    """
-    dashboard_id = request.json.get("dashboard_id")
-    old_name = request.json.get("dashboard_old_name")
-    new_name = request.json.get("dashboard_new_name")
-    dataset_id = request.json.get("dataset_id")
-
-    charts_temp = request.json.get("charts")
-
-    # =======================================================================================
-    # Due to the current way our frontend was set up, each chart is associated with a dataset
-    # However, as only one dataset need to be specified, this chunk of code will change.
-    # Must make necessary changes to the frontend prior to changing this code.
-    # =======================================================================================
-    if charts_temp[0] is not None:
-        dataset_name = charts_temp[0].get("chart_new_dataset")
-        database_name = charts_temp[0].get("database")
-    else:
-        dataset_name = None
-        database_name = None
-
-    charts = []
-    for chart in charts_temp:
-        chart_detail = {
-            "chart_id": chart.get("chart_id"),
-            "chart_old_name": chart.get("chart_old_name"),
-            "chart_new_name": chart.get("chart_new_name")
-        }
-        charts.append(chart_detail)
-    # =======================================================================================
-
-    return DashboardDetails(dashboard_id=dashboard_id, dashboard_old_name=old_name, dashboard_new_name=new_name,
-                            dataset_id=dataset_id, dataset_name=dataset_name, database_name=database_name,
-                            charts=charts)
-
-
-def modify_details(data_object):
-    """
-    Takes in a HTTP Request Object and modifies the dashboards files to update it with new datasets
-
-    @param data_object: a DashboardDetails object with all relevant fields initialized
-    @return: Returns a list with the folder name with the dashboards information (within the zip folder),
-             and the file path of the zip folder, and the request handler
-    """
-    # Retrieve all info
-    dashboard_id = data_object.dashboard_id
-    dashboard_old_name = data_object.dashboard_old_name
-    dashboard_new_name = data_object.dashboard_new_name
-    dataset_id = data_object.dataset_id
-    dataset_name = data_object.dataset_name
-    database_name = data_object.database_name
-    charts = data_object.charts
-
-    # Initialized all paths directly to avoid issues with relativity
-    FILE_DIR = os.path.dirname(os.path.abspath(__file__))
-    PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
-    GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
-    ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
-
-    # Initialize a request handler which will be used to make any and all requests to Superset API
-    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
-
-    # Get the files relating to the template dashboard
-    dashboard_export_name = export_one_dashboard(request_handler, dashboard_id)
-    dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
-                                                ZIP_DIR, dashboard_export_name)
-
-    # Swap out the old dataset and database with the chosen ones
-    modify_dataset_and_database(request_handler, ZIP_DIR, dashboard_export_name, dataset_id)
-
-    # At this point, we have a folder zip/dashboard_export_name
-    # We must change all the details within the files that the user specified to change
-    # 1) Change names that are referenced in each file
-    change_dashboard_details(dashboard_filename, dashboard_new_name)
-    change_chart_details(charts, dashboard_export_name, dataset_name, database_name)
-
-    # 2) Change uuids that are referenced in each file
-    update_dashboard_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/charts/', dashboard_filename)
-    update_chart_uuids(f'{ZIP_DIR}/{dashboard_export_name}/', dataset_name, database_name)
-    update_dataset_uuids(f'{ZIP_DIR}/{dashboard_export_name}/', dataset_name, database_name)
-
-    return dashboard_export_name, ZIP_DIR, request_handler
