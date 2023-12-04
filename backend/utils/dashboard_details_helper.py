@@ -1,6 +1,7 @@
 """
 This file takes a json request and creates a DashboardDetail object
 """
+
 from backend.utils.dashboard_details import DashboardDetails
 
 

@@ -1,3 +1,7 @@
+"""
+A class for APIRequestHandler which is an object that will be used for any call to Superset API
+"""
+
 import requests
 from backend.utils.endpoints import *
 
@@ -67,6 +71,3 @@ class APIRequestHandler:
 
     def get_request(self, endpoint, **kwargs):
         return self._execute_http_method(self.session.get, endpoint, **kwargs)
-
-    def put_request(self, endpoint, **kwargs):
-        return self._execute_http_method(self.session.put, endpoint, **kwargs)

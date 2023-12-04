@@ -1,3 +1,7 @@
+"""
+A class for DashboardDetails which will store any information related to cloning from the frontend POST request
+"""
+
 class DashboardDetails:
     def __init__(self, dashboard_id, dashboard_old_name, dashboard_new_name,
                  dataset_id, dataset_name, database_name, charts):
