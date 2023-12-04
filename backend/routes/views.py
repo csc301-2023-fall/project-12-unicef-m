@@ -117,7 +117,6 @@ def clone():
     dashboard_export_name, zip_directory, request_handler = modify_details(dashboard_details)
 
     import_new_dashboard(request_handler, dashboard_export_name)
-    breakpoint()
     delete_zip(f"{zip_directory}/")
 
     return "Cloning Successful"

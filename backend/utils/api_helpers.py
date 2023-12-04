@@ -87,7 +87,7 @@ def export_one_dashboard(request_handler, dashboard_id):
 
 def get_dashboard_filename(dashboard_id, dashboard_old_name, zip_dir, extracted_folder_name):
     """
-    Get the full path to the dashboard filename
+    Get the full path to the dashboard file
 
     @param dashboard_id: The dashboard_id of the dashboard
     @param dashboard_old_name: The original name of the dashboard
@@ -105,7 +105,14 @@ def get_dashboard_filename(dashboard_id, dashboard_old_name, zip_dir, extracted_
 
 def modify_dataset_and_database(request_handler, zip_dir, dashboard_export, dataset_id):
     """
-    Updates the dataset folders within extracted_folder_name
+    Updates the dataset and database folders within the extracted dashboard file
+    Replaces the dataset and database files that are located within
+
+    @param request_handler: An initialized APIRequestHandler
+    @param zip_dir: the full path to the zip folder where data is stored
+    @param dashboard_export: the name of the folder within the zip folder
+    @param dataset_id: the id of the chosen dataset
+    @return: None
     """
     export_dataset_endpoint = f'api/v1/dataset/export/?q=[{dataset_id}]'
     export_response = request_handler.get_request(export_dataset_endpoint)
@@ -122,20 +129,21 @@ def modify_dataset_and_database(request_handler, zip_dir, dashboard_export, data
     _replace_subfolder(zip_dir, dataset_export, dashboard_export, 'databases')
     _replace_subfolder(zip_dir, dataset_export, dashboard_export, 'datasets')
 
-    return dataset_export
-
 
 def change_dashboard_details(dashboard_filename, dashboard_new_name):
     """
     Change the details of the dashboard file
+    Specifically change the dashboard_title, uuid, and slug
 
     @param dashboard_filename: the name of the dashboard
     @param dashboard_new_name: the new name of the dashboard
+    @return: None
     """
     params = [
         ("dashboard_title", dashboard_new_name),
         ("uuid", create_id()),
-        ("slug", 'null')
+        # Setting slug to None makes a new dashboard instead of overriding an existing dashboard
+        ("slug", None)
     ]
     _set_new_details(dashboard_filename, params)
 
@@ -148,7 +156,7 @@ def change_chart_details(charts, extracted_folder_name, dataset_name, database_n
     @param extracted_folder_name: The folder within the zip file created from export_one_dashboard()
     @param dataset_name: the name of the dataset
     @param database_name: the name of the database
-    return: None
+    @return: None
     """
     # ============================================================
     # Uncomment out 2 lines when frontend supports renaming charts
@@ -162,7 +170,10 @@ def change_chart_details(charts, extracted_folder_name, dataset_name, database_n
         database_name = _cleaned_filename(database_name)
 
         dataset_filename = f'zip/{extracted_folder_name}/datasets/{database_name}/{dataset_name}.yaml'
-        dataset_uuid = _get_dataset_uuid(dataset_filename)
+
+        with open(dataset_filename, 'r') as file:
+            dataset_data = yaml.safe_load(file)
+        dataset_uuid = dataset_data.get("uuid")
 
         chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
         params = [
@@ -180,7 +191,7 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
     @param charts: A list of all charts containing [chart_id, chart_old_name]
     @param charts_dir: The path to the directory containing all charts
     @param dashboard_filepath: The path to the dashboard yaml file
-    return: None
+    @return: None
     """
     # Read the dashboard file
     with open(dashboard_filepath, 'r') as dashboard_file:
@@ -203,7 +214,7 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
 
             chart_uuid = chart_data.get('uuid')
             # Update UUID in the dashboard data
-            _update_dataset_uuid(chart_id, chart_uuid, dashboard_data)
+            _update_dashboard_uuid(chart_id, chart_uuid, dashboard_data)
 
             chart_file.close()
 
@@ -214,7 +225,12 @@ def update_dashboard_uuids(charts, charts_dir, dashboard_filepath):
 
 def update_chart_uuids(dashboard_export_dir, dataset_name, database_name):
     """
-    Update the dataset_uuid on each of the chart.yaml files
+    Update the unique id of the dataset on each of the chart.yaml files
+
+    @param dashboard_export_dir: The full path to the exported dashboard
+    @param dataset_name: The name of the dataset
+    @param database_name: The name of the database
+    @return: None
     """
     dataset_name = _cleaned_filename(dataset_name)
     database_name = _cleaned_filename(database_name)
@@ -234,6 +250,11 @@ def update_chart_uuids(dashboard_export_dir, dataset_name, database_name):
 def update_dataset_uuids(dashboard_export_dir, dataset_name, database_name):
     """
     Update the database_uuid in the dataset.yaml file
+
+    @param dashboard_export_dir: The full path to the exported dashboard
+    @param dataset_name: The name of the dataset
+    @param database_name: The name of the database
+    @return: None
     """
     database_name = _cleaned_filename(database_name)
     database_filepath = f'{dashboard_export_dir}databases/{database_name}.yaml'
@@ -292,6 +313,14 @@ def delete_zip(path):
 
 
 def _replace_subfolder(filepath, source, destination, subfolder_name):
+    """
+    Replace the subfolder in destination with the one in source looking at the filepath
+
+    @param filepath: path to the subfolder
+    @param source: (Usage - new dataset folder)
+    @param destination: (Usage - old dashboard folder)
+    @param subfolder_name: (Usage - dataset/dashboard folders)
+    """
     source_subfolder = os.path.join(source, subfolder_name)
     destination_subfolder = os.path.join(destination, subfolder_name)
 
@@ -318,19 +347,27 @@ def _set_new_details(filename, details):
         yaml.dump(file_data, file, sort_keys=False)
 
 
-def _get_dataset_uuid(filename):
-    with open(filename, 'r') as file:
-        dataset_data = yaml.safe_load(file)
-    return dataset_data["uuid"]
-
-
 def _cleaned_filename(input_string):
+    """
+    Return the input_string as Superset would name it
+
+    @param input_string: the string to filter
+    @return: the input string, without non-filename characters, replaced spaces with underscores, and remove leading _
+    """
     only_file_char =  re.sub(r'[^a-zA-Z0-9\s\-_]', '', input_string)
     no_spaces = only_file_char.replace(" ", "_").lstrip('_')
     return no_spaces
 
 
-def _update_dataset_uuid(chart_id, chart_uuid, dashboard_data):
+def _update_dashboard_uuid(chart_id, chart_uuid, dashboard_data):
+    """
+    Update the chart uuid within dashboard_data
+
+    @param chart_id: the id of the chart
+    @param chart_uuid: the new uuid
+    @param dashboard_data: the data within the dashboard.yaml file
+    @return: None
+    """
     for _, chart_info in dashboard_data.get('position', {}).items():
         if 'type' in chart_info:
             if chart_info.get('type') == 'CHART':
@@ -343,6 +380,13 @@ def _update_dataset_uuid(chart_id, chart_uuid, dashboard_data):
 
 
 def _update_chart_uuid(chart_filepath, new_dataset_uuid):
+    """
+    Update the dataset uuid within chart
+
+    @param chart_filepath: the filepath to the chart file
+    @param new_dataset_uuid: the new dataset uuid
+    @return: None
+    """
     with open(chart_filepath, 'r') as chart_file:
         chart_data = yaml.safe_load(chart_file)
 
@@ -353,7 +397,13 @@ def _update_chart_uuid(chart_filepath, new_dataset_uuid):
 
 
 def _zipdir(path, ziph):
-    # ziph is zipfile handle
+    """
+    Zip a folder
+
+    @param path: the folder to zip
+    @param ziph: the zipfile handle
+    @return: None
+    """
     for root, dirs, files in os.walk(path):
         for file in files:
             ziph.write(os.path.join(root, file),
