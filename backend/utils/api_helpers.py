@@ -178,6 +178,10 @@ def change_chart_details(charts, extracted_folder_name, dataset_name, database_n
         chart_filename = f'zip/{extracted_folder_name}/charts/{chart_old_name}_{chart_id}.yaml'
         params = [
             ("dataset_uuid", dataset_uuid),
+            # Note: Creating new IDs for charts is needed to create a chart with a new dataset
+            # However, deleting a dashboard on Superset does not delete its charts
+            # This creates an issue where new charts being created are never being deleted
+            # Do not know if this is an issue we can fix, or if it is a Superset issue.
             ("uuid", create_id())
             # ("slice_name", chart_new_name)
         ]
