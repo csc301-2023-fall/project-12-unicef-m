@@ -7,6 +7,7 @@ import json
 
 from backend.utils.dashboard_details_helper import *
 from backend.utils.data_helpers import *
+from backend.utils.api_request_handler import APIRequestHandler
 
 views = Blueprint('views', __name__)
 
@@ -122,25 +123,21 @@ def clone():
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
     ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
-    dashboard_export_name, zip_directory, request_handler = modify_details(dashboard_details, ZIP_DIR)
+    # Initialize a request handler which will be used to make any and all requests to Superset API
+    request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    # Change all details within the dashboard files
+    dashboard_export_name, zip_directory = modify_details(dashboard_details, request_handler, ZIP_DIR)
 
-    import_new_dashboard(request_handler, dashboard_export_name)
+    # Initialize an API request handler with the instance that will receive the dashboard
+    instance_url = dashboard_details.credentials['instance_url']
+    username = dashboard_details.credentials['username']
+    password = dashboard_details.credentials['password']
+    import_request_handler = APIRequestHandler(instance_url, username, password)
+
+    # Import the dashboard
+    import_new_dashboard(import_request_handler, dashboard_export_name)
+
+    # Delete the files in the zip folder that was used as a temporary destination
+    # Comment out this function to be able to view the dashboard files
     delete_zip(zip_directory)
     return "Cloning Successful"
-
-
-@views.route('/across-instance-clone', methods=['POST'])
-def across_instances():
-    dashboard_details = get_details(request)
-    dashboard_export_name, zip_directory, _ = modify_details(dashboard_details)
-
-    second_superset_instance_url = request.json.get("second_instance_url")
-    second_superset_username = request.json.get("second_instance_username")
-    second_superset_password = request.json.get("second_instance_password")
-
-    new_request_handler = APIRequestHandler(second_superset_instance_url, second_superset_username,
-                                            second_superset_password)
-
-    import_new_dashboard(new_request_handler, dashboard_export_name)
-    delete_zip(zip_directory)
-    return "Across instance Cloning Successful"

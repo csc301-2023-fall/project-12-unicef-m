@@ -3,6 +3,7 @@ This file takes a json request and creates a DashboardDetail object
 """
 
 from backend.utils.dashboard_details import DashboardDetails
+from backend.utils.superset_constants import SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD
 
 
 def get_details(request):
@@ -28,6 +29,8 @@ def get_details(request):
         dataset_name = charts_temp[0].get("chart_new_dataset")
         database_name = charts_temp[0].get("database")
     else:
+        # There may be no database if a user clones an empty dashboard with the way the current frontend is setup
+        # This should be changed once the frontend supports a better request format.
         dataset_name = None
         database_name = None
 
@@ -40,7 +43,21 @@ def get_details(request):
         }
         charts.append(chart_detail)
     # =======================================================================================
+    credentials = {
+        "instance_url": SUPERSET_INSTANCE_URL,
+        "username": SUPERSET_USERNAME,
+        "password": SUPERSET_PASSWORD
+    }
+
+    # If this field exists, assume that all 3 fields exist.
+    # These new credentials will be used for importing the dashboard (Across Instance Cloning)
+    if request.json.get("instance_url") is not None:
+        credentials = {
+            "instance_url": request.json.get("instance_url"),
+            "username": request.json.get("superset_username"),
+            "password": request.json.get("superset_password")
+        }
 
     return DashboardDetails(dashboard_id=dashboard_id, dashboard_old_name=old_name, dashboard_new_name=new_name,
                             dataset_id=dataset_id, dataset_name=dataset_name, database_name=database_name,
-                            charts=charts)
+                            charts=charts, credentials=credentials)
