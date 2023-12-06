@@ -1,11 +1,13 @@
+"""
+This file contains all backend endpoints the frontend may call
+"""
+
 from flask import Blueprint, request
 import json
-import os
 
-from backend.utils.api_helpers import *
+from backend.utils.dashboard_details_helper import *
+from backend.utils.data_helpers import *
 from backend.utils.api_request_handler import APIRequestHandler
-from backend.utils.superset_constants import SUPERSET_PASSWORD, SUPERSET_USERNAME, SUPERSET_INSTANCE_URL
-from backend.utils.utils import create_id
 
 views = Blueprint('views', __name__)
 
@@ -103,43 +105,39 @@ def clone():
            "dashboard_new_name":
            "dataset_id":
            "charts": [
-                        [
+                        {
                         chart_id
                         chart_old_name
                         chart_new_name
                         "chart_new_dataset": "covid_vaccines",
                         "database": "examples"
-                        ]
+                        }
                    ]
        }
     """
-    dashboard_id = request.json.get("dashboard_id")
-    dashboard_old_name = request.json.get("dashboard_old_name")
-    dashboard_new_name = request.json.get("dashboard_new_name")
-    charts = request.json.get("charts")
-    dataset_id = request.json.get("dataset_id")
+    dashboard_details = get_details(request)
 
+    # Initialized all paths directly to avoid issues with relativity
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
     PARENT_DIR = os.path.join(FILE_DIR, os.pardir)
     GRANDPARENT_DIR = os.path.abspath(os.path.join(PARENT_DIR, os.pardir))
     ZIP_DIR = os.path.join(GRANDPARENT_DIR, 'backend/zip')
 
+    # Initialize a request handler which will be used to make any and all requests to Superset API
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    # Change all details within the dashboard files
+    dashboard_export_name, zip_directory = modify_details(dashboard_details, request_handler, ZIP_DIR)
 
-    dashboard_export_name = export_one_dashboard(request_handler, dashboard_id)
-    swap_dataset_and_database(request_handler, ZIP_DIR, dashboard_export_name, dataset_id)
+    # Initialize an API request handler with the instance that will receive the dashboard
+    instance_url = dashboard_details.credentials['instance_url']
+    username = dashboard_details.credentials['username']
+    password = dashboard_details.credentials['password']
+    import_request_handler = APIRequestHandler(instance_url, username, password)
 
-    dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
-                                                ZIP_DIR, dashboard_export_name)
+    # Import the dashboard
+    import_new_dashboard(import_request_handler, dashboard_export_name)
 
-    set_new_details(dashboard_filename, [("dashboard_title", dashboard_new_name), ("uuid", create_id())])
-    change_chart_details(charts, dashboard_export_name)
-
-    update_dashboard_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/charts/', dashboard_filename)
-    update_chart_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
-    update_dataset_uuids(charts, f'{ZIP_DIR}/{dashboard_export_name}/')
-
-    import_new_dashboard(request_handler, dashboard_export_name)
-
-    delete_zip(f"{ZIP_DIR}/")
+    # Delete the files in the zip folder that was used as a temporary destination
+    # Comment out this function to be able to view the dashboard files
+    delete_zip(zip_directory)
     return "Cloning Successful"

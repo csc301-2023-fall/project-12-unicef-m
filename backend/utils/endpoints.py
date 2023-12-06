@@ -1,3 +1,7 @@
+"""
+All Superset API endpoints that are used
+"""
+
 ACCESS_TOKEN_ENDPOINT = "api/v1/security/login"
 CSRF_TOKEN_ENDPOINT = "api/v1/security/csrf_token/"
 DASHBOARD_ENDPOINT = "api/v1/dashboard/"
