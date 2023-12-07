@@ -24,9 +24,13 @@ function FinalClone() {
   // let dataset_id=0
 
 
-  
+  const [chart_and_newname_list, appendChartAndNewNameList] = useState([]); //list of charts, and the name that the user wants to use for each chart
+
 
    useEffect(() => {
+
+  
+
     setLoading(true);
     axios.get(dashboard_list_endpoint).then((response) => {
       // getting dashboard info
@@ -40,8 +44,8 @@ function FinalClone() {
           })
         }
       })
-      setChartList(c_list);
-      
+      // setChartList(c_list);
+      c_list.forEach(chart => {chart_and_newname_list.push([chart[1],chart[0]])}) ;// prepopulate with [id, old name]
       // console.log(c_list)
       setChartList(c_list);  // upon mounting, fetch the chart list from the backend
       setLoading(false);
@@ -49,6 +53,7 @@ function FinalClone() {
       console.error('Error fetching data from dashboard list endpoint:', error);
     });
 
+    
     
     axios.get(source_list_endpoint).then((response) => {
       // getting source info
@@ -70,8 +75,8 @@ function FinalClone() {
     });
   },[]);
 
-  console.log("source list ", sourcelist)
-  console.log("chart list ", chart_list)
+  // console.log("source list ", sourcelist)
+  // console.log("chart list ", chart_list)
 
 
 
@@ -80,8 +85,8 @@ function FinalClone() {
   // console.log(chart_list, sourcelist)//debugging purposes
 
   const [db_name,setdb_name]=useState(dashboard_name);
-  const [chart_and_newname_list, appendChartAndNewNameList] = useState([]); //list of charts, and the name that the user wants to use for each chart
-  chart_list.forEach(chart => {chart_and_newname_list.push([chart[1],chart[0]])}) // prepopulate with [id, old name]
+  
+  console.log("chart and newname list", chart_and_newname_list)
   const handleRename = (chartid, newname) => {
 
     // let dataset_id = 0
@@ -90,6 +95,7 @@ function FinalClone() {
     //     dataset_id = sourceIndex[2]
     //   }
     // })
+    
     let pair = [chartid, newname]  
     for (let i = 0; i < chart_and_newname_list.length; i++) { 
       if (chart_and_newname_list[i][0] == chartid) {
@@ -101,9 +107,9 @@ function FinalClone() {
     // do a check to see if the chartname is already in the list, and if it is, just update the name
 
     //otherwise add to list(prob will never get called)
-    appendChartAndNewNameList([...chart_and_newname_list, pair])
+    // appendChartAndNewNameList([...chart_and_newname_list, pair])
   }
-
+  // console.log("chart and newname list", chart_and_newname_list)
 
 
   // console.log("chart and newname list", chart_and_newname_list)
@@ -132,29 +138,8 @@ function FinalClone() {
   })
 
   // console.log("dataset for all charts", dataset)
-  console.log("dataset_name, database_name and dataset_id for dataset", dataset_name, database_name, dataset_id)
+  // console.log("dataset_name, database_name and dataset_id for dataset", dataset_name, database_name, dataset_id)
 
-
-  //use enabled_across_instance_cloning to determine if we should include the url,username,and pass in the json object
-  const[enabled_across_instance_cloning,setEnableAcrossInstanceCloning]= useState(false);
-  const handleAcrossInstanceCloning = (event) => { 
-    if(event.target.checked){
-      setEnableAcrossInstanceCloning(true);
-    }
-    else{
-      setEnableAcrossInstanceCloning(false);
-    }
-  }
-  console.log("across instance cloning enabled?", enabled_across_instance_cloning)
-
-  // data, for across instance cloning
-  const[superSet_url,setSupersetUrl]= useState("");
-  const[superSet_username,setSupersetUsername]= useState("");
-  const[superSet_password,setSupersetPassword]= useState("");
-
-  // console.log("superset url: ", superSet_url)
-  // console.log("superset username: ", superSet_username)
-  // console.log("superset password: ", superSet_password)
 
 
 
@@ -198,17 +183,77 @@ function FinalClone() {
       // should now be a list of json objects, where each object is a chart and its attributes
     })
 
+
+    var clone_response_data1 = {
+      "dashboard_id": Number(dashboard_id),
+      "dashboard_old_name": dashboard_old_name,
+      "dashboard_new_name": dashboard_new_name, 
+      "charts": charts,
+      "dataset_name": dataset_name,
+      "database_name": database_name,
+      "dataset_id": dataset_id
+    }
+    console.log("clone response data1", clone_response_data1)
+
+
+
+      //use enabled_across_instance_cloning to determine if we should include the url,username,and pass in the json object
+    const[enabled_across_instance_cloning,setEnableAcrossInstanceCloning]= useState(false);
+    const handleAcrossInstanceCloning = (event) => { 
+      if(event.target.checked){
+        setEnableAcrossInstanceCloning(true);
+      }
+      else{
+        setEnableAcrossInstanceCloning(false);
+      }
+    }
+    // console.log("across instance cloning enabled?", enabled_across_instance_cloning)
+
+    // data, for across instance cloning
+    const[superSet_url,setSupersetUrl]= useState("");
+    const[superSet_username,setSupersetUsername]= useState("");
+    const[superSet_password,setSupersetPassword]= useState("");
+
+    console.log("superset url: ", superSet_url)
+    console.log("superset username: ", superSet_username)
+    console.log("superset password: ", superSet_password)
+
+    
+    const add_additional_fields = (clone_response_data1) => {}
+
+
+
+
     const clone_endpoint = import.meta.env.VITE_REACT_APP_BASEURL + '/view/clone';
     const[error,setError]= useState(null);
     const navigateToDashboards = useNavigate();
     const handleCloneSubmit = async(event) => {
-      const clone_response_data2 = {
+      var clone_response_data2 = {
         "dashboard_id": Number(dashboard_id),
         "dashboard_old_name": dashboard_old_name,
         "dashboard_new_name": dashboard_new_name, 
-        "dataset_id": chart_and_source_list[0][2],
-        "charts": charts
+        "charts": charts,
+        "dataset_name": dataset_name,
+        "database_name": database_name,
+        "dataset_id": dataset_id
       }
+
+
+      if (enabled_across_instance_cloning ===true ) {
+        clone_response_data2 = {
+          "dashboard_id": Number(dashboard_id),
+          "dashboard_old_name": dashboard_old_name,
+          "dashboard_new_name": dashboard_new_name, 
+          "charts": charts,
+          "dataset_name": dataset_name,
+          "database_name": database_name,
+          "dataset_id": dataset_id,
+          "superset_url": superSet_url,
+          "superset_username": superSet_username,
+          "superset_password": superSet_password
+        }
+      }
+
       console.log("clone response data2", clone_response_data2)
       event.preventDefault();
       try{
@@ -240,7 +285,7 @@ function FinalClone() {
           <form className="flex flex-col h-full" method="POST" onSubmit={handleCloneSubmit}>
             <div className="form-group mb-2 mt-5 flex flex-row ">
               <label className="text-sky-400 font-bold text-xl w-1/6" for="#dashboard_name">Rename: </label>
-              <input className="clone-input w-3/4 text-center text-black" type="text" id="dashboard_name" onInput={handledb_name} required></input>
+              <input className="clone-input w-3/4 text-center text-black " type="text" id="dashboard_name" onInput={handledb_name} placeholder="optional rename"></input>
             </div>
 
             <div className="form-group mb-2 mt-5 flex flex-row ">
@@ -298,12 +343,13 @@ function FinalClone() {
 
             {
               enabled_across_instance_cloning && !(superSet_username && superSet_password && superSet_url) &&
-              <div class="alert alert-danger" role="alert">
+              <div class="alert alert-danger text-black" role="alert">
               <strong>Notice, you MUST fill out all fields to clone across instances</strong>
               </div>
             }
-            <div className="button-wrapper flex justify-center">
-              <button className="bg-sky-400 w-1/2 text-lg text-white" type="submit">Finalize Clone</button>
+            
+              <div className="button-wrapper flex justify-center">
+              <button className="bg-sky-400 w-1/2 text-lg text-white" type="submit"> Finalize Clone</button>
             </div>
           </form>
       </div>
