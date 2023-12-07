@@ -81,9 +81,8 @@ function FinalClone() {
 
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_newname_list, appendChartAndNewNameList] = useState([]); //list of charts, and the name that the user wants to use for each chart
-  chart_list.forEach(chart => {chart_and_newname_list.push([chart[0],chart[0]])}) // prepopulate with identical names
-  console.log("chart and newname list", chart_and_newname_list)
-  const handleRename = (chartname, newname) => {
+  chart_list.forEach(chart => {chart_and_newname_list.push([chart[1],chart[0]])}) // prepopulate with [id, old name]
+  const handleRename = (chartid, newname) => {
 
     // let dataset_id = 0
     // sourcelist.forEach(sourceIndex => {
@@ -91,9 +90,9 @@ function FinalClone() {
     //     dataset_id = sourceIndex[2]
     //   }
     // })
-    let pair = [chartname, newname]  
+    let pair = [chartid, newname]  
     for (let i = 0; i < chart_and_newname_list.length; i++) { 
-      if (chart_and_newname_list[i][0] == chartname) {
+      if (chart_and_newname_list[i][0] == chartid) {
         chart_and_newname_list[i][1] = newname
         appendChartAndNewNameList([...chart_and_newname_list])
         return
@@ -177,8 +176,8 @@ function FinalClone() {
       chart_attrib_list[1] = chart_name
 
       chart_and_newname_list.forEach(chart_and_newname => {
-        const chart_we_want = chart_in_chart_list[0]
-        if (chart_and_newname[0] ==chart_we_want) {
+        const target_id = chart_in_chart_list[1]
+        if (chart_and_newname[0] ==target_id) {
           // check if the chart name is in the chart_and_newname
           // chart_and_newname[0] is the old chart name
           const chart_new_name = chart_and_newname[1]
@@ -266,7 +265,7 @@ function FinalClone() {
                     <div className="flex flex-row justify-around items-center h-1/8 mb-3 mt-3 input-wrapper">
                         <div className="name-container h-full w-full">
                           <p className="text-sky-400 font-test">{chart[0]}</p>
-                          <input className="clone-input w-3/4 text-center text-black" type="text" id="dashboard_name" placeholder="optional rename" onChange={(event)=>handleRename(chart[0],event.target.value)}></input>
+                          <input className="clone-input w-3/4 text-center text-black" type="text" id="dashboard_name" placeholder="optional rename" onChange={(event)=>handleRename(chart[1],event.target.value)}></input>
                         </div>
                         {/* <select className="w-1/2 h-1/2 bg-sky-400 text-white" 
                         onChange={(event) => handleSelect(chart[0], event.target.value) }>
