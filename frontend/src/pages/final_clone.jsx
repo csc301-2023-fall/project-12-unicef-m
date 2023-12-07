@@ -81,7 +81,8 @@ function FinalClone() {
 
   const [db_name,setdb_name]=useState(dashboard_name);
   const [chart_and_newname_list, appendChartAndNewNameList] = useState([]); //list of charts, and the name that the user wants to use for each chart
-  chart_list.forEach(chart => {chart_and_newname_list.append([c[0],c[0]])}) // prepopulate with identical names
+  chart_list.forEach(chart => {chart_and_newname_list.push([chart[0],chart[0]])}) // prepopulate with identical names
+  console.log("chart and newname list", chart_and_newname_list)
   const handleRename = (chartname, newname) => {
 
     // let dataset_id = 0
@@ -103,7 +104,6 @@ function FinalClone() {
     //otherwise add to list(prob will never get called)
     appendChartAndNewNameList([...chart_and_newname_list, pair])
   }
-
 
 
 
