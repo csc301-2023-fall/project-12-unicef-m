@@ -25,9 +25,24 @@ and propagate these changes onto any dashboards cloned from the template.
 
 ### Key Technical Components & Modules
 
+Our GitHub repository contains two folders called 'frontend' and 
+'backend', each of which contain the respective code for the 
+frontend and the backend. Both folders contain their own respective 
+testing suites, which are called to run the automated tests in the 
+GitHub workflow described below.
+
 #### .github/workflows/github-actions.yml
 
-A github-actions.yml exists to for automatic deployment when changes are pushed to main.
+We have set up a GitHub workflow to run automated tests on our 
+frontend and our backend anytime we push or merge changes into our 
+'develop' and 'main' branches. In the file, 'gihub-actions.yml', 
+we set up a testing job that checks out the code in our repository 
+and installs Node.js and Python, and then installs all the 
+necessary libraries/modules from 'package.json' and 'requirements.txt',
+respectively, to run the automated testing suites defined for the 
+frontend and the backend. These tests are also automatically run 
+anytime we make pull requests to those branches to let us know 
+whether the incoming changes break existing functionality or not.
 
 #### backend/
 
@@ -102,19 +117,50 @@ pip freeze > requirements.txt
 
 Everything should now be set up to begin development
 
-### Deployment 
+### Deployment and Access
 
-RUDY WRITE WHATEVER NEEDS TO GO HERE
+Our project is hosted on Render and it deploys automatically 
+there are any changes to the 'main' branch. When the 'main' branch 
+is updated, Render pulls the latest changes, builds the latest 
+iteration of the project, and serves it on a public url.
+
+Our project is hosted on Render and is available at:
+[https://project12-csc301.onrender.com/](https://project12-csc301.onrender.com/)
+
+The current credentials to access the program above are:
+
+Dashboard Name: User
+
+Superset Username: testuser
+
+Superset Password: testpass
+
+These credentials are currently linked to the superset instance that was provided. 
+
+Link: https://superset-dev.unicef.io/
+
+Username and Password were provided by UNICEF.
+
+
+Since this is hosted on one of the team member's private Render account, to deploy the project yourself, you must link it to the repository consisting of the code. In the Render environment, make sure to declare the following keys with the correct values:
+
+ - PYTHON_VERSION
+ - SUPERSET_INSTANCE_URL
+ - SUPERSET_PASSWORD
+ - SUPERSET_USERNAME
+ - VITE_REACT_APP_BASEURL
+
+Additionally, in the build settings, set the 'Root Directory' to 'backend', set the 'Build Command' to 'pip install -r requirements.txt', and set the 'Start Command' to "PYTHONPATH=\`pwd\`/.. gunicorn -w 4 -b 0.0.0.0:$PORT backend.app:app --timeout 90". 
 
 ### Next Steps
 
 The current completed project is ready for general use.
 However, there are a few changes that must be made first.
 
-To view an exported dashboard, you could comment out the delete_zip function
+To view exported dashboard files, you could comment out the delete_zip function
 located in backend/routes/views.py - clone(). The exported dashboard will
 be viewable within the backend/zip folder. This may be useful when making 
-edits to the exported data (e.g. Implementing Renaming Charts)
+changes to functionality involving editing data files.
 
 #### Login Credentials
 
@@ -152,4 +198,4 @@ Changes will need to be made in the following files
 Do note that across instance cloning does not support local instances of
 superset if ran through render. As the online version of this program
 does not have superset on it's local host. Changes may need to be made
-to accomodate this fact.
+to accommodate this fact.
