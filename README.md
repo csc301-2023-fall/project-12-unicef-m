@@ -65,6 +65,8 @@ Password: UNICEFToronto2023##
 
 ### Instructions to Work on the Project
 
+For more detailed instructions view README-dev.md
+
 Prior to working on the backend, make sure that you create a virtual environment in the backend folder. To do so, first navigate to the backend directory, and then type the following command:
 ```
 python -m venv venv
