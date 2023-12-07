@@ -17,43 +17,20 @@ def get_details(request):
     old_name = request.json.get("dashboard_old_name")
     new_name = request.json.get("dashboard_new_name")
     dataset_id = request.json.get("dataset_id")
+    dataset_name = request.json.get("dataset_name")
+    database_name = request.json.get("database_name")
+    charts = request.json.get("charts")
 
-    charts_temp = request.json.get("charts")
-
-    # =======================================================================================
-    # Due to the current way our frontend was set up, each chart is associated with a dataset
-    # However, as only one dataset need to be specified, this chunk of code will change.
-    # Must make necessary changes to the frontend prior to changing this code.
-    # =======================================================================================
-    if charts_temp[0] is not None:
-        dataset_name = charts_temp[0].get("chart_new_dataset")
-        database_name = charts_temp[0].get("database")
-    else:
-        # There may be no database if a user clones an empty dashboard with the way the current frontend is setup
-        # This should be changed once the frontend supports a better request format.
-        dataset_name = None
-        database_name = None
-
-    charts = []
-    for chart in charts_temp:
-        chart_detail = {
-            "chart_id": chart.get("chart_id"),
-            "chart_old_name": chart.get("chart_old_name"),
-            "chart_new_name": chart.get("chart_new_name")
-        }
-        charts.append(chart_detail)
-    # =======================================================================================
     credentials = {
         "instance_url": SUPERSET_INSTANCE_URL,
         "username": SUPERSET_USERNAME,
         "password": SUPERSET_PASSWORD
     }
-
     # If this field exists, assume that all 3 fields exist.
     # These new credentials will be used for importing the dashboard (Across Instance Cloning)
-    if request.json.get("instance_url") is not None:
+    if request.json.get("superset_url") is not None:
         credentials = {
-            "instance_url": request.json.get("instance_url"),
+            "instance_url": request.json.get("superset_url"),
             "username": request.json.get("superset_username"),
             "password": request.json.get("superset_password")
         }
