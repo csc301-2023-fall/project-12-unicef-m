@@ -1,10 +1,4 @@
-## NOTE TO TA FOR D3:
-
-We have created a video for our D3 submission also linked in the iteration-03-review.md file.
-
-#### Video Link in Docs: https://docs.google.com/document/d/1bYASU4AnV9Rw8COij2wMZFm57ggSoFY9WIWmg3Y8Ekw/edit
-
-https://docs.google.com/document/d/15DNbcaayjMLIahSCqLSsfEdc5vjFLFGZHfgA4R6nAxw/edit?usp=sharing
+## Superset Cloning Tool
 
 Group Number: 12  
 Team Name: Red Pandas  
@@ -114,3 +108,12 @@ We aim to keep all new features modular and independent of one another. As we ar
 
 ## Licences 
 We will be using an MIT licence. UNICEF values contributing to the open source community. Our partner believes that this project will not only be useful for UNICEF, but will also be desired by other companies. Therefore, we have received permission to upload the code on GitHub and share it freely.
+
+### Contributors
+Special thanks to:
+- Nicholas Macasaet
+- Rohan Mistry
+- Manya Mittal
+- Rudraksh Monga
+- Andrew Nguyen
+- Jessica Zhang
