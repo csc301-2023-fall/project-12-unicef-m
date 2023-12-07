@@ -71,7 +71,7 @@ function FinalClone() {
   },[]);
 
   console.log("source list ", sourcelist)
-  // console.log("chart list ", chart_list)
+  console.log("chart list ", chart_list)
 
 
 
@@ -80,33 +80,34 @@ function FinalClone() {
   // console.log(chart_list, sourcelist)//debugging purposes
 
   const [db_name,setdb_name]=useState(dashboard_name);
-  const [chart_and_source_list, appendChartAndSourceList] = useState([]); //list of charts, and the source that the user wants to use for each chart
-  const handleSelect = (chartname, source) => {
+  const [chart_and_newname_list, appendChartAndNewNameList] = useState([]); //list of charts, and the name that the user wants to use for each chart
+  chart_list.forEach(chart => {chart_and_newname_list.append([c[0],c[0]])}) // prepopulate with identical names
+  const handleRename = (chartname, newname) => {
 
-    let dataset_id = 0
-    sourcelist.forEach(sourceIndex => {
-      if (sourceIndex[0] == source) {
-        dataset_id = sourceIndex[2]
-      }
-    })
-    let trio = [chartname, source, dataset_id]  
-    for (let i = 0; i < chart_and_source_list.length; i++) { 
-      if (chart_and_source_list[i][0] == chartname) {
-        chart_and_source_list[i][1] = source
-        appendChartAndSourceList([...chart_and_source_list])
+    // let dataset_id = 0
+    // sourcelist.forEach(sourceIndex => {
+    //   if (sourceIndex[0] == source) {
+    //     dataset_id = sourceIndex[2]
+    //   }
+    // })
+    let pair = [chartname, newname]  
+    for (let i = 0; i < chart_and_newname_list.length; i++) { 
+      if (chart_and_newname_list[i][0] == chartname) {
+        chart_and_newname_list[i][1] = newname
+        appendChartAndNewNameList([...chart_and_newname_list])
         return
       }
     }
-    // do a check to see if the chartname is already in the list, and if it is, just update the source
+    // do a check to see if the chartname is already in the list, and if it is, just update the name
 
-    //otherwise add to list
-    appendChartAndSourceList([...chart_and_source_list, trio])
+    //otherwise add to list(prob will never get called)
+    appendChartAndNewNameList([...chart_and_newname_list, pair])
   }
 
 
 
 
-  // console.log("chart and source list", chart_and_source_list)
+  // console.log("chart and newname list", chart_and_newname_list)
   const handledb_name=(event)=>{
     if (event.target.value!= db_name){
       setdb_name(event.target.value);
@@ -175,37 +176,24 @@ function FinalClone() {
       chart_attrib_list[0] = chart_id
       chart_attrib_list[1] = chart_name
 
-      chart_and_source_list.forEach(chart_and_source => {
+      chart_and_newname_list.forEach(chart_and_newname => {
         const chart_we_want = chart_in_chart_list[0]
-        if (chart_and_source[0] ==chart_we_want) {
-          // check if the chart name is in the chart_and_source_list
-          // chart_and_source[0] is the chart name
-          const chart_new_dataset = chart_and_source[1]
+        if (chart_and_newname[0] ==chart_we_want) {
+          // check if the chart name is in the chart_and_newname
+          // chart_and_newname[0] is the old chart name
+          const chart_new_name = chart_and_newname[1]
           // chart_attrib_list.push(chart_new_dataset)
-          chart_attrib_list[2] = chart_new_dataset
+          chart_attrib_list[2] = chart_new_name
           //push the source name to the chart attributes
         }
 
-        sourcelist.forEach(source => {
-          const source_we_want = chart_and_source[1]
-          const source_name = source[0]
-          if (source_name == source_we_want ) {
-            // check if the source name is in the sourcelist
-            const database = source[1]
-            chart_attrib_list[3] = database
-
-            // chart_attrib_list.push(database)
-            //push the database name to the chart attributes
-          }
-        })
 
       })
 
       const chart_attributes ={
         "chart_id": chart_attrib_list[0],
         "chart_old_name": chart_attrib_list[1],
-        "chart_new_dataset": chart_attrib_list[2],
-        "database": chart_attrib_list[3]
+        "chart_new_name": chart_attrib_list[2]
       }
       charts.push(chart_attributes)
       // should now be a list of json objects, where each object is a chart and its attributes
@@ -278,6 +266,7 @@ function FinalClone() {
                     <div className="flex flex-row justify-around items-center h-1/8 mb-3 mt-3 input-wrapper">
                         <div className="name-container h-full w-full">
                           <p className="text-sky-400 font-test">{chart[0]}</p>
+                          <input className="clone-input w-3/4 text-center text-black" type="text" id="dashboard_name" placeholder="optional rename" onChange={(event)=>handleRename(chart[0],event.target.value)}></input>
                         </div>
                         {/* <select className="w-1/2 h-1/2 bg-sky-400 text-white" 
                         onChange={(event) => handleSelect(chart[0], event.target.value) }>
@@ -310,7 +299,9 @@ function FinalClone() {
 
             {
               enabled_across_instance_cloning && !(superSet_username && superSet_password && superSet_url) &&
-              <p className='text-red-600'> Notice, you MUST fill out all fields to clone across instances</p>
+              <div class="alert alert-danger" role="alert">
+              <strong>Notice, you MUST fill out all fields to clone across instances</strong>
+              </div>
             }
             <div className="button-wrapper flex justify-center">
               <button className="bg-sky-400 w-1/2 text-lg text-white" type="submit">Finalize Clone</button>
