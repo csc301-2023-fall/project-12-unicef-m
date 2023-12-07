@@ -113,6 +113,9 @@ Changes will need to be made in the following files:
 - backend/routes/views.py
 - frontend/src/pages/login_page.jsx
 
+Note: The product is remains functional locally with hard-coded
+credentials with an .env file in the backend folder.
+
 #### Renaming Charts
 
 Currently, the frontend supports renaming charts, but the changes
@@ -126,5 +129,9 @@ Changes will need to be made in the following files
 
 - backend/utils/data_helpers.py
 
-Note: The product is remains functional locally with hard-coded
-credentials with an .env file in the backend folder.
+#### Across Instance Cloning
+
+Do note that across instance cloning does not support local instances of
+superset if ran through render. As the online version of this program
+does not have superset on it's local host. Changes may need to be made
+to accomodate this fact.
