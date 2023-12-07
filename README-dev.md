@@ -115,6 +115,16 @@ Before pushing, ensure that if you've downloaded new libraries, you create a new
 pip freeze > requirements.txt
 ```
 
+Prior to working on the frontend, you must ensure that all packages are installed.
+Run the following command while cd'd into the frontend folder:
+```
+npm install
+```
+Then run the following to start up the application 
+```
+npm run dev
+```
+
 Everything should now be set up to begin development
 
 ### Deployment and Access
