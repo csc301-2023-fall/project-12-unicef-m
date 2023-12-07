@@ -288,7 +288,7 @@ function FinalClone() {
               <input className="clone-input w-3/4 text-center text-black " type="text" id="dashboard_name" onInput={handledb_name} placeholder="optional rename"></input>
             </div>
 
-            <div className="form-group mb-2 mt-5 flex flex-row ">
+            <div className="form-group mb-2 mt-5 flex flex-row justify-center">
               <label className="text-sky-400 font-bold text-xl w-1/6" for="#dashboard_name">Choose Dataset: </label>
               <select className="w-1/3 h-full bg-sky-400 text-white" 
                         onChange={chooseDataset}>
