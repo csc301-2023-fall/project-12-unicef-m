@@ -19,8 +19,8 @@ to create a new visualization with the same format.
 may have their own version of Superset running on their desktop.
 I want to be able to send the cloned dashboard to my employee's
 instance of Superset so that they could access the visualization from
-their account.
-6) As a user, I want to be able to know when changes were made onto dashboard
+their account. 
+5) As a user, I want to be able to know when changes were made onto dashboard
 and propagate these changes onto any dashboards cloned from the template.
 
 ### Key Technical Components & Modules
