@@ -60,6 +60,24 @@ can be found in the documentation within these files.
 
 #### frontend/
 
+/src/pages/login_page.jsx
+
+- This file contains code to get Superset URL, username, and password from user. Then navigate to dashboards page if credentials valid.
+
+/src/pages/dashboards.jsx
+- This file contains axio calls to retrieve the dashboards and display them. This file also contains code that enables search.
+
+/src/pages/final_clone.jsx
+- This file contains code that use axios fetch information such as lists of charts the users can rename from the desired dataset, and maps the dataset to this dashboard. Here we also give users the option of cross instance cloning.
+
+/src/pages/pages.css
+
+- This page contains all the styling code for the page components.
+
+/src/main.jsx
+
+- This file specifies the path to access each page.
+
 ### Initial Setup
 
 Prior to working on the backend, make sure that you create a virtual environment in the backend folder. To do so, first navigate to the backend directory, and then type the following command:
