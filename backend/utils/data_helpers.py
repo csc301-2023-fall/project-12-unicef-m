@@ -25,7 +25,7 @@ def modify_details(data_object, request_handler, main_dir):
     dataset_name = data_object.dataset_name
     database_name = data_object.database_name
     charts = data_object.charts
-
+    print(1)
     # Get the files relating to the template dashboard
     dashboard_export_name = export_old_dashboard(request_handler, dashboard_id)
     dashboard_filename = get_dashboard_filename(dashboard_id, dashboard_old_name,
@@ -33,7 +33,7 @@ def modify_details(data_object, request_handler, main_dir):
 
     # Swap out the old dataset and database with the chosen ones
     modify_dataset_and_database(request_handler, main_dir, dashboard_export_name, dataset_id)
-
+    print(2)
     # At this point, we have a folder zip/dashboard_export_name
     # We must change all the details within the files that the user specified to change
 
@@ -42,12 +42,12 @@ def modify_details(data_object, request_handler, main_dir):
     #       There was a slice_name field with the dashboard file which may have to be changed
     change_dashboard_details(dashboard_filename, dashboard_new_name)
     change_chart_details(charts, dashboard_export_name, dataset_name, database_name)
-
+    print(3)
     # 2) Change uuids that are referenced in each file
     update_dashboard_uuids(charts, f'{main_dir}/{dashboard_export_name}/charts/', dashboard_filename)
     update_chart_uuids(f'{main_dir}/{dashboard_export_name}/', dataset_name, database_name)
     update_dataset_uuids(f'{main_dir}/{dashboard_export_name}/', dataset_name, database_name)
-
+    print(4)
     return dashboard_export_name, main_dir
 
 

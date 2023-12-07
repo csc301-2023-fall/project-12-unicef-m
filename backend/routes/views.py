@@ -125,18 +125,19 @@ def clone():
 
     # Initialize a request handler which will be used to make any and all requests to Superset API
     request_handler = APIRequestHandler(SUPERSET_INSTANCE_URL, SUPERSET_USERNAME, SUPERSET_PASSWORD)
+    print("request_handler")
     # Change all details within the dashboard files
     dashboard_export_name, zip_directory = modify_details(dashboard_details, request_handler, ZIP_DIR)
-
+    
     # Initialize an API request handler with the instance that will receive the dashboard
     instance_url = dashboard_details.credentials['instance_url']
     username = dashboard_details.credentials['username']
     password = dashboard_details.credentials['password']
     import_request_handler = APIRequestHandler(instance_url, username, password)
-
+    print("reached import")
     # Import the dashboard
     import_new_dashboard(import_request_handler, dashboard_export_name)
-
+    print("finished import")
     # Delete the files in the zip folder that was used as a temporary destination
     # Comment out this function to be able to view the dashboard files
     delete_zip(zip_directory)
